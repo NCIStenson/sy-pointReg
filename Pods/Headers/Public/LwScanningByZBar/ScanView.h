@@ -1,0 +1,1 @@
+../../../LwScanningByZBar/Pod/Classes/QRCostom/ScanView.h

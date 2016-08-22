@@ -1,0 +1,1 @@
+../../../LwScanningByZBar/Pod/Classes/ZBarSDK/Headers/ZBarSDK/ZBarHelpController.h

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7F0F749A578B5B764380E919 /* libPods-NewCentury.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F0D5EB5E2430C3C54F96D934 /* libPods-NewCentury.a */; };
+		980C6A6A1D6BE2C500BDF47F /* ZEUUM_FUNCTION_MODEL.m in Sources */ = {isa = PBXBuildFile; fileRef = 980C6A691D6BE2C500BDF47F /* ZEUUM_FUNCTION_MODEL.m */; };
 		981F30211CE03DCF00F39537 /* timeline_image_loading@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 981F30201CE03DCF00F39537 /* timeline_image_loading@2x.png */; };
 		981F30251CE05C0800F39537 /* ZESettingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 981F30241CE05C0800F39537 /* ZESettingVC.m */; };
 		981F30281CE05DDB00F39537 /* tab_setting_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 981F30261CE05DDB00F39537 /* tab_setting_normal@2x.png */; };
@@ -61,6 +62,9 @@
 		987B34A31C50D54B0035FB6B /* ZEPointRegChooseDateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 987B34A21C50D54B0035FB6B /* ZEPointRegChooseDateView.m */; };
 		987B34B01C5203450035FB6B /* ZESetLocalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 987B34AF1C5203450035FB6B /* ZESetLocalData.m */; };
 		987B34B31C5214970035FB6B /* ZEPointRegModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 987B34B21C5214970035FB6B /* ZEPointRegModel.m */; };
+		98947EA81D6C44A100D1EE24 /* ZEV_EPM_TEAM_RATION_APP.m in Sources */ = {isa = PBXBuildFile; fileRef = 98947EA71D6C44A100D1EE24 /* ZEV_EPM_TEAM_RATION_APP.m */; };
+		98947EAB1D6C4D2800D1EE24 /* ZEEPM_TEAM_RATION_COMMON.m in Sources */ = {isa = PBXBuildFile; fileRef = 98947EAA1D6C4D2800D1EE24 /* ZEEPM_TEAM_RATION_COMMON.m */; };
+		98947EAE1D6D77A400D1EE24 /* ZEEPM_TEAM_RATIONTYPE.m in Sources */ = {isa = PBXBuildFile; fileRef = 98947EAD1D6D77A400D1EE24 /* ZEEPM_TEAM_RATIONTYPE.m */; };
 		989B2C481C4DE7AA00F14EFA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 989B2C471C4DE7AA00F14EFA /* main.m */; };
 		989B2C4B1C4DE7AA00F14EFA /* ZEAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 989B2C4A1C4DE7AA00F14EFA /* ZEAppDelegate.m */; };
 		989B2C531C4DE7AA00F14EFA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 989B2C521C4DE7AA00F14EFA /* Assets.xcassets */; };
@@ -96,6 +100,7 @@
 		98DB7CB41C50ACCD0046D405 /* JCAlertView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 98DB7CB11C50ACCD0046D405 /* JCAlertView.bundle */; };
 		98DB7CB51C50ACCD0046D405 /* JCAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 98DB7CB31C50ACCD0046D405 /* JCAlertView.m */; };
 		98DB7CB81C50ADF70046D405 /* ZEPointRegOptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 98DB7CB71C50ADF70046D405 /* ZEPointRegOptionView.m */; };
+		B255DEB909BC74725A1EC523 /* libPods-sy-pointReg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AEFFB5CF5C6CACA83E6703 /* libPods-sy-pointReg.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,7 +122,10 @@
 
 /* Begin PBXFileReference section */
 		3DA4BA9D0C5C165BF5EE4A19 /* Pods-NewCentury.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewCentury.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewCentury/Pods-NewCentury.release.xcconfig"; sourceTree = "<group>"; };
+		73AEFFB5CF5C6CACA83E6703 /* libPods-sy-pointReg.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-sy-pointReg.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		755C225354A400252DA198A4 /* Pods-NewCentury.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewCentury.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NewCentury/Pods-NewCentury.debug.xcconfig"; sourceTree = "<group>"; };
+		980C6A681D6BE2C500BDF47F /* ZEUUM_FUNCTION_MODEL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEUUM_FUNCTION_MODEL.h; path = Model/ZEUUM_FUNCTION_MODEL.h; sourceTree = "<group>"; };
+		980C6A691D6BE2C500BDF47F /* ZEUUM_FUNCTION_MODEL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEUUM_FUNCTION_MODEL.m; path = Model/ZEUUM_FUNCTION_MODEL.m; sourceTree = "<group>"; };
 		981593071D6AE18D002A366B /* ZEServerTableMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEServerTableMessage.h; path = Constant/ZEServerTableMessage.h; sourceTree = "<group>"; };
 		981F30201CE03DCF00F39537 /* timeline_image_loading@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "timeline_image_loading@2x.png"; path = "SourceImage/timeline_image_loading@2x.png"; sourceTree = "<group>"; };
 		981F30231CE05C0800F39537 /* ZESettingVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZESettingVC.h; sourceTree = "<group>"; };
@@ -194,6 +202,12 @@
 		987B34AF1C5203450035FB6B /* ZESetLocalData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZESetLocalData.m; path = CommonUtil/ZESetLocalData.m; sourceTree = "<group>"; };
 		987B34B11C5214970035FB6B /* ZEPointRegModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEPointRegModel.h; path = PointRegistration/Model/ZEPointRegModel.h; sourceTree = "<group>"; };
 		987B34B21C5214970035FB6B /* ZEPointRegModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEPointRegModel.m; path = PointRegistration/Model/ZEPointRegModel.m; sourceTree = "<group>"; };
+		98947EA61D6C44A100D1EE24 /* ZEV_EPM_TEAM_RATION_APP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEV_EPM_TEAM_RATION_APP.h; path = Model/ZEV_EPM_TEAM_RATION_APP.h; sourceTree = "<group>"; };
+		98947EA71D6C44A100D1EE24 /* ZEV_EPM_TEAM_RATION_APP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEV_EPM_TEAM_RATION_APP.m; path = Model/ZEV_EPM_TEAM_RATION_APP.m; sourceTree = "<group>"; };
+		98947EA91D6C4D2800D1EE24 /* ZEEPM_TEAM_RATION_COMMON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEEPM_TEAM_RATION_COMMON.h; path = Model/ZEEPM_TEAM_RATION_COMMON.h; sourceTree = "<group>"; };
+		98947EAA1D6C4D2800D1EE24 /* ZEEPM_TEAM_RATION_COMMON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEEPM_TEAM_RATION_COMMON.m; path = Model/ZEEPM_TEAM_RATION_COMMON.m; sourceTree = "<group>"; };
+		98947EAC1D6D77A400D1EE24 /* ZEEPM_TEAM_RATIONTYPE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEEPM_TEAM_RATIONTYPE.h; path = Model/ZEEPM_TEAM_RATIONTYPE.h; sourceTree = "<group>"; };
+		98947EAD1D6D77A400D1EE24 /* ZEEPM_TEAM_RATIONTYPE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEEPM_TEAM_RATIONTYPE.m; path = Model/ZEEPM_TEAM_RATIONTYPE.m; sourceTree = "<group>"; };
 		989B2C431C4DE7AA00F14EFA /* sy-pointReg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "sy-pointReg.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		989B2C471C4DE7AA00F14EFA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		989B2C491C4DE7AA00F14EFA /* ZEAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZEAppDelegate.h; sourceTree = "<group>"; };
@@ -254,6 +268,8 @@
 		98DB7CB31C50ACCD0046D405 /* JCAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCAlertView.m; sourceTree = "<group>"; };
 		98DB7CB61C50ADF70046D405 /* ZEPointRegOptionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEPointRegOptionView.h; path = PointRegistration/ZEPointRegOptionView.h; sourceTree = "<group>"; };
 		98DB7CB71C50ADF70046D405 /* ZEPointRegOptionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEPointRegOptionView.m; path = PointRegistration/ZEPointRegOptionView.m; sourceTree = "<group>"; };
+		C4439B9DE48C22DEFB398478 /* Pods-sy-pointReg.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sy-pointReg.release.xcconfig"; path = "Pods/Target Support Files/Pods-sy-pointReg/Pods-sy-pointReg.release.xcconfig"; sourceTree = "<group>"; };
+		CD01B761E5517D855B3C55EA /* Pods-sy-pointReg.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sy-pointReg.debug.xcconfig"; path = "Pods/Target Support Files/Pods-sy-pointReg/Pods-sy-pointReg.debug.xcconfig"; sourceTree = "<group>"; };
 		F0D5EB5E2430C3C54F96D934 /* libPods-NewCentury.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NewCentury.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -263,6 +279,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F0F749A578B5B764380E919 /* libPods-NewCentury.a in Frameworks */,
+				B255DEB909BC74725A1EC523 /* libPods-sy-pointReg.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +304,7 @@
 			isa = PBXGroup;
 			children = (
 				F0D5EB5E2430C3C54F96D934 /* libPods-NewCentury.a */,
+				73AEFFB5CF5C6CACA83E6703 /* libPods-sy-pointReg.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -296,8 +314,25 @@
 			children = (
 				755C225354A400252DA198A4 /* Pods-NewCentury.debug.xcconfig */,
 				3DA4BA9D0C5C165BF5EE4A19 /* Pods-NewCentury.release.xcconfig */,
+				CD01B761E5517D855B3C55EA /* Pods-sy-pointReg.debug.xcconfig */,
+				C4439B9DE48C22DEFB398478 /* Pods-sy-pointReg.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		980C6A671D6BE27A00BDF47F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				980C6A681D6BE2C500BDF47F /* ZEUUM_FUNCTION_MODEL.h */,
+				980C6A691D6BE2C500BDF47F /* ZEUUM_FUNCTION_MODEL.m */,
+				98947EA91D6C4D2800D1EE24 /* ZEEPM_TEAM_RATION_COMMON.h */,
+				98947EAA1D6C4D2800D1EE24 /* ZEEPM_TEAM_RATION_COMMON.m */,
+				98947EAC1D6D77A400D1EE24 /* ZEEPM_TEAM_RATIONTYPE.h */,
+				98947EAD1D6D77A400D1EE24 /* ZEEPM_TEAM_RATIONTYPE.m */,
+				98947EA61D6C44A100D1EE24 /* ZEV_EPM_TEAM_RATION_APP.h */,
+				98947EA71D6C44A100D1EE24 /* ZEV_EPM_TEAM_RATION_APP.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		981F30221CE05C0800F39537 /* Setting */ = {
@@ -394,6 +429,7 @@
 				98DB7C4A1C4F4F360046D405 /* CommonUtil */,
 				98DB7C3D1C4F2F490046D405 /* Constant */,
 				982F0C671C4E2C5F00593946 /* Service */,
+				980C6A671D6BE27A00BDF47F /* Model */,
 				98DB7C751C4F80BE0046D405 /* SourceImage */,
 				989B2C521C4DE7AA00F14EFA /* Assets.xcassets */,
 				989B2C571C4DE7AA00F14EFA /* Info.plist */,
@@ -780,7 +816,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewCentury/Pods-NewCentury-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-sy-pointReg/Pods-sy-pointReg-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		868FB01EE503F4028CBD07A2 /* [CP] Check Pods Manifest.lock */ = {
@@ -810,7 +846,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewCentury/Pods-NewCentury-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-sy-pointReg/Pods-sy-pointReg-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -824,11 +860,14 @@
 				981F30251CE05C0800F39537 /* ZESettingVC.m in Sources */,
 				98DB7C501C4F4FA70046D405 /* ZEUtil.m in Sources */,
 				98AEA3551CD1AFCC001C4AED /* ZEUserCenterVC.m in Sources */,
+				98947EA81D6C44A100D1EE24 /* ZEV_EPM_TEAM_RATION_APP.m in Sources */,
 				984BFE011C97DD7300A117FD /* ZEPointRegChooseCountView.m in Sources */,
+				980C6A6A1D6BE2C500BDF47F /* ZEUUM_FUNCTION_MODEL.m in Sources */,
 				98DB7C741C4F7D8E0046D405 /* ZEScanQRViewController.m in Sources */,
 				98AEA33A1CD061D0001C4AED /* ZEMainView.m in Sources */,
 				9858D3211C5EF19800937D54 /* ZEAlertSearchView.m in Sources */,
 				987B34A01C50CE540035FB6B /* ZEPointRegCache.m in Sources */,
+				98947EAE1D6D77A400D1EE24 /* ZEEPM_TEAM_RATIONTYPE.m in Sources */,
 				986F19FD1CAD1B4A00B081E3 /* ZESettingRootVC.m in Sources */,
 				98AEA33B1CD061D0001C4AED /* ZEMainViewController.m in Sources */,
 				989B2C4B1C4DE7AA00F14EFA /* ZEAppDelegate.m in Sources */,
@@ -841,6 +880,7 @@
 				984F0DE71C75539D008106A5 /* ZEPointAuditModel.m in Sources */,
 				982CEA071C741E59008693C2 /* ZEHistoryDetailVC.m in Sources */,
 				98DB7C711C4F7D790046D405 /* ZEHistoryViewController.m in Sources */,
+				98947EAB1D6C4D2800D1EE24 /* ZEEPM_TEAM_RATION_COMMON.m in Sources */,
 				982CEA111C744A11008693C2 /* ZEPointAuditView.m in Sources */,
 				982CEA0A1C741E77008693C2 /* ZEHistoryDetailView.m in Sources */,
 				9845DEC81D6AABC600895F1A /* ZELoginViewController.m in Sources */,
@@ -988,7 +1028,7 @@
 		};
 		989B2C711C4DE7AA00F14EFA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 755C225354A400252DA198A4 /* Pods-NewCentury.debug.xcconfig */;
+			baseConfigurationReference = CD01B761E5517D855B3C55EA /* Pods-sy-pointReg.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1009,13 +1049,13 @@
 				WARNING_CFLAGS = "";
 				ZENITH_APPNAME = "邵阳工分登记Debug";
 				ZENITH_BUNDLEID = "com.zenithElec.sy-pointReg-Debug";
-				ZENITH_SERVER = "http://192.168.0.142:9090/emarkspg";
+				ZENITH_SERVER = "http://120.27.152.63:8056/emarkspg_sy";
 			};
 			name = Debug;
 		};
 		989B2C721C4DE7AA00F14EFA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3DA4BA9D0C5C165BF5EE4A19 /* Pods-NewCentury.release.xcconfig */;
+			baseConfigurationReference = C4439B9DE48C22DEFB398478 /* Pods-sy-pointReg.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1035,7 +1075,7 @@
 				WARNING_CFLAGS = "";
 				ZENITH_APPNAME = "邵阳工分登记";
 				ZENITH_BUNDLEID = "com.zenithElec.sy-pointReg-Release";
-				ZENITH_SERVER = "http://192.168.0.142:9090/emarkspg";
+				ZENITH_SERVER = "http://120.27.152.63:8056/emarkspg_sy";
 			};
 			name = Release;
 		};

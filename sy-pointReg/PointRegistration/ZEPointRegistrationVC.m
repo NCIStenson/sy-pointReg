@@ -12,6 +12,8 @@
 #import "MBProgressHUD.h"
 #import "ZEUserServer.h"
 
+#import "ZEEPM_TEAM_RATIONTYPE.h"
+
 @interface ZEPointRegistrationVC ()<ZEPointRegistrationViewDelegate>
 {
     ZEPointRegistrationView * _pointView;
@@ -28,13 +30,170 @@
     self.navigationController.navigationBarHidden = YES;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    _pointView = [[ZEPointRegistrationView alloc]initWithFrame:self.view.frame withEnterType:_enterType];
+    _pointView = [[ZEPointRegistrationView alloc]initWithFrame:self.view.frame];
     _pointView.delegate = self;
     _pointView.historyModel = _hisModel;
     [self.view addSubview:_pointView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAllTaskView) name:kShowAllTaskList object:nil];
     
+    [self cacheShareType];
+}
+#pragma mark - 缓存分摊类型
+
+-(void)cacheShareType
+{
+    if ([[[ZEPointRegCache instance] getDistributionTypeCaches] count] > 0) {
+        return;
+    }
+    NSDictionary * parametersDic = @{@"limit":@"20",
+                                     @"MASTERTABLE":EPM_TEAM_RATIONTYPE,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"DISPLAYORDER",
+                                     @"WHERESQL":@"pagetype = '1' and isselect = 'true' and suitunit = (case (select count(*) from epm_team_rationtype c where c.suitunit = '#SUITUNIT#') when 0 then '-1' else '#SUITUNIT#' end)",
+                                     @"start":@"0",
+                                     @"METHOD":@"search",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     @"DETAILTABLE":@"",};
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATIONTYPE]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                 NSArray * arr =[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPE];
+                                 [[ZEPointRegCache instance] setDistributionTypeCaches:arr];
+                                 for (NSDictionary * dic in arr) {
+                                     ZEEPM_TEAM_RATIONTYPE * model = [ZEEPM_TEAM_RATIONTYPE getDetailWithDic:dic];
+                                     [self cacheDistributionTypeCoefficientWithCode:model.RATIONTYPECODE];
+                                 }
+                                 
+                                 
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+    
+}
+
+-(void)cacheDistributionTypeCoefficientWithCode:(NSString *)rationCode
+{
+    NSString * WHERESQL = [NSString stringWithFormat:@"rationtypecode = '%@' and isselect = 'true' and suitunit = (case (select count(*) from epm_team_rationtype c where c.suitunit = 'XYSDLJ') when 0 then '-1' else 'XYSDLJ' end)",rationCode];
+    NSDictionary * parametersDic = @{@"limit":@"20",
+                                     @"MASTERTABLE":EPM_TEAM_RATIONTYPEDETAIL,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"DISPLAYORDER",
+                                     @"WHERESQL":WHERESQL,
+                                     @"start":@"0",
+                                     @"METHOD":@"search",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     @"DETAILTABLE":@"",};
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATIONTYPEDETAIL]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 NSLog(@"data>>>  %@",data);
+                                 NSArray * arr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEDETAIL];
+                                 if (arr.count > 0) {
+                                     [[ZEPointRegCache instance] setDistributionTypeCoefficient:@{rationCode:arr}];
+                                 }
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+}
+
+#pragma mark - 缓存常用任务列表
+
+-(void)cacheTaskData:(ZEPointRegistrationView *)pointRegView
+{
+    if ([[[ZEPointRegCache instance] getTaskCaches] count] > 0) {
+        return;
+    }
+
+    NSDictionary * parametersDic = @{@"limit":@"20",
+                                     @"MASTERTABLE":EPM_TEAM_RATION_COMMON,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"DISPLAYORDER",
+                                     @"WHERESQL":@"SYSCREATORID = '#PSNNUM#' and suitunit='#SUITUNIT#'",
+                                     @"start":@"0",
+                                     @"METHOD":@"search",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     @"DETAILTABLE":@"",};
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_COMMON]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                 NSArray * arr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_COMMON];
+                                 [[ZEPointRegCache instance] setTaskCaches:arr];
+                                 [pointRegView showListView:arr withLevel:TASK_LIST_LEVEL_JSON withPointReg:POINT_REG_TASK];
+
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+}
+
+#pragma mark - 缓存全部任务列表
+
+-(void)cacheAllTaskData
+{
+    if ([[[ZEPointRegCache instance] getAllTaskCaches] count] > 0) {
+        return;
+    }
+    //第一条记录结束
+    // 参数区域赋值
+    
+    NSDictionary * parametersDic = @{@"limit":@"20",
+                                     @"MASTERTABLE":V_EPM_TEAM_RATION_APP,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"DISPLAYORDER",
+                                     @"WHERESQL":@"orgcode in (#TEAMORGCODES#) and suitunit='#SUITUNIT#'",
+                                     @"start":@"0",
+                                     @"METHOD":@"search",
+                                     @"DETAILTABLE":@"",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[V_EPM_TEAM_RATION_APP]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                 NSArray * arr = [ZEUtil getServerData:data withTabelName:V_EPM_TEAM_RATION_APP];
+                                 [[ZEPointRegCache instance] setAllTaskCaches:arr];
+                                 [_pointView showTaskView:arr];
+                                 
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
 }
 
 -(void)dealloc
@@ -45,33 +204,12 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    if (_enterType == ENTER_POINTREG_TYPE_SCAN) {
-        [self getDataByCodeStr];
-    }
 }
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:YES];
 }
 
--(void)getDataByCodeStr
-{
-    [_pointView showProgress];
-//    [ZEUserServer getServerDataByCodeStr:_codeStr Success:^(id data) {
-//        [_pointView hiddenProgress];
-//        if (![ZEUtil isNotNull:[data objectForKey:@"data"]]) {
-//            [self showAlertView:@"查询不到该二维码任务信息，请确定二维码正确后，重新扫描查询" goBack:YES];
-//        }else{
-//            NSDictionary * dataDic = [data objectForKey:@"data"];
-//            [[ZEPointRegCache instance] setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_TASK]:dataDic}];
-//            [[ZEPointRegCache instance] setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_TYPE]:[dataDic objectForKey:@"dispatchType"]}];
-//            [[ZEPointRegCache instance] setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]:@"1"}];
-//            [_pointView reloadContentView:ENTER_POINTREG_TYPE_SCAN];
-//        }
-//    } fail:^(NSError *errorCode) {
-//        [_pointView hiddenProgress];
-//    }];
-}
 
 #pragma mark - Private Method
 /**
@@ -103,6 +241,41 @@
 
 #pragma mark - ZEPointRegistrationViewDelegate
 
+-(void)getTaskDetail:(NSString *)SEQKEY
+{
+    NSString * WHERESQL = [NSString stringWithFormat:@"SEQKEY=%@",SEQKEY];
+    NSDictionary * parametersDic = @{@"limit":@"20",
+                                     @"MASTERTABLE":EPM_TEAM_RATION,
+                                     @"MENUAPP":@"EMARK_APP",
+//                                     @"ORDERSQL":@"DISPLAYORDER",
+                                     @"WHERESQL":WHERESQL,
+                                     @"start":@"0",
+                                     @"METHOD":@"search",
+                                     @"DETAILTABLE":@"",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                 NSArray * taskDatas = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION];
+                                 if ([ZEUtil isNotNull:taskDatas]) {
+                                     [[ZEPointRegCache instance] setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_TASK]:taskDatas[0]}];
+                                 }
+                                 [_pointView reloadContentView];
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+}
+
 -(void)goBack
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -114,34 +287,30 @@
 
 -(void)goSubmit:(ZEPointRegistrationView *)pointRegView withShowRoles:(BOOL)showRoles withShowCount:(BOOL)showCount
 {
-    if (_enterType == ENTER_POINTREG_TYPE_HISTORY) {
-        [self resubmitPointReg:[[ZEPointRegCache instance] getResubmitCachesDic]];
-    }else{
         NSDictionary * choosedDic = [[ZEPointRegCache instance] getUserChoosedOptionDic];
 
-        if(![ZEUtil isNotNull:[choosedDic objectForKey:[ZEUtil getPointRegField:POINT_REG_TASK]]]){
-            [self showAlertView:[NSString stringWithFormat:@"请选择%@",[ZEUtil getPointRegInformation:POINT_REG_TASK]] goBack:NO];
-            return;
-        }
+//        if(![ZEUtil isNotNull:[choosedDic objectForKey:[ZEUtil getPointRegField:POINT_REG_TASK]]]){
+//            [self showAlertView:[NSString stringWithFormat:@"请选择%@",[ZEUtil getPointRegInformation:POINT_REG_TASK]] goBack:NO];
+//            return;
+//        }
         
         NSString* date;
         NSDateFormatter* formatter = [[NSDateFormatter alloc]init];
         [formatter setDateFormat:@"YYYY-MM-dd"];
         date = [formatter stringFromDate:[NSDate date]];
         
-        if([ZEUtil compareDate:date
-                      withDate:[choosedDic objectForKey:[ZEUtil getPointRegField:POINT_REG_TIME]]] == 1){
-            [self showAlertView:[NSString stringWithFormat:@"发生日期不能大于今天"] goBack:NO];
-            return;
-        }
-
-        if(showRoles && ![ZEUtil isNotNull:[choosedDic objectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]]]){
-            [self showAlertView:[NSString stringWithFormat:@"请选择%@",[ZEUtil getPointRegInformation:POINT_REG_JOB_ROLES]] goBack:NO];
-            return;
-        }
-                
+//        if([ZEUtil compareDate:date
+//                      withDate:[choosedDic objectForKey:[ZEUtil getPointRegField:POINT_REG_TIME]]] == 1){
+//            [self showAlertView:[NSString stringWithFormat:@"发生日期不能大于今天"] goBack:NO];
+//            return;
+//        }
+//
+//        if(showRoles && ![ZEUtil isNotNull:[choosedDic objectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]]]){
+//            [self showAlertView:[NSString stringWithFormat:@"请选择%@",[ZEUtil getPointRegInformation:POINT_REG_JOB_ROLES]] goBack:NO];
+//            return;
+//        }
+        
         [self submitMessageToServer:choosedDic withView:pointRegView];
-    }
 }
 -(void)resubmitPointReg:(NSDictionary *)dic
 {
@@ -150,24 +319,24 @@
     [formatter setDateFormat:@"YYYY-MM-dd"];
     date = [formatter stringFromDate:[NSDate date]];
     
-    if([ZEUtil compareDate:date
-                  withDate:[dic objectForKey:[ZEUtil getPointRegField:POINT_REG_TIME]]] == 1){
-        [self showAlertView:[NSString stringWithFormat:@"发生日期不能大于今天"] goBack:NO];
-        return;
-    }
+//    if([ZEUtil compareDate:date
+//                  withDate:[dic objectForKey:[ZEUtil getPointRegField:POINT_REG_TIME]]] == 1){
+//        [self showAlertView:[NSString stringWithFormat:@"发生日期不能大于今天"] goBack:NO];
+//        return;
+//    }
     
-    if([[dic objectForKey:@"shareType"] integerValue] == 1 || [[dic objectForKey:@"shareType"] integerValue] == 4){
-        NSObject * roleDic = [dic objectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
-        if ([roleDic isKindOfClass:[NSDictionary class]]) {
-            if (![ZEUtil isStrNotEmpty:[(NSDictionary *)roleDic objectForKey:@"TWR_NAME"]]){
-                [self showAlertView:@"请选择角色" goBack:NO];
-                return;
-            }
-        }else if (![ZEUtil isStrNotEmpty:(NSString *)roleDic]){
-            [self showAlertView:@"请选择角色" goBack:NO];
-            return;
-        }
-    }
+//    if([[dic objectForKey:@"shareType"] integerValue] == 1 || [[dic objectForKey:@"shareType"] integerValue] == 4){
+//        NSObject * roleDic = [dic objectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
+//        if ([roleDic isKindOfClass:[NSDictionary class]]) {
+//            if (![ZEUtil isStrNotEmpty:[(NSDictionary *)roleDic objectForKey:@"TWR_NAME"]]){
+//                [self showAlertView:@"请选择角色" goBack:NO];
+//                return;
+//            }
+//        }else if (![ZEUtil isStrNotEmpty:(NSString *)roleDic]){
+//            [self showAlertView:@"请选择角色" goBack:NO];
+//            return;
+//        }
+//    }
     
     [_pointView showProgress];
 //    [ZEUserServer updateTask:dic success:^(id data) {
@@ -187,11 +356,11 @@
 
 -(void)submitMessageToServer:(NSDictionary *)dic withView:(ZEPointRegistrationView *)pointRegView
 {
-    NSMutableDictionary * dataDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-
-    if(![ZEUtil isNotNull:[dataDic objectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]]]){
-        [dataDic setValue:@"1" forKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
-    }
+//    NSMutableDictionary * dataDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+//
+//    if(![ZEUtil isNotNull:[dataDic objectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]]]){
+//        [dataDic setValue:@"1" forKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
+//    }
     
 //    [dataDic setValue:[ZESetLocalData getNumber] forKey:@"userid"];
 //    [dataDic setValue:[ZESetLocalData getUsername] forKey:@"username"];
@@ -223,13 +392,11 @@
     
 }
 
--(void)view:(ZEPointRegistrationView *)pointRegView didSelectRowAtIndexpath:(NSIndexPath *)indexpath withShowRules:(BOOL)showRules
+-(void)view:(ZEPointRegistrationView *)pointRegView didSelectRowAtIndexpath:(NSIndexPath *)indexpath
 {
     switch (indexpath.row) {
         case 0:
-            if(_enterType != ENTER_POINTREG_TYPE_SCAN){
-                [self showTaskView:pointRegView];
-            }
+            [self showTaskView:pointRegView];
             break;
         case 1:
             [self showChooseDateView:pointRegView];
@@ -245,11 +412,7 @@
             break;
         case POINT_REG_JOB_ROLES:
         {
-            if (showRules) {
-                [self showWorkRolesView:pointRegView];
-            }else{
-                [self showChooseCountView:pointRegView];
-            }
+
         }
             break;
         default:
@@ -267,17 +430,7 @@
     if (taskCacheArr.count > 0) {
         [pointRegView showListView:taskCacheArr withLevel:TASK_LIST_LEVEL_JSON withPointReg:POINT_REG_TASK];
     }else{
-        [MBProgressHUD showHUDAddedTo:pointRegView animated:YES];
-//        [ZEUserServer getTaskDataSuccess:^(id data) {
-//            [MBProgressHUD hideAllHUDsForView:pointRegView animated:YES];
-//            if ([ZEUtil isNotNull:[data objectForKey:@"data"]]) {
-//                [[ZEPointRegCache instance] setTaskCaches:[data objectForKey:@"data"]];
-//                [pointRegView showListView:[data objectForKey:@"data"] withLevel:TASK_LIST_LEVEL_JSON withPointReg:POINT_REG_TASK];
-//            }
-//        } fail:^(NSError *errorCode) {
-//            [MBProgressHUD hideAllHUDsForView:pointRegView animated:YES];
-//
-//        }];
+        [self cacheTaskData:pointRegView];
     }
 }
 
@@ -289,41 +442,31 @@
     if (allTaskCacheArr.count > 0) {
         [_pointView showTaskView:allTaskCacheArr];
     }else{
-        [MBProgressHUD showHUDAddedTo:_pointView animated:YES];
-//        [ZEUserServer getAllTaskDataSuccess:^(id data) {
-//            [MBProgressHUD hideAllHUDsForView:_pointView animated:YES];
-//            if ([ZEUtil isNotNull:[data objectForKey:@"data"]]) {
-//                [[ZEPointRegCache instance] setAllTaskCaches:[data objectForKey:@"data"]];
-//                [_pointView showTaskView:[data objectForKey:@"data"]];
-//            }
-//        } fail:^(NSError *errorCode) {
-//            [MBProgressHUD hideAllHUDsForView:_pointView animated:YES];
-//            
-//        }];
+        [self cacheAllTaskData];
     }
 }
 
 #pragma mark - 难度系数
 -(void)showDiffCoeView:(ZEPointRegistrationView *)pointRegView
 {
-    NSArray * diffCoeCacheArr = nil;
-    diffCoeCacheArr = [[ZEPointRegCache instance] getDiffCoeCaches];
-    
-    if (diffCoeCacheArr.count > 0) {
-        [pointRegView showListView:diffCoeCacheArr withLevel:TASK_LIST_LEVEL_JSON withPointReg:POINT_REG_DIFF_DEGREE];
-    }else{
-        [MBProgressHUD showHUDAddedTo:pointRegView animated:YES];
-//        [ZEUserServer getDiffCoeSuccess:^(id data) {
-//            [MBProgressHUD hideAllHUDsForView:pointRegView animated:YES];
-//            if ([ZEUtil isNotNull:[data objectForKey:@"data"]]) {
-//                [[ZEPointRegCache instance] setDiffCoeCaches:[data objectForKey:@"data"]];
-//                [pointRegView showListView:[data objectForKey:@"data"] withLevel:TASK_LIST_LEVEL_JSON withPointReg:POINT_REG_DIFF_DEGREE];
-//            }
-//        } fail:^(NSError *errorCode) {
-//            [MBProgressHUD hideAllHUDsForView:pointRegView animated:YES];
-//            
-//        }];
-    }
+//    NSArray * diffCoeCacheArr = nil;
+//    diffCoeCacheArr = [[ZEPointRegCache instance] getDiffCoeCaches];
+//    
+//    if (diffCoeCacheArr.count > 0) {
+////        [pointRegView showListView:diffCoeCacheArr withLevel:TASK_LIST_LEVEL_JSON withPointReg:POINT_REG_DIFF_DEGREE];
+//    }else{
+//        [MBProgressHUD showHUDAddedTo:pointRegView animated:YES];
+////        [ZEUserServer getDiffCoeSuccess:^(id data) {
+////            [MBProgressHUD hideAllHUDsForView:pointRegView animated:YES];
+////            if ([ZEUtil isNotNull:[data objectForKey:@"data"]]) {
+////                [[ZEPointRegCache instance] setDiffCoeCaches:[data objectForKey:@"data"]];
+////                [pointRegView showListView:[data objectForKey:@"data"] withLevel:TASK_LIST_LEVEL_JSON withPointReg:POINT_REG_DIFF_DEGREE];
+////            }
+////        } fail:^(NSError *errorCode) {
+////            [MBProgressHUD hideAllHUDsForView:pointRegView animated:YES];
+////            
+////        }];
+//    }
     
 }
 
@@ -333,7 +476,7 @@
     timeCoeCacheArr = [[ZEPointRegCache instance] getTimesCoeCaches];
     
     if (timeCoeCacheArr.count > 0) {
-        [pointRegView showListView:timeCoeCacheArr withLevel:TASK_LIST_LEVEL_JSON withPointReg:POINT_REG_TIME_DEGREE];
+//        [pointRegView showListView:timeCoeCacheArr withLevel:TASK_LIST_LEVEL_JSON withPointReg:POINT_REG_TIME_DEGREE];
     }else{
         [MBProgressHUD showHUDAddedTo:pointRegView animated:YES];
 //        [ZEUserServer getTimeCoeSuccess:^(id data) {

@@ -13,7 +13,7 @@
 #define kMaxHeight SCREEN_HEIGHT * 0.7
 
 #import "ZEPointRegOptionView.h"
-#import "ZEPointRegModel.h"
+#import "ZEV_EPM_TEAM_RATION_APP.h"
 
 @interface ZEPointRegOptionView ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -117,18 +117,8 @@
                 cell.textLabel.font = [UIFont systemFontOfSize:13];
                 return cell;
             }
-            ZEPointRegModel * model = [ZEPointRegModel getDetailWithDic:_optionsArray[indexPath.row]];
-            cell.textLabel.text = [NSString stringWithFormat:@"%@(%@)",model.TR_NAME,model.TR_HOUR];
-;
-        }else if (_pointReg == POINT_REG_DIFF_DEGREE){
-            ZEPointRegModel * model = [ZEPointRegModel getDetailWithDic:_optionsArray[indexPath.row]];
-            cell.textLabel.text = model.NDXS_LEVEL;
-        }else if (_pointReg == POINT_REG_TIME_DEGREE){
-            ZEPointRegModel * model = [ZEPointRegModel getDetailWithDic:_optionsArray[indexPath.row]];
-            cell.textLabel.text = model.NDXS_LEVEL;
-        }else if (_pointReg == POINT_REG_JOB_ROLES){
-            ZEPointRegModel * model = [ZEPointRegModel getDetailWithDic:_optionsArray[indexPath.row]];
-            cell.textLabel.text = model.TWR_NAME;
+            ZEV_EPM_TEAM_RATION_APP * model = [ZEV_EPM_TEAM_RATION_APP getDetailWithDic:_optionsArray[indexPath.row]];
+            cell.textLabel.text = [NSString stringWithFormat:@"%@",model.RATIONNAME];
         }
     }else{
         cell.textLabel.text = _optionsArray[indexPath.row];

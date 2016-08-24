@@ -17,8 +17,6 @@
  * 手动点入不请求
  * 历史进入工分登记页面
  */
-@property (nonatomic,assign) ENTER_POINTREG_TYPE enterType;
-
 @property (nonatomic,retain) ZEHistoryModel * hisModel;     // 从历史界面进入工分登记修改数据
 
 @end

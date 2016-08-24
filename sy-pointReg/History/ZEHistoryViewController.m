@@ -62,8 +62,8 @@
 
 -(void)sendRequest
 {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    NSString * str = @"null";
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    NSString * str = @"null";
 //    [ZEUserServer getHistoryDataByStartDate:str
 //                                    endDate:str
 //                                       page:[NSString stringWithFormat:@"%ld",(long)_currentPage]
@@ -183,7 +183,6 @@
         
         NSMutableDictionary * historyDic = [NSMutableDictionary dictionary];
         
-        [historyDic setObject:hisMod.TT_ENDDATE forKey:[ZEUtil getPointRegField:POINT_REG_TIME]];
         [historyDic setObject:hisMod.NDXS forKey:@"ndxs"];
         [historyDic setObject:hisMod.TT_HOUR forKey:@"hour"];
         [historyDic setObject:hisMod.TT_TASK forKey:@"woekername"];
@@ -200,28 +199,27 @@
         [historyDic setObject:hisMod.SJXSScore  forKey:@"sjxsScore"];
         [historyDic setObject:hisMod.NDXSScore  forKey:@"ndxsScore"];
 
-        if ([ZEUtil isNotNull:hisMod.TIMES]) {
-            [historyDic setObject:hisMod.TIMES forKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
-        }else{
-            [historyDic setObject:@"1" forKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
-        }
-        if ([ZEUtil isNotNull:hisMod.TWR_ID]) {
-            [historyDic setObject:hisMod.TWR_ID forKey:@"twr_id"];
-        }else{
-            [historyDic setObject:@"" forKey:@"twr_id"];
-        }
-        
-        if ([ZEUtil isNotNull:hisMod.ROLENAME] && [ZEUtil isNotNull:hisMod.TTP_QUOTIETY]) {
-            [historyDic setObject:hisMod.ROLENAME forKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
-
-        }else{
-            [historyDic setObject:@"" forKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
-        }
-
-        [[ZEPointRegCache instance] setResubmitCaches:historyDic];
+//        if ([ZEUtil isNotNull:hisMod.TIMES]) {
+//            [historyDic setObject:hisMod.TIMES forKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
+//        }else{
+//            [historyDic setObject:@"1" forKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
+//        }
+//        if ([ZEUtil isNotNull:hisMod.TWR_ID]) {
+//            [historyDic setObject:hisMod.TWR_ID forKey:@"twr_id"];
+//        }else{
+//            [historyDic setObject:@"" forKey:@"twr_id"];
+//        }
+//        
+//        if ([ZEUtil isNotNull:hisMod.ROLENAME] && [ZEUtil isNotNull:hisMod.TTP_QUOTIETY]) {
+//            [historyDic setObject:hisMod.ROLENAME forKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
+//
+//        }else{
+//            [historyDic setObject:@"" forKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
+//        }
+//
+//        [[ZEPointRegCache instance] setResubmitCaches:historyDic];
 
         ZEPointRegistrationVC * pointRegVC = [[ZEPointRegistrationVC alloc]init];
-        pointRegVC.enterType               = ENTER_POINTREG_TYPE_HISTORY;
         pointRegVC.hisModel                = hisMod;
         [self presentViewController:pointRegVC animated:YES completion:nil];
     }else{
@@ -235,7 +233,7 @@
 
 -(void)deleteHistory:(NSString *)seqkey
 {
-    __block ZEHistoryViewController * safeSelf = self;
+//    __block ZEHistoryViewController * safeSelf = self;
 //    [ZEUserServer deleteHistoryItem:seqkey success:^(id data) {
 //        if ([ZEUtil isNotNull:data]) {
 //            if ([[data objectForKey:@"data"] integerValue] == 1) {

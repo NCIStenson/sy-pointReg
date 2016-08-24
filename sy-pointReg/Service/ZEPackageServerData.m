@@ -51,7 +51,7 @@
 
 -(NSDictionary *)PARAMETERS
 {
-    NSDictionary * dic =@{@"PARA":@[@{@"name":@"NOSUITUNIT",@"value":@"true"}]};
+    NSDictionary * dic =@{@"PARA":@[]};
     return dic;
 }
 

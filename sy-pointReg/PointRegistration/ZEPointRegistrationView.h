@@ -16,7 +16,7 @@
 /**
  *  选择工分登记界面row
  */
--(void)view:(ZEPointRegistrationView *)pointRegView didSelectRowAtIndexpath:(NSIndexPath *)indexpath withShowRules:(BOOL)showRules;
+-(void)view:(ZEPointRegistrationView *)pointRegView didSelectRowAtIndexpath:(NSIndexPath *)indexpath;
 
 /**
  *  提交
@@ -28,6 +28,15 @@
  */
 -(void)goBack;
 
+/**
+ *  @author Stenson, 16-08-24 11:08:14
+ *
+ *  获取任务详情
+ *
+ *  @param SEQKEY 任务主键
+ */
+-(void)getTaskDetail:(NSString *)SEQKEY;
+
 @end
 
 @interface ZEPointRegistrationView : UIView
@@ -35,7 +44,7 @@
 @property (nonatomic,retain) ZEHistoryModel * historyModel;     // 从历史界面进入工分登记修改数据
 @property (nonatomic,assign) id <ZEPointRegistrationViewDelegate> delegate;
 
--(id)initWithFrame:(CGRect)rect withEnterType:(ENTER_POINTREG_TYPE)enterType;
+-(id)initWithFrame:(CGRect)rect;
 
 -(void)showListView:(NSArray *)listArr withLevel:(TASK_LIST_LEVEL)level withPointReg:(POINT_REG)pointReg;
 /**
@@ -54,7 +63,7 @@
 /**
  *  刷新表
  */
--(void)reloadContentView:(ENTER_POINTREG_TYPE)entertype;
+-(void)reloadContentView;
 
 /**
  *  显示隐藏加载菊花

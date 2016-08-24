@@ -12,7 +12,7 @@
 #define kMaxHeight SCREEN_HEIGHT * 0.7
 
 #import "ZEPointChooseTaskView.h"
-#import "ZEPointRegModel.h"
+#import "ZEV_EPM_TEAM_RATION_APP.h"
 
 @interface ZEPointChooseTaskView ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -48,13 +48,13 @@
     NSMutableArray * contArray = [NSMutableArray array];
     
     for (int i = 0; i < _optionsArray.count; i ++) {
-        ZEPointRegModel * regModel = [ZEPointRegModel getDetailWithDic:_optionsArray[i]];
+        ZEV_EPM_TEAM_RATION_APP * regModel = [ZEV_EPM_TEAM_RATION_APP getDetailWithDic:_optionsArray[i]];
         
         if (_kindTaskArr.count > 0) {
-            if([regModel.TRC_NAME isEqualToString:[_kindTaskArr lastObject]]){
+            if([regModel.CATEGORYNAME isEqualToString:[_kindTaskArr lastObject]]){
                 [contArray addObject:_optionsArray[i]];
             }else{
-                [_kindTaskArr addObject:regModel.TRC_NAME];
+                [_kindTaskArr addObject:regModel.CATEGORYNAME];
                 [_detailTaskArr addObject:contArray];
                 contArray = [NSMutableArray array];
                 [contArray addObject:_optionsArray[i]];
@@ -63,13 +63,16 @@
                 [_detailTaskArr addObject:contArray];
             }
         }else{
-            [_kindTaskArr addObject:regModel.TRC_NAME];
+            [_kindTaskArr addObject:regModel.CATEGORYNAME];
             [contArray addObject:_optionsArray[i]];
             if (i == _optionsArray.count - 1) {
                 [_detailTaskArr addObject:contArray];
             }
         }
     }
+    
+    NSLog(@">> %@  %@    %@",_optionsArray,_detailTaskArr,_kindTaskArr);
+    
     
     _maskArr = [NSMutableArray array];
     for (int i = 0; i < _kindTaskArr.count; i ++) {
@@ -168,8 +171,8 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    ZEPointRegModel * model = [ZEPointRegModel getDetailWithDic:_detailTaskArr[indexPath.section][indexPath.row]];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@(%@)",model.TR_NAME,model.TR_HOUR];
+    ZEV_EPM_TEAM_RATION_APP * model = [ZEV_EPM_TEAM_RATION_APP getDetailWithDic:_detailTaskArr[indexPath.section][indexPath.row]];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@",model.RATIONNAME];
     cell.textLabel.font = [UIFont systemFontOfSize:13];
     cell.textLabel.textColor = MAIN_COLOR;
     

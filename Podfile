@@ -1,6 +1,6 @@
 platform :ios, '7.0'
 inhibit_all_warnings!
-target 'NewCentury' do
+target 'sy-pointReg' do
    pod 'MJRefresh', '~> 3.1.0'
    pod 'MBProgressHUD', '~> 0.9.2'
    pod 'Masonry', '~> 0.6.4'

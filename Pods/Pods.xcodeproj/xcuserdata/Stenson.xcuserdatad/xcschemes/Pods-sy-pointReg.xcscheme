@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'D4AAA099831D74AB3B0BB480AC13EA72'
-               BlueprintName = 'Pods-NewCentury'
+               BlueprintIdentifier = '7988F9A93041C3E9920E6994581065BB'
+               BlueprintName = 'Pods-sy-pointReg'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'libPods-NewCentury.a'>
+               BuildableName = 'libPods-sy-pointReg.a'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

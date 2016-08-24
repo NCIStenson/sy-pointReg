@@ -20,9 +20,12 @@
 @property(nonatomic,retain) NSMutableDictionary * optionDic;
 @property(nonatomic,retain) NSMutableDictionary * scanOptionDic;
 @property(nonatomic,retain) NSMutableDictionary * resubmitDataDic;
+
+@property (nonatomic,strong) NSMutableDictionary * disTypeCoefficientDic;
+
 @property (nonatomic,retain) NSArray * taskCachesArr;
 @property (nonatomic,retain) NSArray * allTaskCachesArr;
-@property (nonatomic,retain) NSArray * diffCoeCachesArr;
+@property (nonatomic,retain) NSArray * distributionTypeArr;
 @property (nonatomic,retain) NSArray * timesCoeCachesArr;
 @property (nonatomic,retain) NSArray * workRulesCachesArr;
 
@@ -36,7 +39,7 @@ static ZEPointRegCache * pointRegCahe = nil;
 {
     self = [super init];
     if (self) {
-//        self.optionDic = [NSMutableDictionary dictionary];
+        self.disTypeCoefficientDic = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -77,18 +80,28 @@ static ZEPointRegCache * pointRegCahe = nil;
 {
     return self.allTaskCachesArr;
 }
-
+/**
+ *  存储用户第一次请求分配类型系数列表，APP运行期间 只请求一次分配类型系数列表
+ */
+- (void)setDistributionTypeCoefficient:(NSDictionary *)dic
+{
+    [self.disTypeCoefficientDic setValuesForKeysWithDictionary:dic];
+}
+- (NSDictionary *)getDistributionTypeCoefficient
+{
+    return self.disTypeCoefficientDic;
+}
 
 /**
- *  存储用户第一次请求 难度系数 列表，APP运行期间 只请求一次 难度系数 列表
+ *  存储用户第一次请求 分摊类型 列表，APP运行期间 只请求一次 难度系数 列表
  */
-- (void)setDiffCoeCaches:(NSArray *)diffCoeArr
+- (void)setDistributionTypeCaches:(NSArray *)disArr
 {
-    self.diffCoeCachesArr = diffCoeArr;
+    self.distributionTypeArr = disArr;
 }
-- (NSArray *)getDiffCoeCaches
+- (NSArray *)getDistributionTypeCaches
 {
-    return self.diffCoeCachesArr;
+    return  self.distributionTypeArr;
 }
 /**
  *  存储用户第一次请求时间系数列表，APP运行期间 只请求一次时间系数列表
@@ -175,10 +188,10 @@ static ZEPointRegCache * pointRegCahe = nil;
  */
 -(void)clearCount
 {
-    if ([ZEUtil isNotNull:[_optionDic objectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]]]) {
-        [_optionDic removeObjectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
-        [_resubmitDataDic removeObjectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
-    }
+//    if ([ZEUtil isNotNull:[_optionDic objectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]]]) {
+//        [_optionDic removeObjectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
+//        [_resubmitDataDic removeObjectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
+//    }
 }
 
 /**
@@ -186,10 +199,10 @@ static ZEPointRegCache * pointRegCahe = nil;
  */
 -(void)clearRoles
 {
-    if ([ZEUtil isNotNull:[_optionDic objectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]]]) {
-        [_optionDic removeObjectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
-        [_resubmitDataDic removeObjectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
-    }
+//    if ([ZEUtil isNotNull:[_optionDic objectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]]]) {
+//        [_optionDic removeObjectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
+//        [_resubmitDataDic removeObjectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
+//    }
 }
 /**
  *  清除用户选择过的信息

@@ -17,7 +17,7 @@
  *  @param object 选择的数据
  *  @param row    选择弹出框第几行
  */
--(void)didSelectOption:(NSDictionary *)object withRow:(NSInteger)row;
+-(void)didSelectOption:(id)object withRow:(NSInteger)row;
 
 /**
  *  隐藏常用列表弹出框

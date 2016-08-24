@@ -14,6 +14,8 @@
 
 #import "ZEMainViewController.h"
 #import "ZESettingVC.h"
+#import "ZEPointRegCache.h"
+
 @interface ZELoginViewController ()<ZELoginViewDelegate>
 
 @end
@@ -93,8 +95,13 @@
                            if ([[data objectForKey:@"RETMSG"] isEqualToString:@"null"]) {
                                 NSLog(@"登陆成功  %@",[data objectForKey:@"RETMSG"]);
                                [ZESettingLocalData setUSERNAME:username];
-                               [self commonRequest];
-                               [self isExpert];
+                               
+                               dispatch_queue_t queue = dispatch_queue_create("queue", DISPATCH_QUEUE_CONCURRENT);
+                               dispatch_async(queue, ^{
+                                   for (int i = 1; i < 7; i ++) {
+                                       [self cacheCoefficientDetail:i];
+                                   }
+                               });
                                [self goHome];
                            }else{
                                [ZESettingLocalData deleteCookie];
@@ -107,56 +114,44 @@
     
 }
 
-#pragma mark - 获取个人信息
+#pragma mark - 缓存工时登记界面下拉框选项数据
 
--(void)commonRequest
+-(void)cacheCoefficientDetail:(NSInteger)number
 {
-
-}
-
-#pragma mark - 查询该用户是否为专家
-
--(void)isExpert
-{
-//    NSDictionary * parametersDic = @{@"limit":@"20",
-//                                     @"MASTERTABLE":KLB_EXPERT_INFO,
-//                                     @"MENUAPP":@"EMARK_APP",
-//                                     @"ORDERSQL":@"",
-//                                     @"WHERESQL":@"",
-//                                     @"start":@"0",
-//                                     @"METHOD":@"search",
-//                                     @"MASTERFIELD":@"SEQKEY",
-//                                     @"DETAILFIELD":@"",
-//                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
-//                                     @"DETAILTABLE":@"",};
-//    
-//    NSDictionary * fieldsDic =@{@"USERCODE":[ZESettingLocalData getUSERNAME],
-//                                @"USERNAME":@"",
-//                                @"EXPERTDATE":@"",
-//                                @"EXPERTTYPE":@"",
-//                                @"STATUS":@"",
-//                                @"EXPERTFRADE":@"",
-//                                @"SEQKEY":@""};
-//    
-//    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[KLB_EXPERT_INFO]
-//                                                                           withFields:@[fieldsDic]
-//                                                                       withPARAMETERS:parametersDic
-//                                                                       withActionFlag:nil];
-//    
-//    [ZEUserServer getDataWithJsonDic:packageDic
-//                             success:^(id data) {
-//                                 NSDictionary * dataDic = [ZEUtil getServerDic:data withTabelName:KLB_EXPERT_INFO];
-//                                 if ([[dataDic objectForKey:@"totalCount"] integerValue] == 0) {
-//                                     [ZESettingLocalData setISEXPERT:NO];
-//                                 }else{
-//                                     [ZESettingLocalData setISEXPERT:YES];
+    
+    NSString * WHERESQL = [NSString stringWithFormat:@"suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode in (select case (select count(1) from EPM_TEAM_RATIONTYPEVALUE t where t.suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode = '#SECORGCODE#') when 0 then '-1' else '#SECORGCODE#' end from dual)",number,number];
+    NSDictionary * parametersDic = @{@"limit":@"20",
+                                     @"MASTERTABLE":EPM_TEAM_RATIONTYPEVALUE,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"DISPLAYORDER",
+                                     @"WHERESQL":WHERESQL,
+                                     @"start":@"0",
+                                     @"METHOD":@"search",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     @"DETAILTABLE":@"",};
+    
+    NSDictionary * fieldsDic =@{@"QUOTIETYCODE":@"",
+                                @"QUOTIETYNAME":@"",
+                                @"QUOTIETY":@""};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATIONTYPEVALUE]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 NSLog(@" 选项详情系数 ====  %@",data);
+//                                 NSArray * arr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEVALUE];
+//                                 if (arr.count > 0) {
+//                                     [[ZEPointRegCache instance] setDistributionTypeCoefficient:@{rationCode:arr}];
 //                                 }
-//                                 
-//                             } fail:^(NSError *errorCode) {
-//                                 NSLog(@">>  %@",errorCode);
-//                             }];
-}
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
 
+}
 
 -(void)showAlertView:(NSString *)alertMes
 {
@@ -186,15 +181,9 @@
     mainVC.tabBarItem.image = [UIImage imageNamed:@"icon_home"];
     UINavigationController * navVC = [[UINavigationController alloc]initWithRootViewController:mainVC];
     
-    ZESettingVC * settingVC = [[ZESettingVC alloc]init];
-    UINavigationController * settingNavVC = [[UINavigationController alloc]initWithRootViewController:settingVC];
-    settingVC.tabBarItem.title = @"设置";
-    settingVC.tabBarItem.image = [UIImage imageNamed:@"tab_setting_normal"];
-    UITabBarController * tabBarVC = [[UITabBarController alloc]init];
-    tabBarVC.viewControllers = @[navVC,settingNavVC];
 
     UIWindow * keyWindow = [UIApplication sharedApplication].keyWindow;
-    keyWindow.rootViewController = tabBarVC;
+    keyWindow.rootViewController = navVC;
 }
 
 

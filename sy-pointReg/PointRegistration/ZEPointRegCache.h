@@ -25,10 +25,17 @@
 - (NSArray *)getAllTaskCaches;
 
 /**
- *  存储用户第一次请求难度系数列表，APP运行期间 只请求一次难度系数列表
+ *  存储用户第一次请求分配系数列表，APP运行期间 只请求一次分配系数列表
 */
-- (void)setDiffCoeCaches:(NSArray *)diffCoeArr;
-- (NSArray *)getDiffCoeCaches;
+- (void)setDistributionTypeCaches:(NSArray *)disArr;
+- (NSArray *)getDistributionTypeCaches;
+
+
+/**
+ *  存储用户第一次请求分配类型系数列表，APP运行期间 只请求一次分配类型系数列表
+ */
+- (void)setDistributionTypeCoefficient:(NSDictionary *)dic;
+- (NSDictionary *)getDistributionTypeCoefficient;
 /**
  *  存储用户第一次请求时间系数列表，APP运行期间 只请求一次时间系数列表
  */

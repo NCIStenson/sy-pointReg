@@ -169,56 +169,56 @@
 //        cell.detailTextLabel.text = [ZESetLocalData getUsername];
     }
     
-    switch (row - 1) {
-        case POINT_REG_TASK:
-        {
-            cell.detailTextLabel.text = _historyModel.TT_TASK;
-        }
-            break;
-        case POINT_REG_TIME:
-        {
-            cell.detailTextLabel.text = _historyModel.TT_ENDDATE;
-        }
-            break;
-        case POINT_REG_WORKING_HOURS:
-        {
-            cell.detailTextLabel.text = _historyModel.TT_HOUR;
-        }
-            break;
-        case POINT_REG_TYPE:
-        {
-            cell.detailTextLabel.text = [ZEUtil getPointRegShareType:[_historyModel.DISPATCH_TYPE integerValue]];
-        }
-            break;
-        case POINT_REG_DIFF_DEGREE:
-        {
-            cell.detailTextLabel.text = _historyModel.NDSX_NAME;
-        }
-            break;
-            
-        case POINT_REG_TIME_DEGREE:
-        {
-            cell.detailTextLabel.text = _historyModel.SJSX_NAME;
-        }
-            break;
-        case POINT_REG_ALLSCORE:
-            cell.detailTextLabel.text = _historyModel.REAL_HOUR;
-            break;
-        case POINT_REG_JOB_ROLES:
-           {
-               if([_historyModel.DISPATCH_TYPE integerValue] == 1 ||[_historyModel.DISPATCH_TYPE integerValue] == 4 ){
-                   //按系数分配的情况
-                   cell.detailTextLabel.text = _historyModel.ROLENAME;
-               }else if ([_historyModel.DISPATCH_TYPE integerValue] == 3){
-                   cell.textLabel.text = [ZEUtil getPointRegInformation:row];
-                   cell.detailTextLabel.text = [NSString stringWithFormat: @"%@次",_historyModel.TIMES];
-               }
-            }
-            break;
-            
-        default:
-            break;
-    }
+//    switch (row - 1) {
+//        case POINT_REG_TASK:
+//        {
+//            cell.detailTextLabel.text = _historyModel.TT_TASK;
+//        }
+//            break;
+//        case POINT_REG_TIME:
+//        {
+//            cell.detailTextLabel.text = _historyModel.TT_ENDDATE;
+//        }
+//            break;
+//        case POINT_REG_WORKING_HOURS:
+//        {
+//            cell.detailTextLabel.text = _historyModel.TT_HOUR;
+//        }
+//            break;
+//        case POINT_REG_TYPE:
+//        {
+//            cell.detailTextLabel.text = [ZEUtil getPointRegShareType:[_historyModel.DISPATCH_TYPE integerValue]];
+//        }
+//            break;
+//        case POINT_REG_DIFF_DEGREE:
+//        {
+//            cell.detailTextLabel.text = _historyModel.NDSX_NAME;
+//        }
+//            break;
+//            
+//        case POINT_REG_TIME_DEGREE:
+//        {
+//            cell.detailTextLabel.text = _historyModel.SJSX_NAME;
+//        }
+//            break;
+//        case POINT_REG_ALLSCORE:
+//            cell.detailTextLabel.text = _historyModel.REAL_HOUR;
+//            break;
+//        case POINT_REG_JOB_ROLES:
+//           {
+//               if([_historyModel.DISPATCH_TYPE integerValue] == 1 ||[_historyModel.DISPATCH_TYPE integerValue] == 4 ){
+//                   //按系数分配的情况
+//                   cell.detailTextLabel.text = _historyModel.ROLENAME;
+//               }else if ([_historyModel.DISPATCH_TYPE integerValue] == 3){
+//                   cell.textLabel.text = [ZEUtil getPointRegInformation:row];
+//                   cell.detailTextLabel.text = [NSString stringWithFormat: @"%@次",_historyModel.TIMES];
+//               }
+//            }
+//            break;
+//            
+//        default:
+//            break;
+//    }
 }
 
 

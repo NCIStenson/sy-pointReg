@@ -12,14 +12,16 @@
 /*  登记工分选项 */
 typedef NS_ENUM (NSInteger,POINT_REG){
     POINT_REG_TASK,
-    POINT_REG_TIME,
+    POINT_REG_DATE,
     POINT_REG_WORKING_HOURS,
     POINT_REG_TYPE,
-    POINT_REG_DIFF_DEGREE,
-    POINT_REG_TIME_DEGREE,
-    POINT_REG_ALLSCORE,
-    POINT_REG_JOB_ROLES,
     POINT_REG_JOB_COUNT,
+    POINT_REG_DEGREE,
+    POINT_REG_JOB_ROLES,
+    POINT_REG_JOB_TIME,
+    POINT_REG_QUALITY,
+    POINT_REG_EXPLAIN,
+    POINT_REG_ALLSCORE,
 };
 
 /*  分摊类型 */
@@ -37,12 +39,12 @@ typedef NS_ENUM (NSInteger,TASK_LIST_LEVEL){
     TASK_LIST_LEVEL_JSON    //数组中包含json数据
 };
 
-/*  进入工分登记页面方式 */
-typedef NS_ENUM (NSInteger,ENTER_POINTREG_TYPE){
-    ENTER_POINTREG_TYPE_SCAN,      //扫描进入工分登记页面
-    ENTER_POINTREG_TYPE_DEFAULT,   //手动点击进入工分登记页面
-    ENTER_POINTREG_TYPE_HISTORY    //历史详情进入工分登记页面
-};
+///*  进入工分登记页面方式 */
+//typedef NS_ENUM (NSInteger,ENTER_POINTREG_TYPE){
+//    ENTER_POINTREG_TYPE_SCAN,      //扫描进入工分登记页面
+//    ENTER_POINTREG_TYPE_DEFAULT,   //手动点击进入工分登记页面
+//    ENTER_POINTREG_TYPE_HISTORY    //历史详情进入工分登记页面
+//};
 
 
 /* 进入不可以修改的工分登记界面 */

@@ -74,11 +74,6 @@
         CGRect rect = [str boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil];
         height = ceil(rect.size.height);
     }
-//    else {
-//        CGSize sizeToFit = [str sizeWithFont:font constrainedToSize:CGSizeMake(width, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
-//        height = sizeToFit.height;
-//    }
-    
     return height;
 }
 
@@ -89,10 +84,6 @@
         CGRect rect = [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil];
         width = rect.size.width;
     }
-//    else {
-//        CGSize sizeToFit = [str sizeWithFont:font constrainedToSize:maxSize lineBreakMode:NSLineBreakByWordWrapping];
-//        width = sizeToFit.width;
-//    }
     return width;
 }
 
@@ -299,7 +290,7 @@
         case POINT_REG_TASK:
             return @"工作任务";
             break;
-        case POINT_REG_TIME:
+        case POINT_REG_DATE:
             return @"发生日期";
             break;
         case POINT_REG_WORKING_HOURS:
@@ -308,20 +299,26 @@
         case POINT_REG_TYPE:
             return @"分摊类型";
             break;
-        case POINT_REG_DIFF_DEGREE:
-            return @"难度系数";
+        case POINT_REG_JOB_COUNT:
+            return @"工作数量";
             break;
-        case POINT_REG_TIME_DEGREE:
-            return @"时间系数";
-            break;
-        case POINT_REG_ALLSCORE:
-            return @"工作得分";
+        case POINT_REG_DEGREE:
+            return @"修正系数";
             break;
         case POINT_REG_JOB_ROLES:
             return @"工作角色";
             break;
-        case POINT_REG_JOB_COUNT:
-            return @"工作次数";
+        case POINT_REG_JOB_TIME:
+            return @"工作耗时";
+            break;
+        case POINT_REG_QUALITY:
+            return @"工作质量";
+            break;
+        case POINT_REG_EXPLAIN:
+            return @"工作说明";
+            break;
+        case POINT_REG_ALLSCORE:
+            return @"工作得分";
             break;
         default:
             return @"工作任务";
@@ -335,32 +332,13 @@
         case POINT_REG_TASK:
             return @"task";
             break;
-        case POINT_REG_TIME:
-            return @"date";
-            break;
-        case POINT_REG_WORKING_HOURS:
-            return @"核定工时";
-            break;
-        case POINT_REG_TYPE:
-            return @"shareType";
-            break;
-        case POINT_REG_DIFF_DEGREE:
-            return @"difficultyCoefficient";
-            break;
-        case POINT_REG_TIME_DEGREE:
-            return @"timeCoefficient";
-            break;
-        case POINT_REG_JOB_ROLES:
-            return @"workrole";
-            break;
-        case POINT_REG_JOB_COUNT:
-            return @"times";
-            break;
+            
         default:
             return @"task";
             break;
     }
 }
+
 //  获取分配类型中文
 + (NSString *)getPointRegShareType:(POINT_REG_SHARE_TYPE)point_reg_type
 {

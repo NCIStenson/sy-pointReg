@@ -133,7 +133,7 @@
 
 -(void)deleteNoAuditHistory:(NSString *)seqkey
 {
-    __block ZEPointAuditViewController * safeSelf = self;
+//    __block ZEPointAuditViewController * safeSelf = self;
 //    [ZEUserServer deleteTeamTask:seqkey success:^(id data) {
 //        if ([ZEUtil isNotNull:data]) {
 //            if ([[data objectForKey:@"data"] integerValue] == 1) {

@@ -100,7 +100,6 @@
 -(void)goPointReg
 {
     ZEPointRegistrationVC * pointVC = [[ZEPointRegistrationVC alloc]init];
-    pointVC.enterType = ENTER_POINTREG_TYPE_DEFAULT;
     [self.navigationController pushViewController:pointVC animated:YES];
 }
 
@@ -119,6 +118,59 @@
     ZEUserCenterVC * userCenterVC = [[ZEUserCenterVC alloc]init];
     [self.navigationController pushViewController:userCenterVC animated:YES];
 }
+
+-(void)logout{
+    
+    if (IS_IOS8) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"切换账号需重新登录？"
+                                                                                 message:nil
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定"
+                                                           style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                                                               [self requestLogout];
+                                                           }];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+                                                               style:UIAlertActionStyleDefault handler:nil];
+        
+        [alertController addAction:okAction];
+        [alertController addAction:cancelAction];
+        [self presentViewController:alertController animated:YES completion:nil];
+        
+    }else{
+        UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"密码不能为空"
+                                                            message:nil
+                                                           delegate:self
+                                                  cancelButtonTitle:@"确定"
+                                                  otherButtonTitles:@"取消", nil];
+        [alertView show];
+    }
+    
+    
+}
+-(void)requestLogout
+{
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ZEUserServer logoutSuccess:^(id data) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        NSLog(@" 正在退出登录 >>  %@",data);
+        //        if ([ZEUtil isSuccess:[data objectForKey:@"RETMSG"]]) {
+        [self logoutSuccess];
+        //        }
+    } fail:^(NSError *error) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+    }];
+    
+}
+
+-(void)logoutSuccess
+{
+    [ZESettingLocalData clearLocalData];
+    UIWindow * keyWindow = [UIApplication sharedApplication].keyWindow;
+    
+    ZELoginViewController * loginVC = [[ZELoginViewController alloc]init];
+    keyWindow.rootViewController = loginVC;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

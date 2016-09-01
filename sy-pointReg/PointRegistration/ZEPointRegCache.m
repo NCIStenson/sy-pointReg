@@ -12,22 +12,21 @@
 {
     NSArray * _taskCachesArr;          //  常用任务列表缓存
     NSArray * _allTaskCachesArr;          //  全部任务列表缓存
-    NSArray * _diffCoeCachesArr;       //  难度系数
-    NSArray * _timesCoeCachesArr;      //  时间系数
-    NSArray * _workRulesCachesArr;     //  工作角色
+
     NSMutableDictionary * _optionDic; // 用户选择信息缓存
 }
 @property(nonatomic,retain) NSMutableDictionary * optionDic;
-@property(nonatomic,retain) NSMutableDictionary * scanOptionDic;
+@property(nonatomic,retain) NSMutableDictionary * leaderOptionDic;
+
 @property(nonatomic,retain) NSMutableDictionary * resubmitDataDic;
 
 @property (nonatomic,strong) NSMutableDictionary * disTypeCoefficientDic;
+@property (nonatomic,strong) NSMutableDictionary * RATIONTYPEVALUEDic;
+@property (nonatomic,strong) NSArray * workerListArr;
 
 @property (nonatomic,retain) NSArray * taskCachesArr;
 @property (nonatomic,retain) NSArray * allTaskCachesArr;
 @property (nonatomic,retain) NSArray * distributionTypeArr;
-@property (nonatomic,retain) NSArray * timesCoeCachesArr;
-@property (nonatomic,retain) NSArray * workRulesCachesArr;
 
 @end
 
@@ -40,6 +39,7 @@ static ZEPointRegCache * pointRegCahe = nil;
     self = [super init];
     if (self) {
         self.disTypeCoefficientDic = [NSMutableDictionary dictionary];
+        self.RATIONTYPEVALUEDic = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -103,29 +103,34 @@ static ZEPointRegCache * pointRegCahe = nil;
 {
     return  self.distributionTypeArr;
 }
+
 /**
- *  存储用户第一次请求时间系数列表，APP运行期间 只请求一次时间系数列表
+ *  存储用户第一次请求分配类型系数详情列表，APP运行期间 只请求一次分配类型系数详情列表
  */
-- (void)setTimesCoeCaches:(NSArray *)timesCoeArr
+- (void)setRATIONTYPEVALUE:(NSDictionary *)dic
 {
-    self.timesCoeCachesArr = timesCoeArr;
+    [self.RATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
 }
-- (NSArray *)getTimesCoeCaches
+- (NSDictionary *)getRATIONTYPEVALUE
 {
-    return self.timesCoeCachesArr;
+    return self.RATIONTYPEVALUEDic;
 }
 
 /**
- *  存储用户第一次请求 工作角色 列表，APP运行期间 只请求一次 工作角色 列表
+ *  @author Stenson, 16-08-30 09:08:32
+ *
+ *  存储用户第一次请求 工作人员 列表，APP运行期间 只请求一次 工作人员 列表
+ *
  */
-- (void)setWorkRulesCaches:(NSArray *)workRulesArr
+- (void)setWorkerList:(NSArray *)arr
 {
-    self.workRulesCachesArr = workRulesArr;
+    self.workerListArr = arr;
 }
-- (NSArray *)getWorkRulesCaches
+- (NSArray *)getWorkerList
 {
-    return self.workRulesCachesArr;
+    return self.workerListArr;
 }
+
 
 /**
  *  存储用户选择过的选项
@@ -144,16 +149,21 @@ static ZEPointRegCache * pointRegCahe = nil;
 }
 
 /**
- *  用户扫描得到的登记信息
+ *  多人工分登记
+ *  存储用户选择过的选项
  */
-- (void)setScanCodeChoosedOptionDic:(NSDictionary *)choosedDic
+- (void)setLeaderChoosedOptionDic:(NSDictionary *)choosedDic
 {
-    self.scanOptionDic = [NSMutableDictionary dictionaryWithDictionary:choosedDic];
+    _optionDic = [NSMutableDictionary dictionaryWithDictionary:[self getUserChoosedOptionDic]];
+    if ([ZEUtil isNotNull:choosedDic]) {
+        [_optionDic setValuesForKeysWithDictionary:choosedDic];
+    }
 }
-- (NSDictionary * )getScanCodeChoosedOptionDic
+- (NSDictionary * )getLeaderChoosedOptionDic
 {
-    return self.scanOptionDic;
+    return _leaderOptionDic;
 }
+
 /**
  *  @author Zenith Electronic, 16-02-23 14:02:17
  *
@@ -181,36 +191,16 @@ static ZEPointRegCache * pointRegCahe = nil;
 {
     [self.resubmitDataDic removeAllObjects];
     self.resubmitDataDic = nil;
+    self.leaderOptionDic = nil;
 }
 
-/**
- *  清除输入次数缓存
- */
--(void)clearCount
-{
-//    if ([ZEUtil isNotNull:[_optionDic objectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]]]) {
-//        [_optionDic removeObjectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
-//        [_resubmitDataDic removeObjectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
-//    }
-}
-
-/**
- *  清除工作角色缓存
- */
--(void)clearRoles
-{
-//    if ([ZEUtil isNotNull:[_optionDic objectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]]]) {
-//        [_optionDic removeObjectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
-//        [_resubmitDataDic removeObjectForKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
-//    }
-}
 /**
  *  清除用户选择过的信息
  */
 -(void)clearUserOptions
 {
     _optionDic          = nil;    // 用户选择信息缓存
-    _scanOptionDic      = nil;    // 用户扫描结果缓存
+    _resubmitDataDic    = nil;
 }
 
 /**
@@ -219,12 +209,14 @@ static ZEPointRegCache * pointRegCahe = nil;
 
 - (void)clear
 {
-    _scanOptionDic      = nil;         // 用户扫描结果缓存
-    _taskCachesArr      = nil;        //  任务列表缓存
-    _diffCoeCachesArr   = nil;       //  难度系数
-    _timesCoeCachesArr  = nil;      //  时间系数
-    _workRulesCachesArr = nil;     //  工作角色
-    _optionDic          = nil;    // 用户选择信息缓存
+    _taskCachesArr         = nil;//  任务列表缓存
+    _optionDic             = nil;// 用户选择信息缓存
+    _resubmitDataDic       = nil;
+    _RATIONTYPEVALUEDic    = nil;
+    _allTaskCachesArr      = nil;
+    _distributionTypeArr   = nil;
+    _disTypeCoefficientDic = nil;
+    _workerListArr         = nil;
 }
 
 @end

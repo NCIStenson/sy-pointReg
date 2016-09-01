@@ -21,7 +21,7 @@
 /**
  *  提交
  */
--(void)goSubmit:(ZEPointRegistrationView *)pointRegView withShowRoles:(BOOL)showRoles withShowCount:(BOOL)showCount;
+-(void)goSubmit:(ZEPointRegistrationView *)pointRegView withChoosedDic:(NSDictionary *)dic;
 
 /**
  *  返回扫描界面
@@ -36,6 +36,15 @@
  *  @param SEQKEY 任务主键
  */
 -(void)getTaskDetail:(NSString *)SEQKEY;
+
+/**
+ *  @author Stenson, 16-08-25 14:08:59
+ *
+ *  根据系数显示不同类型的参数值
+ *
+ *  @param QUOTIETYCODE 系数code
+ */
+-(void)showRATIONTYPEVALUE:(NSString *)QUOTIETYCODE;
 
 @end
 

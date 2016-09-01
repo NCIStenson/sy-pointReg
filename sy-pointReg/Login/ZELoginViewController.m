@@ -85,7 +85,6 @@
 //        return;
 //    }
 //    __block ZELoginViewController * safeSelf = self;
-    username = @"060600-01-100823";
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [self progressBegin:nil];
     [ZEUserServer loginWithNum:username
@@ -95,13 +94,7 @@
                            if ([[data objectForKey:@"RETMSG"] isEqualToString:@"null"]) {
                                 NSLog(@"登陆成功  %@",[data objectForKey:@"RETMSG"]);
                                [ZESettingLocalData setUSERNAME:username];
-                               
-                               dispatch_queue_t queue = dispatch_queue_create("queue", DISPATCH_QUEUE_CONCURRENT);
-                               dispatch_async(queue, ^{
-                                   for (int i = 1; i < 7; i ++) {
-                                       [self cacheCoefficientDetail:i];
-                                   }
-                               });
+                               [self cacheUserInfo];
                                [self goHome];
                            }else{
                                [ZESettingLocalData deleteCookie];
@@ -114,44 +107,41 @@
     
 }
 
-#pragma mark - 缓存工时登记界面下拉框选项数据
-
--(void)cacheCoefficientDetail:(NSInteger)number
+-(void)cacheUserInfo
 {
-    
-    NSString * WHERESQL = [NSString stringWithFormat:@"suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode in (select case (select count(1) from EPM_TEAM_RATIONTYPEVALUE t where t.suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode = '#SECORGCODE#') when 0 then '-1' else '#SECORGCODE#' end from dual)",number,number];
     NSDictionary * parametersDic = @{@"limit":@"20",
-                                     @"MASTERTABLE":EPM_TEAM_RATIONTYPEVALUE,
+                                     @"MASTERTABLE":UUM_USER,
                                      @"MENUAPP":@"EMARK_APP",
                                      @"ORDERSQL":@"DISPLAYORDER",
-                                     @"WHERESQL":WHERESQL,
+                                     @"WHERESQL":@"",
                                      @"start":@"0",
                                      @"METHOD":@"search",
+                                     @"DETAILTABLE":@"",
                                      @"MASTERFIELD":@"SEQKEY",
                                      @"DETAILFIELD":@"",
                                      @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
-                                     @"DETAILTABLE":@"",};
+                                     };
+    NSDictionary * fieldsDic =@{@"USERACCOUNT":@"",
+                                @"USERID":@"",
+                                @"USERNAME":@"",
+                                @"USERCODE":@""};
     
-    NSDictionary * fieldsDic =@{@"QUOTIETYCODE":@"",
-                                @"QUOTIETYNAME":@"",
-                                @"QUOTIETY":@""};
-    
-    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATIONTYPEVALUE]
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[UUM_USER]
                                                                            withFields:@[fieldsDic]
                                                                        withPARAMETERS:parametersDic
                                                                        withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
-                                 NSLog(@" 选项详情系数 ====  %@",data);
-//                                 NSArray * arr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEVALUE];
-//                                 if (arr.count > 0) {
-//                                     [[ZEPointRegCache instance] setDistributionTypeCoefficient:@{rationCode:arr}];
-//                                 }
+                                 [ZESettingLocalData setUSERINFODic:[ZEUtil getServerData:data withTabelName:UUM_USER][0]];
+                                 NSLog(@"<<<   %@",data);
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
-
 }
+
+#pragma mark - 缓存工时登记界面下拉框选项数据
+
 
 -(void)showAlertView:(NSString *)alertMes
 {

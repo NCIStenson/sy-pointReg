@@ -77,7 +77,7 @@ static NSString * kUSERINFODic      = @"kUSERINFODic";
 }
 +(NSString *)getUSERNAME
 {
-    return [self Get:kUSERNAME];
+    return [[self getUSERINFO] objectForKey:@"USERNAME"];
 }
 +(void)deleteUSERNAME
 {
@@ -86,19 +86,10 @@ static NSString * kUSERINFODic      = @"kUSERINFODic";
 
 #pragma mark - USERCODE
 
-+(void)setUSERCODE:(NSString *)str
-{
-    [self Set:kUSERCODE value:str];
-}
 +(NSString *)getUSERCODE
 {
     return [[self getUSERINFO] objectForKey:@"USERCODE"];
 }
-+(void)deleteUSERCODE
-{
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUSERCODE];
-}
-
 
 #pragma mark - ISEXPERT
 +(void)setISEXPERT:(BOOL)isExpert
@@ -153,7 +144,6 @@ static NSString * kUSERINFODic      = @"kUSERINFODic";
 +(void)clearLocalData
 {
     [ZESettingLocalData deleteCookie];
-    [ZESettingLocalData deleteUSERCODE];
     [ZESettingLocalData deleteUSERNAME];
     [ZESettingLocalData deleteISEXPERT];
     [ZESettingLocalData deleteUSERINFODic];

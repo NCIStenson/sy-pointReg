@@ -42,9 +42,7 @@
  *  保存用户唯一标示
  *
  */
-+(void)setUSERCODE:(NSString *)str;
 +(NSString *)getUSERCODE;
-+(void)deleteUSERCODE;
 /**
  *  @author Stenson, 16-08-12 15:08:00
  *

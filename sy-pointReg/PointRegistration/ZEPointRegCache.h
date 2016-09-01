@@ -36,28 +36,35 @@
  */
 - (void)setDistributionTypeCoefficient:(NSDictionary *)dic;
 - (NSDictionary *)getDistributionTypeCoefficient;
-/**
- *  存储用户第一次请求时间系数列表，APP运行期间 只请求一次时间系数列表
- */
-- (void)setTimesCoeCaches:(NSArray *)timesCoeArr;
-- (NSArray *)getTimesCoeCaches;
 
 /**
- *  存储用户第一次请求 工作角色 列表，APP运行期间 只请求一次 工作角色 列表
+ *  存储用户第一次请求分配类型系数详情列表，APP运行期间 只请求一次分配类型系数详情列表
  */
-- (void)setWorkRulesCaches:(NSArray *)workRulesArr;
-- (NSArray *)getWorkRulesCaches;
+- (void)setRATIONTYPEVALUE:(NSDictionary *)dic;
+- (NSDictionary *)getRATIONTYPEVALUE;
+
+
+/**
+ *  @author Stenson, 16-08-30 09:08:32
+ *
+ *  存储用户第一次请求 工作人员 列表，APP运行期间 只请求一次 工作人员 列表
+ *
+ */
+- (void)setWorkerList:(NSArray *)arr;
+- (NSArray *)getWorkerList;
 
 /**
  *  存储用户选择过的选项
  */
 - (void)setUserChoosedOptionDic:(NSDictionary *)choosedDic;
 - (NSDictionary * )getUserChoosedOptionDic;
+
 /**
- *  用户扫描得到的登记信息
+ *  多人工分登记
+ *  存储用户选择过的选项
  */
-- (void)setScanCodeChoosedOptionDic:(NSDictionary *)choosedDic;
-- (NSDictionary * )getScanCodeChoosedOptionDic;
+- (void)setLeaderChoosedOptionDic:(NSDictionary *)choosedDic;
+- (NSDictionary * )getLeaderChoosedOptionDic;
 
 /**
  *  @author Zenith Electronic, 16-02-23 14:02:17
@@ -66,7 +73,7 @@
  *
  *  @param dic 历史数据信息
  */
--(void)setResubmitCaches:(NSDictionary *)dic;
+-(void)setResubmitCaches:(NSDictionary *)dic;   
 -(void)changeResubmitCache:(NSDictionary *)dic;
 - (NSDictionary * )getResubmitCachesDic;
 /**
@@ -74,15 +81,6 @@
  */
 -(void)clearResubmitCaches;
 
-/**
- *  清除输入次数缓存
- */
--(void)clearCount;
-
-/**
- *  清除工作角色缓存
- */
--(void)clearRoles;
 /**
  *  清除用户选择过的信息
  */

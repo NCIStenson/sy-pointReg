@@ -71,9 +71,6 @@
         }
     }
     
-    NSLog(@">> %@  %@    %@",_optionsArray,_detailTaskArr,_kindTaskArr);
-    
-    
     _maskArr = [NSMutableArray array];
     for (int i = 0; i < _kindTaskArr.count; i ++) {
         [_maskArr addObject:@"0"];

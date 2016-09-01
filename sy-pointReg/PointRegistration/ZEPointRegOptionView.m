@@ -119,6 +119,9 @@
             }
             ZEV_EPM_TEAM_RATION_APP * model = [ZEV_EPM_TEAM_RATION_APP getDetailWithDic:_optionsArray[indexPath.row]];
             cell.textLabel.text = [NSString stringWithFormat:@"%@",model.RATIONNAME];
+        }else if (_pointReg == POINT_REG_TYPE){
+            NSDictionary * dic = _optionsArray[indexPath.row];
+            cell.textLabel.text = [NSString stringWithFormat:@"%@",[dic objectForKey:@"QUOTIETYNAME"]];
         }
     }else{
         cell.textLabel.text = _optionsArray[indexPath.row];

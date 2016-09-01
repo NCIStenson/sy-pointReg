@@ -142,6 +142,8 @@
             [self.layer addSublayer:lineLayer];
 
             field.placeholder = @"请输入用户名";
+            field.text = @"060600-01-100823";
+
             [field mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.offset(kUsernameFieldMarginLeft);
                 make.top.offset(kUsernameFieldMarginTop + 5.0f);

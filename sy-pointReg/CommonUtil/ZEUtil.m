@@ -332,7 +332,10 @@
         case POINT_REG_TASK:
             return @"task";
             break;
-            
+        case POINT_REG_DATE:
+            return @"date";
+            break;
+ 
         default:
             return @"task";
             break;

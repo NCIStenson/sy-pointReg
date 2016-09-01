@@ -105,9 +105,16 @@
     [scrollView addSubview:bannerImageView];
     scroolContentH = bannerImageView.frame.size.height;
 
-    for(int i = 0 ; i < data.count ; i ++){
-        ZEUUM_FUNCTION_MODEL * UUMFUNCTIONM = [ZEUUM_FUNCTION_MODEL getDetailWithDic:data[i]];
-
+    NSMutableArray * deleteVaildData = [NSMutableArray arrayWithArray:data];
+    
+    for(int i = 0 ; i < data.count - 1 ; i ++){
+        
+        ZEUUM_FUNCTION_MODEL * UUMFUNCTIONMODEL = [ZEUUM_FUNCTION_MODEL getDetailWithDic:data[i]];
+        if ([UUMFUNCTIONMODEL.FUNCTIONCODE isEqualToString:@"APPSPECIALNUM"]) {
+            [deleteVaildData removeObjectAtIndex:i];
+        }
+        
+        ZEUUM_FUNCTION_MODEL * UUMFUNCTIONM = [ZEUUM_FUNCTION_MODEL getDetailWithDic:deleteVaildData[i]];        
         UIButton * enterBtn     = [UIButton buttonWithType:UIButtonTypeCustom];
         enterBtn.frame          = CGRectMake(0 + SCREEN_WIDTH / 3 * (i % 3), (bannerImageView.frame.origin.y + bannerImageView.frame.size.height) + ( i / 3 ) * (IPHONE4S_LESS ? 120 : 150) , SCREEN_WIDTH / 3, (IPHONE4S_LESS ? 100 : 120));
         [enterBtn setImage:[UIImage imageNamed:@"home_toolkit"] forState:UIControlStateNormal];
@@ -121,7 +128,6 @@
         [scrollView addSubview:tipsLabel];
         
         if (i == 6) {
-            NSLog(@">>  %f %d",scroolContentH + ( i / 3 + 1 ) * (IPHONE4S_LESS ? 120 : 150),i / 3);
             scrollView.contentSize = CGSizeMake(SCREEN_WIDTH, scroolContentH + ( i / 3 + 1) * (IPHONE4S_LESS ? 120 : 150));
         }
         [enterBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
@@ -130,7 +136,7 @@
         switch (i) {
             case 0:
                 [enterBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
-                [enterBtn addTarget:self action:@selector(goScan) forControlEvents:UIControlEventTouchUpInside];
+                [enterBtn addTarget:self action:@selector(goLeaderView) forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 1:
                 [enterBtn setImage:[UIImage imageNamed:@"icon_point"] forState:UIControlStateNormal];
@@ -160,10 +166,10 @@
 
 #pragma mark - SelfDelegate
 
--(void)goScan
+-(void)goLeaderView
 {
-    if ([self.delegate respondsToSelector:@selector(goScanView) ]) {
-        [self.delegate goScanView];
+    if ([self.delegate respondsToSelector:@selector(goLeaderView) ]) {
+        [self.delegate goLeaderView];
     }
 }
 

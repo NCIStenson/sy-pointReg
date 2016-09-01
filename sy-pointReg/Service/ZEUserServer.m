@@ -36,7 +36,6 @@
                 fail:(ServerResponseFailBlock)failBlock
 {
     NSDictionary * dataDic = [ZEPackageServerData getLogoutServerData];
-    NSLog(@">>  %@",dataDic);
     NSString * logoutServer = [NSString stringWithFormat: @"%@/do/app/logout",Zenith_Server];
     [[ZEServerEngine sharedInstance]requestWithJsonDic:dataDic
                                      withServerAddress:logoutServer
@@ -54,13 +53,10 @@
 {
     
     NSString * commonServer = [NSString stringWithFormat: @"%@/do/app/uiaction",Zenith_Server];
-    NSLog(@">  %@",commonServer);
     [[ZEServerEngine sharedInstance]requestWithJsonDic:dic
                                      withServerAddress:commonServer
                                                success:^(id data) {
                                                    if ([ZEUtil isSuccess:[data objectForKey:@"RETMSG"]]) {
-                                                       NSLog(@" 全部工作任务 >>>  %@",data);
-
                                                        successBlock(data);
                                                    }else{
                                                        [ZESettingLocalData clearLocalData];

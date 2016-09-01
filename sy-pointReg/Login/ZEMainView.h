@@ -14,7 +14,7 @@
  *
  *  进入扫描页面
  */
--(void)goScanView;
+-(void)goLeaderView;
 
 /**
  *  进入工分登记页面

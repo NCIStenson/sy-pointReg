@@ -43,9 +43,12 @@
 {
     NSArray * arr = @[@{@"name":@"UUM_USER",
                         @"fields":@[@{@"name":@"LOGINPWD",
-                                           @"value":pwd},
-                                       @{@"name":@"USERACCOUNT",
-                                         @"value":username}]}];
+                                      @"value":pwd},
+                                    @{@"name":@"USERACCOUNT",
+                                      @"value":username},
+                                    ]
+                        }
+                      ];
     return arr;
 }
 

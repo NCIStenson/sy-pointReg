@@ -10,12 +10,13 @@
 
 #import "ZELoginViewController.h"
 
-#import "ZEScanQRViewController.h"
 #import "ZEHistoryViewController.h"
 #import "ZEPointRegistrationVC.h"
 #import "ZEPointAuditViewController.h"
 
 #import "ZEMainViewController.h"
+
+#import "ZEFormulaStringCalcUtility.h"
 
 #import "ZEUserServer.h"
 #import "ZESettingVC.h"
@@ -37,7 +38,6 @@
     [self checkUpdate];
     
     NSData *cookiesdata = [ZESettingLocalData getCookie];
-    NSLog(@">>  %@",cookiesdata);
     if([cookiesdata length]) {
         ZEMainViewController * mainVC = [[ZEMainViewController alloc]init];
         mainVC.tabBarItem.title = @"首页";

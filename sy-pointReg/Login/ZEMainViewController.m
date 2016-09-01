@@ -8,7 +8,7 @@
 
 #import "ZEMainViewController.h"
 
-#import "ZEScanQRViewController.h"
+#import "ZELeaderRegVC.h"
 #import "ZEPointRegistrationVC.h"
 #import "ZEHistoryViewController.h"
 #import "ZEPointAuditViewController.h"
@@ -57,7 +57,6 @@
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  [mainView reloadHomeView:[ZEUtil getServerData:data withTabelName:UUM_FUNCTION]];
-                                 NSLog(@">>>   %@",data);
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
@@ -91,10 +90,10 @@
 
 #pragma mark - ZEMainViewDelegate
 
--(void)goScanView
+-(void)goLeaderView
 {
-    ZEScanQRViewController * scanVC = [[ZEScanQRViewController alloc]init];
-    [self.navigationController pushViewController:scanVC animated:YES];
+    ZELeaderRegVC * leaderVC = [[ZELeaderRegVC alloc]init];
+    [self.navigationController pushViewController:leaderVC animated:YES];
 }
 
 -(void)goPointReg
@@ -152,7 +151,6 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer logoutSuccess:^(id data) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-        NSLog(@" 正在退出登录 >>  %@",data);
         //        if ([ZEUtil isSuccess:[data objectForKey:@"RETMSG"]]) {
         [self logoutSuccess];
         //        }

@@ -98,12 +98,11 @@ static ZEServerEngine *serverEngine = nil;
             [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
         }
     }
-    
+
     [manager POST:serverAddress
        parameters:jsonDic
          progress:nil
           success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-              
               NSArray *cookiesArray = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
               NSData *data = [NSKeyedArchiver archivedDataWithRootObject:cookiesArray];
               if(![cookiesdata length]) {

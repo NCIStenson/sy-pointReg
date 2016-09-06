@@ -95,6 +95,7 @@
                                 NSLog(@"登陆成功  %@",[data objectForKey:@"RETMSG"]);
                                [ZESettingLocalData setUSERNAME:username];
                                [self cacheUserInfo];
+                               [self getKValue];
                                [self goHome];
                            }else{
                                [ZESettingLocalData deleteCookie];
@@ -134,13 +135,43 @@
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
                                  [ZESettingLocalData setUSERINFODic:[ZEUtil getServerData:data withTabelName:UUM_USER][0]];
-                                 NSLog(@"<<<   %@",data);
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
 }
 
-#pragma mark - 缓存工时登记界面下拉框选项数据
+#pragma mark - 获取K值系数
+
+-(void)getKValue
+{
+    NSDictionary * parametersDic = @{@"limit":@"20",
+                                     @"MASTERTABLE":EPM_TEAM_K_VALUE,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"DISPLAYORDER",
+                                     @"WHERESQL":@"suitunit = '#SUITUNIT#'",
+                                     @"start":@"0",
+                                     @"METHOD":@"search",
+                                     @"DETAILTABLE":@"",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    NSDictionary * fieldsDic =@{@"KVALUE":@""};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_K_VALUE]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 NSLog(@">>>  %@",data);
+                                 NSDictionary * dic = [ZEUtil getServerData:data withTabelName:EPM_TEAM_K_VALUE][0];
+                                 [ZESettingLocalData setKValue:[dic objectForKey:@"KVALUE"]];
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+}
 
 
 -(void)showAlertView:(NSString *)alertMes

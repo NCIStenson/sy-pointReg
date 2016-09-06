@@ -24,6 +24,7 @@
 @property (nonatomic,copy) NSString * RATIONTYPECODE;
 @property (nonatomic,copy) NSString * SEQKEY;
 @property (nonatomic,copy) NSString * SUITUNIT;
+@property (nonatomic,copy) NSString * TYPE;
 
 @property (nonatomic,copy) NSString * QUOTIETYCODE;
 @property (nonatomic,copy) NSString * QUOTIETYNAME;

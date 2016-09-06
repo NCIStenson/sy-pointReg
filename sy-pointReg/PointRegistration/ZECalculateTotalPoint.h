@@ -10,6 +10,10 @@
 
 @interface ZECalculateTotalPoint : NSObject
 
-+(void)getTotalPoint;
++(instancetype)instance;
+
+-(void)getTotalPointTaskDic:(NSDictionary *)rationDic withPersonalDetailArr:(NSArray *)personalData;
+
+-(NSDictionary *)getResultDic;
 
 @end

@@ -8,30 +8,32 @@
 
 #import "ZEFormulaStringCalcUtility.h"
 
+
+
 @implementation ZEFormulaStringCalcUtility
 
 // 字符串加
 + (NSString *)addV1:(NSString *)v1 v2:(NSString *)v2 {
     CGFloat result = [v1 floatValue] + [v2 floatValue];
-    return [NSString stringWithFormat:@"%.2f", result];
+    return [NSString stringWithFormat:@"%.6f", result];
 }
 
 // 字符串减
 + (NSString *)subV1:(NSString *)v1 v2:(NSString *)v2 {
     CGFloat result = [v1 floatValue] - [v2 floatValue];
-    return [NSString stringWithFormat:@"%.2f", result];
+    return [NSString stringWithFormat:@"%.6f", result];
 }
 
 // 字符串乘
 + (NSString *)mulV1:(NSString *)v1 v2:(NSString *)v2 {
     CGFloat result = [v1 floatValue] * [v2 floatValue];
-    return [NSString stringWithFormat:@"%.2f", result];
+    return [NSString stringWithFormat:@"%.6f", result];
 }
 
 // 字符串除
 + (NSString *)divV1:(NSString *)v1 v2:(NSString *)v2 {
     CGFloat result = [v1 floatValue] / [v2 floatValue];
-    return [NSString stringWithFormat:@"%.2f", result];
+    return [NSString stringWithFormat:@"%.6f", result];
 }
 
 // 简单只包含 + - 的计算

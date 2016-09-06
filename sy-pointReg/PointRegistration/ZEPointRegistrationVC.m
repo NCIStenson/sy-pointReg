@@ -6,6 +6,8 @@
 //  Copyright © 2016年 Stenson. All rights reserved.
 //
 
+#define kCOMMONPOINTREG @"10"  //  负责人录入
+
 #import "ZEPointRegistrationVC.h"
 #import "ZEPointRegistrationView.h"
 #import "ZEPointRegCache.h"
@@ -16,6 +18,8 @@
 
 #import "ZEEPM_TEAM_RATION_COMMON.h"
 #import "ZEEPM_TEAM_RATIONTYPEDETAIL.h"
+
+#import "ZECalculateTotalPoint.h"
 
 @interface ZEPointRegistrationVC ()<ZEPointRegistrationViewDelegate>
 {
@@ -96,7 +100,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
-                                 
+
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  NSArray * arr =[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPE];
                                  [[ZEPointRegCache instance] setDistributionTypeCaches:arr];
@@ -135,7 +139,6 @@
                                                                        withActionFlag:nil];
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
-                                 NSLog(@" 系数列表 >>>>> %@",data);
                                  NSArray * arr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEDETAIL];
                                  if (arr.count > 0) {
                                      [[ZEPointRegCache instance] setDistributionTypeCoefficient:@{rationCode:arr}];
@@ -174,6 +177,8 @@
                                                                        withActionFlag:nil];
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
+                                 
+                                 
                                  [[ZEPointRegCache instance] setRATIONTYPEVALUE:@{valueStr:[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEVALUE]}];
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -377,6 +382,10 @@
 
 -(void)submitMessageToServer:(NSDictionary *)dic withView:(ZEPointRegistrationView *)pointRegView
 {
+    
+    NSLog(@" 班组长登记工分内容 >>>  %@",pointRegView.CHOOSEDRATIONTYPEVALUEDic);
+    NSLog(@" 班组长登记工分员工内容 >>>  %@",pointRegView.USERCHOOSEDWORKERVALUEARR);
+
     NSDictionary * userChoosedDic = [[ZEPointRegCache instance] getUserChoosedOptionDic];
     NSString * dateStr = [userChoosedDic objectForKey:[ZEUtil getPointRegField:POINT_REG_DATE]];
     
@@ -401,60 +410,26 @@
                                     };
     
     
+    [[ZECalculateTotalPoint instance] getTotalPointTaskDic:pointRegView.CHOOSEDRATIONTYPEVALUEDic withPersonalDetailArr:pointRegView.USERCHOOSEDWORKERVALUEARR];
     
-    NSMutableDictionary * fieldsDic = [NSMutableDictionary dictionaryWithDictionary: @{@"ENDDATE":dateStr,
-                                                                                       @"RATIONNAME":taskDetailM.RATIONNAME,
-                                                                                       @"STDSCORE":taskDetailM.STDSCORE,
-                                                                                       @"RATIONTYPE":taskDetailM.RATIONTYPE,
-                                                                                       @"RATIONCODE":taskDetailM.RATIONCODE,
-                                                                                       @"RATIONID":taskDetailM.SEQKEY,
-                                                                                       @"ADDMODE":@"10",
-                                                                                       @"STATUS":@"10"}];
-    
-    NSMutableDictionary * detailFieldsDic = [NSMutableDictionary dictionaryWithDictionary:@{@"PSNNAME":[ZESettingLocalData getUSERNAME],
-                                                                                            @"PSNNUM":[ZESettingLocalData getUSERCODE],
-                                                                                            @"DESCR":@"",
-                                                                                            @"WORKPOINTS":@"10",
-                                                                                            }];
-    
-    for (NSDictionary * typeDic in cacheDisType) {
-        ZEEPM_TEAM_RATIONTYPEDETAIL * rationTypeDetailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:typeDic];
-        if ([rationTypeDetailM.ISRATION boolValue]) {
-            id object = [dic objectForKey:rationTypeDetailM.FIELDNAME];
-            if ([object isKindOfClass:[NSDictionary class]]) {
-                [fieldsDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[rationTypeDetailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
-            }else{
-                [fieldsDic setObject:object forKey:[rationTypeDetailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
-            }
-        }else{
-            id object = [dic objectForKey:rationTypeDetailM.FIELDNAME];
-            if ([object isKindOfClass:[NSDictionary class]]) {
-                [detailFieldsDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[rationTypeDetailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
-            }else{
-                [detailFieldsDic setObject:object forKey:[rationTypeDetailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
-            }
-        }
-    }
-    
-    NSLog(@" =============== %@",fieldsDic);
-    NSLog(@" =============== %@",detailFieldsDic);
+    NSLog(@" 最终得分 >>>>>>>>>   %@",[[ZECalculateTotalPoint instance] getResultDic]);
 
     
-    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG,EPM_TEAM_RATION_REG_DETAIL]
-                                                                           withFields:@[fieldsDic,detailFieldsDic]
-                                                                       withPARAMETERS:parametersDic
-                                                                       withActionFlag:nil];
+//    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG,EPM_TEAM_RATION_REG_DETAIL]
+//                                                                           withFields:@[fieldsDic,detailFieldsDic]
+//                                                                       withPARAMETERS:parametersDic
+//                                                                       withActionFlag:nil];
     
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [ZEUserServer getDataWithJsonDic:packageDic
-                             success:^(id data) {
-                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                            NSLog(@"============================================================================================================================================== %@",data);
-                                 
-                             } fail:^(NSError *errorCode) {
-                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                             }];
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [ZEUserServer getDataWithJsonDic:packageDic
+//                             success:^(id data) {
+//                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                            NSLog(@"============================================================================================================================================== %@",data);
+//                                 
+//                             } fail:^(NSError *errorCode) {
+//                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                             }];
 }
 
 -(void)resubmitPointReg:(NSDictionary *)dic

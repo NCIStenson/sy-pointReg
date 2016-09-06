@@ -62,6 +62,15 @@
 +(NSDictionary *)getUSERINFO;
 +(void)deleteUSERINFODic;
 
+/**
+ *  @author Stenson, 16-08-17 13:08:23
+ *
+ *  保存K值系数
+ */
++(void)setKValue:(NSString *)k;
++(NSString *)getKValue;
++(void)deleteKValue;
+
 /******** 修改昵称 *******/
 +(void)changeNICKNAME:(NSString *)nickname;
 /*********** 获取用户昵称 ********/

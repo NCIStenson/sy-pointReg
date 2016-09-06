@@ -14,6 +14,7 @@ static NSString * kUSERNAME         = @"kUSERNAME";
 static NSString * kUSERCODE         = @"kUSERCODE";
 static NSString * kISEXPERT         = @"kISEXPERT";
 static NSString * kUSERINFODic      = @"kUSERINFODic";
+static NSString * KValue            = @"KValue";
 
 @implementation ZESettingLocalData
 
@@ -140,6 +141,25 @@ static NSString * kUSERINFODic      = @"kUSERINFODic";
     return [[self getUSERINFO] objectForKey:@"SEQKEY"];
 }
 
+/**
+ *  @author Stenson, 16-08-17 13:08:23
+ *
+ *  保存K值系数
+ */
++(void)setKValue:(NSString *)k
+{
+    [self Set:KValue value:k];
+}
++(NSString *)getKValue
+{
+    return [self Get:KValue];
+}
++(void)deleteKValue
+{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:KValue];
+}
+
+
 #pragma mark - CLEAR
 +(void)clearLocalData
 {
@@ -147,6 +167,7 @@ static NSString * kUSERINFODic      = @"kUSERINFODic";
     [ZESettingLocalData deleteUSERNAME];
     [ZESettingLocalData deleteISEXPERT];
     [ZESettingLocalData deleteUSERINFODic];
+    [ZESettingLocalData deleteKValue];
 }
 
 

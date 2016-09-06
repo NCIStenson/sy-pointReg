@@ -6,6 +6,8 @@
 //  Copyright © 2016年 Zenith Electronic. All rights reserved.
 //
 
+#define kLEADERPOINTREG @"20"  //  负责人录入
+
 #import "ZELeaderRegVC.h"
 #import "ZELeaderRegView.h"
 
@@ -17,6 +19,9 @@
 #import "ZEEPM_TEAM_RATIONTYPE.h"
 #import "ZEEPM_TEAM_RATION_COMMON.h"
 #import "ZEEPM_TEAM_RATIONTYPEDETAIL.h"
+
+#import "ZECalculateTotalPoint.h"
+
 @interface ZELeaderRegVC ()<ZELeaderRegViewDelegate>
 {
     ZELeaderRegView * _leaderRegView;
@@ -291,7 +296,6 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
-                                 
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  NSArray * taskDatas = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION];
                                  if ([ZEUtil isNotNull:taskDatas]) {
@@ -413,53 +417,80 @@
 -(void)rightBtnClick
 {
     [_leaderRegView endEditing:YES];
-    NSLog(@" 班组长登记工分内容 >>>  %@",_leaderRegView.CHOOSEDRATIONTYPEVALUEDic);
-    NSLog(@" 班组长登记工分员工内容 >>>  %@",_leaderRegView.USERCHOOSEDWORKERVALUEARR);
+//    NSLog(@" 班组长登记工分内容 >>>  %@",_leaderRegView.CHOOSEDRATIONTYPEVALUEDic);
+//    NSLog(@" 班组长登记工分员工内容 >>>  %@",_leaderRegView.USERCHOOSEDWORKERVALUEARR);
     
-//    NSDictionary * userChoosedDic = [[ZEPointRegCache instance] getUserChoosedOptionDic];
-//    NSString * dateStr = [userChoosedDic objectForKey:[ZEUtil getPointRegField:POINT_REG_DATE]];
-//    
-//    NSDictionary * taskDic = [userChoosedDic objectForKey:[ZEUtil getPointRegField:POINT_REG_TASK]];
-//    
-//    ZEEPM_TEAM_RATION_COMMON * taskDetailM = [ZEEPM_TEAM_RATION_COMMON getDetailWithDic:taskDic];
-//    
-//    NSArray * cacheDisType = [[[ZEPointRegCache instance] getDistributionTypeCoefficient] objectForKey:taskDetailM.RATIONTYPE];
-//    
-//    NSDictionary * parametersDic =@{@"limit":@"20",
-//                                    @"MASTERTABLE":EPM_TEAM_RATION_REG,
-//                                    @"MENUAPP":@"EMARK_APP",
-//                                    @"ORDERSQL":@"",
-//                                    @"WHERESQL":@"",
-//                                    @"start":@"0",
-//                                    @"METHOD":@"addSave",
-//                                    @"DETAILTABLE":@"EPM_TEAM_RATION_REG_DETAIL",
-//                                    @"MASTERFIELD":@"SEQKEY",
-//                                    @"DETAILFIELD":@"TASKID",
-//                                    @"self":@"self",
-//                                    @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
-//                                    };
-//    
-//    
-//    
-//    NSMutableDictionary * fieldsDic = [NSMutableDictionary dictionaryWithDictionary: @{@"ENDDATE":dateStr,
-//                                                                                       @"RATIONNAME":taskDetailM.RATIONNAME,
-//                                                                                       @"STDSCORE":taskDetailM.STDSCORE,
-//                                                                                       @"RATIONTYPE":taskDetailM.RATIONTYPE,
-//                                                                                       @"RATIONCODE":taskDetailM.RATIONCODE,
-//                                                                                       @"RATIONID":taskDetailM.SEQKEY,
-//                                                                                       @"ADDMODE":@"10",
-//                                                                                       @"STATUS":@"10"}];
-//    
-//    NSMutableDictionary * detailFieldsDic = [NSMutableDictionary dictionaryWithDictionary:@{@"PSNNAME":[ZESettingLocalData getUSERNAME],
-//                                                                                            @"PSNNUM":[ZESettingLocalData getUSERCODE],
-//                                                                                            @"DESCR":@"",
-//                                                                                            @"WORKPOINTS":@"10",
-//                                                                                            }];
-//    
+    NSDictionary * userChoosedDic = [[ZEPointRegCache instance] getUserChoosedOptionDic];
+    NSString * dateStr = [userChoosedDic objectForKey:[ZEUtil getPointRegField:POINT_REG_DATE]];
+    
+    NSDictionary * taskDic = [userChoosedDic objectForKey:[ZEUtil getPointRegField:POINT_REG_TASK]];
+    
+    ZEEPM_TEAM_RATION_COMMON * taskDetailM = [ZEEPM_TEAM_RATION_COMMON getDetailWithDic:taskDic];
+    
+    NSArray * cacheDisType = [[[ZEPointRegCache instance] getDistributionTypeCoefficient] objectForKey:taskDetailM.RATIONTYPE];
+    
+    NSDictionary * parametersDic =@{@"limit":@"20",
+                                    @"MASTERTABLE":EPM_TEAM_RATION_REG,
+                                    @"MENUAPP":@"EMARK_APP",
+                                    @"ORDERSQL":@"",
+                                    @"WHERESQL":@"",
+                                    @"start":@"0",
+                                    @"METHOD":@"addSave",
+                                    @"DETAILTABLE":@"EPM_TEAM_RATION_REG_DETAIL",
+                                    @"MASTERFIELD":@"SEQKEY",
+                                    @"DETAILFIELD":@"TASKID",
+                                    @"self":@"self",
+                                    @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                    };
+    
+    
+    
+    NSMutableDictionary * fieldsDic = [NSMutableDictionary dictionaryWithDictionary: @{@"ENDDATE":dateStr,
+                                                                                       @"RATIONNAME":taskDetailM.RATIONNAME,
+                                                                                       @"STDSCORE":taskDetailM.STDSCORE,
+                                                                                       @"STANDARDOPERATIONTIME":taskDetailM.STANDARDOPERATIONTIME,
+                                                                                       @"STANDARDOPERATIONNUM":taskDetailM.STANDARDOPERATIONNUM,
+                                                                                       @"CONVERSIONCOEFFICIENT":taskDetailM.CONVERSIONCOEFFICIENT,
+                                                                                       @"CONVERSIONUNITS":taskDetailM.CONVERSIONUNITS,
+                                                                                       @"RATIONTYPE":taskDetailM.RATIONTYPE,
+                                                                                       @"RATIONCODE":taskDetailM.RATIONCODE,
+                                                                                       @"RATIONID":taskDetailM.SEQKEY,
+                                                                                       @"ADDMODE":kLEADERPOINTREG,
+                                                                                       @"STATUS":@""}];
+
+    
+    for (int i = 0 ; i < _leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count; i ++) {
+        id object = [_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:_leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]];
+        if ([object isKindOfClass:[NSDictionary class]]) {
+            [fieldsDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[_leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+        }else{
+            [fieldsDic setObject:object forKey:[_leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+        }
+    }
+    
+    NSLog(@"fieldsDic >>  %@",fieldsDic);
+    
+    for (int i = 0 ; i < _leaderRegView.USERCHOOSEDWORKERVALUEARR.count; i ++) {
+        NSMutableDictionary * defaultDic = [NSMutableDictionary dictionaryWithDictionary:_leaderRegView.USERCHOOSEDWORKERVALUEARR[i]];
+        for (int j = 0 ; j < defaultDic.allKeys.count; j ++) {
+            id object = [defaultDic objectForKey:defaultDic.allKeys[j]];
+            if ([object isKindOfClass:[NSDictionary class]]) {
+                [defaultDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+            }else{
+                [defaultDic setObject:object forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+            }
+        }
+        [_leaderRegView.USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:i withObject:defaultDic];
+    }
+    
+    
+    [[ZECalculateTotalPoint instance] getTotalPointTaskDic:fieldsDic withPersonalDetailArr:_leaderRegView.USERCHOOSEDWORKERVALUEARR];
+
+    NSLog(@">>>>>>>>>   %@",[[ZECalculateTotalPoint instance] getResultDic]);
 //    for (NSDictionary * typeDic in cacheDisType) {
 //        ZEEPM_TEAM_RATIONTYPEDETAIL * rationTypeDetailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:typeDic];
 //        if ([rationTypeDetailM.ISRATION boolValue]) {
-//            id object = [dic objectForKey:rationTypeDetailM.FIELDNAME];
+//            id object = [_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:rationTypeDetailM.FIELDNAME];
 //            if ([object isKindOfClass:[NSDictionary class]]) {
 //                [fieldsDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[rationTypeDetailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
 //            }else{

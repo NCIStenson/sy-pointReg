@@ -50,7 +50,11 @@
 
 @interface ZEPointRegistrationView : UIView
 
+@property (nonatomic,strong) NSMutableDictionary * CHOOSEDRATIONTYPEVALUEDic;
+@property (nonatomic,strong) NSMutableArray * USERCHOOSEDWORKERVALUEARR;  // 用户选择的人员任务系数
+
 @property (nonatomic,retain) ZEHistoryModel * historyModel;     // 从历史界面进入工分登记修改数据
+
 @property (nonatomic,assign) id <ZEPointRegistrationViewDelegate> delegate;
 
 -(id)initWithFrame:(CGRect)rect;

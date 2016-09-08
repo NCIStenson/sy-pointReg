@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ZEPointAuditModel.h"
+
 @class ZEPointAuditView;
 @protocol ZEPointAuditViewDelegate <NSObject>
 
@@ -25,7 +25,7 @@
 /**
  *  是否审核
  */
--(void)confirmWeatherAudit:(ZEPointAuditView *)hisView withModel:(ZEPointAuditModel *)pointAM;
+//-(void)confirmWeatherAudit:(ZEPointAuditView *)hisView withModel:(ZEPointAuditModel *)pointAM;
 
 /**
  *  审核界面

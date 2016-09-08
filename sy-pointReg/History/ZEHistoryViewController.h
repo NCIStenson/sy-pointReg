@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZESettingRootVC.h"
 
 @interface ZEHistoryViewController : UIViewController
 

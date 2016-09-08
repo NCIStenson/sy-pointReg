@@ -52,39 +52,39 @@
 
 -(void)goLogin:(NSString *)username password:(NSString *)pwd
 {
-//    if ([username isEqualToString:@""]) {
-//        if (IS_IOS8) {
-//            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"用户名不能为空" message:nil preferredStyle:UIAlertControllerStyleAlert];
-//            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:nil];
-//            [alertController addAction:okAction];
-//            [self presentViewController:alertController animated:YES completion:nil];
-//            
-//        }else{
-//            UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"用户名不能为空" message:nil delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-//            [alertView show];
-//        }
-//        return;
-//    }else if (![ZEUtil isStrNotEmpty:pwd]){
-//        if (IS_IOS8) {
-//            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"密码不能为空"
-//                                                                                     message:nil
-//                                                                              preferredStyle:UIAlertControllerStyleAlert];
-//            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的"
-//                                                               style:UIAlertActionStyleDefault handler:nil];
-//            [alertController addAction:okAction];
-//            [self presentViewController:alertController animated:YES completion:nil];
-//            
-//        }else{
-//            UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"密码不能为空"
-//                                                                message:nil
-//                                                               delegate:nil
-//                                                      cancelButtonTitle:@"好的"
-//                                                      otherButtonTitles:nil, nil];
-//            [alertView show];
-//        }
-//        return;
-//    }
-//    __block ZELoginViewController * safeSelf = self;
+    if ([username isEqualToString:@""]) {
+        if (IS_IOS8) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"用户名不能为空" message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:nil];
+            [alertController addAction:okAction];
+            [self presentViewController:alertController animated:YES completion:nil];
+            
+        }else{
+            UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"用户名不能为空" message:nil delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            [alertView show];
+        }
+        return;
+    }else if (![ZEUtil isStrNotEmpty:pwd]){
+        if (IS_IOS8) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"密码不能为空"
+                                                                                     message:nil
+                                                                              preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的"
+                                                               style:UIAlertActionStyleDefault handler:nil];
+            [alertController addAction:okAction];
+            [self presentViewController:alertController animated:YES completion:nil];
+            
+        }else{
+            UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"密码不能为空"
+                                                                message:nil
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"好的"
+                                                      otherButtonTitles:nil, nil];
+            [alertView show];
+        }
+        return;
+    }
+
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [self progressBegin:nil];
     [ZEUserServer loginWithNum:username
@@ -110,8 +110,8 @@
 
 -(void)cacheUserInfo
 {
-    NSDictionary * parametersDic = @{@"limit":@"20",
-                                     @"MASTERTABLE":UUM_USER,
+    NSDictionary * parametersDic = @{@"limit":@"2000",
+                                     @"MASTERTABLE":V_UUM_USER_ST,
                                      @"MENUAPP":@"EMARK_APP",
                                      @"ORDERSQL":@"DISPLAYORDER",
                                      @"WHERESQL":@"",
@@ -122,19 +122,30 @@
                                      @"DETAILFIELD":@"",
                                      @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
                                      };
-    NSDictionary * fieldsDic =@{@"USERACCOUNT":@"",
+    
+    NSLog(@"%@",[ZESettingLocalData getUSERNAME]);
+    
+    NSDictionary * fieldsDic =@{@"USERACCOUNT":[ZESettingLocalData getUSERNAME],
                                 @"USERID":@"",
                                 @"USERNAME":@"",
-                                @"USERCODE":@""};
+                                @"USERCODE":@"",
+                                @"PLURALIST":@""};
     
-    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[UUM_USER]
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[V_UUM_USER_ST]
                                                                            withFields:@[fieldsDic]
                                                                        withPARAMETERS:parametersDic
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
-                                 [ZESettingLocalData setUSERINFODic:[ZEUtil getServerData:data withTabelName:UUM_USER][0]];
+                                 NSDictionary * userinfoDic= [ZEUtil getServerData:data withTabelName:V_UUM_USER_ST][0];
+                                 
+                                 if ([[userinfoDic objectForKey:@"USERCODE"] isEqualToString:[userinfoDic objectForKey:@"PLURALIST"]]) {
+                                     [ZESettingLocalData setISLEADER:YES];
+                                 }
+                                 [ZESettingLocalData setUSERINFODic:userinfoDic];
+                                 
+                                 
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
@@ -166,8 +177,10 @@
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
                                  NSLog(@">>>  %@",data);
-                                 NSDictionary * dic = [ZEUtil getServerData:data withTabelName:EPM_TEAM_K_VALUE][0];
-                                 [ZESettingLocalData setKValue:[dic objectForKey:@"KVALUE"]];
+                                 if ([[ZEUtil getServerData:data withTabelName:EPM_TEAM_K_VALUE] count] > 0) {
+                                     NSDictionary * dic = [ZEUtil getServerData:data withTabelName:EPM_TEAM_K_VALUE][0];
+                                     [ZESettingLocalData setKValue:[dic objectForKey:@"KVALUE"]];
+                                 }
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];

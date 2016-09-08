@@ -36,51 +36,50 @@
     NSLog(@"%@",NSHomeDirectory());
     /***** 检测更新  *****/
     [self checkUpdate];
-    
-    NSString * sqrt = @"sqrtmethod11*4method2/4";
-    
-    NSRange resultRange = [sqrt rangeOfString:@"method1" options:NSBackwardsSearch range:NSMakeRange(0,sqrt.length)];
-    NSRange resultRange1 = [sqrt rangeOfString:@"method2" options:NSBackwardsSearch range:NSMakeRange(0,sqrt.length)];
-    NSRange sqrtRange = [sqrt rangeOfString:@"sqrtmethod1" options:NSBackwardsSearch range:NSMakeRange(0,sqrt.length)];
-    NSRange replaceRange = NSMakeRange(sqrtRange.location , resultRange1.location + resultRange1.length);
-    NSRange range = NSMakeRange(resultRange.location + resultRange.length, resultRange1.location - resultRange.location - resultRange.length);
-    
-    NSLog(@"%d  %d",replaceRange.location,replaceRange.length);
-    
-    NSString * resultStr = [sqrt substringWithRange:range];
-
-    NSString * resultSqrt = [sqrt stringByReplacingCharactersInRange:replaceRange withString:resultStr];
-    
-    NSLog( @"  %@  === %@ ",resultStr ,resultSqrt );
-
-    NSString * finalStr = @"1+[K]*([QUOTIETY4]-[STANDARDOPERATIONTIME])/[STANDARDOPERATIONTIME]";
-    
-    finalStr = [finalStr stringByReplacingOccurrencesOfString:@"[]" withString:@"[aaaaaa]"];
-    
-    NSInteger strLength = finalStr.length;
-    for (int i = 0 ; i < strLength; i ++) {
-        
-        if (strLength <= 0) {
-            break;
-        }
-        
-        NSRange resultRange = [finalStr rangeOfString:@"[" options:NSBackwardsSearch range:NSMakeRange(0,strLength)];
-        NSRange resultRange1 = [finalStr rangeOfString:@"]" options:NSBackwardsSearch range:NSMakeRange(0,strLength)];
-        
-        NSRange range = NSMakeRange(resultRange.location + resultRange.length, resultRange1.location - resultRange.location - resultRange1.length);
-        
-        NSString * resultStr = [finalStr substringWithRange:range];
-                
-        NSRange replaceRange = NSMakeRange(resultRange.location , resultRange1.location - resultRange.location + 1);
-
-        finalStr = [finalStr stringByReplacingCharactersInRange:replaceRange withString:@"8"];
-
-        strLength = resultRange.location;
-        NSLog(@"%@",finalStr);
-
-        NSLog(@" %ld %@",(long)strLength,resultStr);
-    }
-    
+//    NSString * sqrt = @"sqrtmethod11*4method2/4";
+//    
+//    NSRange resultRange = [sqrt rangeOfString:@"method1" options:NSBackwardsSearch range:NSMakeRange(0,sqrt.length)];
+//    NSRange resultRange1 = [sqrt rangeOfString:@"method2" options:NSBackwardsSearch range:NSMakeRange(0,sqrt.length)];
+//    NSRange sqrtRange = [sqrt rangeOfString:@"sqrtmethod1" options:NSBackwardsSearch range:NSMakeRange(0,sqrt.length)];
+//    NSRange replaceRange = NSMakeRange(sqrtRange.location , resultRange1.location + resultRange1.length);
+//    NSRange range = NSMakeRange(resultRange.location + resultRange.length, resultRange1.location - resultRange.location - resultRange.length);
+//    
+//    NSLog(@"%d  %d",replaceRange.location,replaceRange.length);
+//    
+//    NSString * resultStr = [sqrt substringWithRange:range];
+//
+//    NSString * resultSqrt = [sqrt stringByReplacingCharactersInRange:replaceRange withString:resultStr];
+//    
+//    NSLog( @"  %@  === %@ ",resultStr ,resultSqrt );
+//
+//    NSString * finalStr = @"1+[K]*([QUOTIETY4]-[STANDARDOPERATIONTIME])/[STANDARDOPERATIONTIME]";
+//    
+//    finalStr = [finalStr stringByReplacingOccurrencesOfString:@"[]" withString:@"[aaaaaa]"];
+//    
+//    NSInteger strLength = finalStr.length;
+//    for (int i = 0 ; i < strLength; i ++) {
+//        
+//        if (strLength <= 0) {
+//            break;
+//        }
+//        
+//        NSRange resultRange = [finalStr rangeOfString:@"[" options:NSBackwardsSearch range:NSMakeRange(0,strLength)];
+//        NSRange resultRange1 = [finalStr rangeOfString:@"]" options:NSBackwardsSearch range:NSMakeRange(0,strLength)];
+//        
+//        NSRange range = NSMakeRange(resultRange.location + resultRange.length, resultRange1.location - resultRange.location - resultRange1.length);
+//        
+//        NSString * resultStr = [finalStr substringWithRange:range];
+//                
+//        NSRange replaceRange = NSMakeRange(resultRange.location , resultRange1.location - resultRange.location + 1);
+//
+//        finalStr = [finalStr stringByReplacingCharactersInRange:replaceRange withString:@"8"];
+//
+//        strLength = resultRange.location;
+//        NSLog(@"%@",finalStr);
+//
+//        NSLog(@" %ld %@",(long)strLength,resultStr);
+//    }
+//    
     NSData *cookiesdata = [ZESettingLocalData getCookie];
     if([cookiesdata length]) {
         ZEMainViewController * mainVC = [[ZEMainViewController alloc]init];

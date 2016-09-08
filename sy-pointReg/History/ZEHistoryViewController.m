@@ -11,11 +11,10 @@
 #import "MBProgressHUD.h"
 #import "ZEUserServer.h"
 
-#import "ZEHistoryDetailVC.h"
 #import "ZEPointRegistrationVC.h"
 
 #import "ZEPointRegCache.h"
-#import "ZEPointRegModel.h"
+#import "ZEEPM_TEAM_RATION_REGModel.h"
 
 @interface ZEHistoryViewController ()<ZEHistoryViewDelegate>
 {
@@ -34,10 +33,11 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationController.navigationBarHidden = YES;
-    
+        
     _historyView = [[ZEHistoryView alloc]initWithFrame:self.view.frame];
     _historyView.delegate = self;
     [self.view addSubview:_historyView];
+    [self.view sendSubviewToBack:_historyView];
     
     _currentPage = 0;
     [_historyView canLoadMoreData];
@@ -46,14 +46,15 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadNewData:) name:kNotiRefreshHistoryView object:nil];
 }
 
-
-
-
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:kNotiRefreshHistoryView object:nil];
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:YES];
+}
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -62,72 +63,106 @@
 
 -(void)sendRequest
 {
-//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    NSString * str = @"null";
-//    [ZEUserServer getHistoryDataByStartDate:str
-//                                    endDate:str
-//                                       page:[NSString stringWithFormat:@"%ld",(long)_currentPage]
-//                                 success:^(id data) {
-//                                     if ([ZEUtil isNotNull:data]) {
-//                                         NSArray * dataArr = [data objectForKey:@"data"];
-//                                         if ([ZEUtil isNotNull:dataArr] && dataArr.count > 0) {
-//                                             if (_currentPage == 0) {
-//                                                 [_historyView reloadFirstView:dataArr];
-//                                             }else{
-//                                                 [_historyView reloadView:dataArr];
-//                                             }
-//                                             if (dataArr.count%20 == 0) {
-//                                                 _currentPage += 1;
-//                                             }
-//                                         }else{
-//                                             [_historyView reloadFirstView:dataArr];
-//                                             [_historyView headerEndRefreshing];
-//                                             [_historyView loadNoMoreData];
-//                                         }
-//                                     }
-//                                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-//
-//                                 }
-//                                    fail:^(NSError *errorCode) {
-//                                        [_historyView headerEndRefreshing];
-//                                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-//
-//                                    }];
+    NSDictionary * parametersDic = @{@"start":[NSString stringWithFormat:@"%ld",(long)_currentPage * 20],
+                                     @"limit":@"20",
+                                     @"MASTERTABLE":EPM_TEAM_RATION_REG,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"ENDDATE",
+                                     @"WHERESQL":@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#'",
+                                     @"METHOD":@"search",
+                                     @"DETAILTABLE":@"",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:_historyView animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:_historyView animated:YES];
+                                 NSArray * dataArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG];
+                                 
+                                 if ([ZEUtil isNotNull:dataArr] && dataArr.count > 0) {
+                                     if (_currentPage == 0) {
+                                         [_historyView reloadFirstView:dataArr];
+                                     }else{
+                                         [_historyView reloadView:dataArr];
+                                     }
+                                     if (dataArr.count%20 == 0) {
+                                         _currentPage += 1;
+                                     }
+                                 }else{
+                                     [_historyView reloadFirstView:dataArr];
+                                     [_historyView headerEndRefreshing];
+                                     [_historyView loadNoMoreData];
+                                 }
+                                 
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:_historyView animated:YES];
+                             }];
 }
 
 -(void)searchHistoryStartDate:(NSString *)startDate withEndDate:(NSString *)endDate
 {
     [_historyView showAlertView:YES];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    [ZEUserServer getHistoryDataByStartDate:startDate
-//                                    endDate:endDate
-//                                       page:[NSString stringWithFormat:@"%ld",(long)_currentPage]
-//                                    success:^(id data) {
-//                                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-//                                        if ([ZEUtil isNotNull:data]) {
-//                                            NSArray * dataArr = [data objectForKey:@"data"];                                            
-//                                            if ([ZEUtil isNotNull:dataArr]) {
-//                                                if(dataArr.count == 0){
-//                                                    [_historyView headerEndRefreshing];
-//                                                    [_historyView reloadFirstView:dataArr];
-//                                                    [ZEUtil showAlertView:@"未查询到历史数据" viewController:self];
-//                                                    return;
-//                                                }
-//                                                if (_currentPage == 0) {
-//                                                    [_historyView reloadFirstView:dataArr];
-//                                                }else{
-//                                                    [_historyView reloadView:dataArr];
-//                                                }
-//                                                if (dataArr.count%20 == 0) {
-//                                                    _currentPage += 1;
-//                                                }
-//                                            }
-//                                        }
-//    }
-//                                       fail:^(NSError *errorCode) {
-//                                           [_historyView headerEndRefreshing];
-//                                           [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-//    }];
+    
+    NSDictionary * parametersDic = @{@"start":[NSString stringWithFormat:@"%ld",(long)_currentPage * 20],
+                                     @"limit":@"20",
+                                     @"MASTERTABLE":EPM_TEAM_RATION_REG,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"ENDDATE",
+                                     @"WHERESQL":@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#'",
+                                     @"METHOD":@"search",
+                                     @"DETAILTABLE":@"",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:_historyView animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 
+                                 NSArray * dataArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG];
+                                 
+                                 if ([ZEUtil isNotNull:dataArr] && dataArr.count > 0) {
+                                     if(dataArr.count == 0){
+                                         [_historyView headerEndRefreshing];
+                                         [_historyView reloadFirstView:dataArr];
+                                         [ZEUtil showAlertView:@"未查询到历史数据" viewController:self];
+                                         return;
+                                     }
+                                     if (_currentPage == 0) {
+                                         [_historyView reloadFirstView:dataArr];
+                                     }else{
+                                         [_historyView reloadView:dataArr];
+                                     }
+                                     if (dataArr.count%20 == 0) {
+                                         _currentPage += 1;
+                                     }
+                                 }else{
+                                     [_historyView reloadFirstView:dataArr];
+                                     [_historyView headerEndRefreshing];
+                                     [_historyView loadNoMoreData];
+                                 }
+                                 [MBProgressHUD hideHUDForView:_historyView animated:YES];
+
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:_historyView animated:YES];
+                             }];
+
 }
 
 
@@ -177,79 +212,90 @@
     }
 }
 
--(void)enterDetailView:(ZEHistoryModel *)hisMod
+-(void)enterDetailView:(NSString *)seqkey
 {
-    if ([hisMod.TT_FLAG isEqualToString:@"未审核"]) {
-        
-        NSMutableDictionary * historyDic = [NSMutableDictionary dictionary];
-        
-        [historyDic setObject:hisMod.NDXS forKey:@"ndxs"];
-        [historyDic setObject:hisMod.TT_HOUR forKey:@"hour"];
-        [historyDic setObject:hisMod.TT_TASK forKey:@"woekername"];
-//        [historyDic setObject:[ZESetLocalData getUsername] forKey:@"username"];
-        [historyDic setObject:hisMod.seqkey forKey:@"sqlkey"];
-        [historyDic setObject:hisMod.DISPATCH_TYPE forKey:@"shareType"];
-        [historyDic setObject:hisMod.SJXS forKey:@"sjxs"];
-        [historyDic setObject:hisMod.REAL_HOUR forKey:@"allScore"];
-        
 
-        if ([hisMod.DISPATCH_TYPE integerValue] == 4) {
-            [historyDic setObject:hisMod.TTP_QUOTIETY forKey:@"workRoleScore"];
-        }
-        [historyDic setObject:hisMod.SJXSScore  forKey:@"sjxsScore"];
-        [historyDic setObject:hisMod.NDXSScore  forKey:@"ndxsScore"];
+    NSDictionary * parametersDic = @{@"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"SYSCREATEDATE",
+                                     @"WHERESQL":[NSString stringWithFormat:@"SEQKEY=%@",seqkey],
+                                     @"METHOD":@"search",
+                                     @"MASTERTABLE":EPM_TEAM_RATION_REG,
+                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"TASKID",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:_historyView animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 NSLog(@"  =========  %@",data);
+                                 [MBProgressHUD hideHUDForView:_historyView animated:YES];
+                                 [self goChageVC:data];
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:_historyView animated:YES];
+                             }];
 
-//        if ([ZEUtil isNotNull:hisMod.TIMES]) {
-//            [historyDic setObject:hisMod.TIMES forKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
-//        }else{
-//            [historyDic setObject:@"1" forKey:[ZEUtil getPointRegField:POINT_REG_JOB_COUNT]];
-//        }
-//        if ([ZEUtil isNotNull:hisMod.TWR_ID]) {
-//            [historyDic setObject:hisMod.TWR_ID forKey:@"twr_id"];
-//        }else{
-//            [historyDic setObject:@"" forKey:@"twr_id"];
-//        }
-//        
-//        if ([ZEUtil isNotNull:hisMod.ROLENAME] && [ZEUtil isNotNull:hisMod.TTP_QUOTIETY]) {
-//            [historyDic setObject:hisMod.ROLENAME forKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
-//
-//        }else{
-//            [historyDic setObject:@"" forKey:[ZEUtil getPointRegField:POINT_REG_JOB_ROLES]];
-//        }
-//
-//        [[ZEPointRegCache instance] setResubmitCaches:historyDic];
+}
 
+-(void)goChageVC:(NSDictionary *)dic
+{
+    ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:[ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0]];
+    NSLog(@">>>  %@",model.SELF);
+    if ([model.SELF isEqualToString:@"self"]) {
+        NSLog(@"自己录入的");
         ZEPointRegistrationVC * pointRegVC = [[ZEPointRegistrationVC alloc]init];
-        pointRegVC.hisModel                = hisMod;
-        [self presentViewController:pointRegVC animated:YES completion:nil];
+        pointRegVC.defaultDic = [ZEUtil getServerDic:dic withTabelName:EPM_TEAM_RATION_REG];
+        pointRegVC.defaultDetailDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        [self.navigationController pushViewController:pointRegVC animated:YES];
+        
+    }else if([model.SELF isEqualToString:@"leader"]){
+        NSLog(@"负责人录入");
     }else{
-        ZEHistoryDetailVC * detailVC = [[ZEHistoryDetailVC alloc]init];
-        detailVC.model = hisMod;
-        detailVC.enterType = ENTER_FIXED_POINTREG_TYPE_HIS;
-        [self presentViewController:detailVC animated:YES completion:nil];
+        NSLog(@" 班组长录入 ");
     }
 }
 
-
 -(void)deleteHistory:(NSString *)seqkey
 {
-//    __block ZEHistoryViewController * safeSelf = self;
-//    [ZEUserServer deleteHistoryItem:seqkey success:^(id data) {
-//        if ([ZEUtil isNotNull:data]) {
-//            if ([[data objectForKey:@"data"] integerValue] == 1) {
-//                _currentPage = 0 ;
-//                if(_isSearch){
-//                    [safeSelf searchHistoryStartDate:_startDate withEndDate:_endDate];
-//                }else{
-//                    [safeSelf sendRequest];
-//                }
-//            }else{
-//                [ZEUtil showAlertView:@"删除失败，请重试" viewController:self];
-//            }
-//        }
-//    } fail:^(NSError *errorCode) {
-//        
-//    }];
+    
+    NSDictionary * parametersDic = @{@"MASTERTABLE":EPM_TEAM_RATION_REG,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"WHERESQL":@"",
+                                     @"METHOD":@"delete",
+                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"TASKID",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSDictionary * fieldsDic =@{@"SEQKEY":seqkey};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    __block ZEHistoryViewController * safeSelf = self;
+    
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 _currentPage = 0 ;
+                                 if(_isSearch){
+                                     [safeSelf searchHistoryStartDate:_startDate withEndDate:_endDate];
+                                 }else{
+                                     [safeSelf sendRequest];
+                                 }
+                                 
+                                 
+                             } fail:^(NSError *errorCode) {
+
+                             }];
 }
 
 -(void)goBack

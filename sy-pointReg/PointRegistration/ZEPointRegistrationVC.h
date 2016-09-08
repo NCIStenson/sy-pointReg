@@ -9,14 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "ZEHistoryModel.h"
 
+#import "ZEEPM_TEAM_RATION_REGModel.h"
+
 @interface ZEPointRegistrationVC : UIViewController
 
-@property (nonatomic,copy) NSString * codeStr;
-/**
- * 扫码进入工分登记页面 发送请求
- * 手动点入不请求
- * 历史进入工分登记页面
- */
-@property (nonatomic,retain) ZEHistoryModel * hisModel;     // 从历史界面进入工分登记修改数据
+@property (nonatomic,assign) ENTER_PERSON_POINTREG_TYPE regType;
+
+@property (nonnull,nonatomic,strong) NSDictionary * defaultDic;
+@property (nonnull,nonatomic,strong) NSArray * defaultDetailDic;
 
 @end

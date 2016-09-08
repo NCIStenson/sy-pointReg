@@ -21,8 +21,6 @@
 		98255AAB1CE5CE420023BEA9 /* icon_point@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98255AA31CE5CE420023BEA9 /* icon_point@3x.png */; };
 		98255AAC1CE5CE420023BEA9 /* icon_scan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98255AA41CE5CE420023BEA9 /* icon_scan@2x.png */; };
 		98255AAD1CE5CE420023BEA9 /* icon_scan@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98255AA51CE5CE420023BEA9 /* icon_scan@3x.png */; };
-		982CEA071C741E59008693C2 /* ZEHistoryDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 982CEA061C741E59008693C2 /* ZEHistoryDetailVC.m */; };
-		982CEA0A1C741E77008693C2 /* ZEHistoryDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 982CEA091C741E77008693C2 /* ZEHistoryDetailView.m */; };
 		982CEA0E1C7449F8008693C2 /* ZEPointAuditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 982CEA0D1C7449F8008693C2 /* ZEPointAuditViewController.m */; };
 		982CEA111C744A11008693C2 /* ZEPointAuditView.m in Sources */ = {isa = PBXBuildFile; fileRef = 982CEA101C744A11008693C2 /* ZEPointAuditView.m */; };
 		982F0C6A1C4E2D4600593946 /* ZEServerEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 982F0C691C4E2D4600593946 /* ZEServerEngine.m */; };
@@ -81,6 +79,7 @@
 		98AEA3471CD063A4001C4AED /* banner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 98AEA33C1CD063A4001C4AED /* banner.jpg */; };
 		98AEA3551CD1AFCC001C4AED /* ZEUserCenterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 98AEA3541CD1AFCC001C4AED /* ZEUserCenterVC.m */; };
 		98AEA3581CD1AFED001C4AED /* ZEUserCenterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 98AEA3571CD1AFED001C4AED /* ZEUserCenterView.m */; };
+		98C0BADE1D7EAE9D007FDDC3 /* ZEEPM_TEAM_RATION_REGModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C0BADD1D7EAE9D007FDDC3 /* ZEEPM_TEAM_RATION_REGModel.m */; };
 		98DAD9351C7EDFD200A1AB49 /* login_password@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98DAD9331C7EDFD200A1AB49 /* login_password@2x.png */; };
 		98DAD9361C7EDFD200A1AB49 /* login_username@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98DAD9341C7EDFD200A1AB49 /* login_username@2x.png */; };
 		98DB7C501C4F4FA70046D405 /* ZEUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 98DB7C4F1C4F4FA70046D405 /* ZEUtil.m */; };
@@ -140,10 +139,6 @@
 		98255AA31CE5CE420023BEA9 /* icon_point@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_point@3x.png"; path = "SourceImage/icon_point@3x.png"; sourceTree = "<group>"; };
 		98255AA41CE5CE420023BEA9 /* icon_scan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_scan@2x.png"; path = "SourceImage/icon_scan@2x.png"; sourceTree = "<group>"; };
 		98255AA51CE5CE420023BEA9 /* icon_scan@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_scan@3x.png"; path = "SourceImage/icon_scan@3x.png"; sourceTree = "<group>"; };
-		982CEA051C741E59008693C2 /* ZEHistoryDetailVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEHistoryDetailVC.h; path = History/ZEHistoryDetailVC.h; sourceTree = "<group>"; };
-		982CEA061C741E59008693C2 /* ZEHistoryDetailVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEHistoryDetailVC.m; path = History/ZEHistoryDetailVC.m; sourceTree = "<group>"; };
-		982CEA081C741E77008693C2 /* ZEHistoryDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEHistoryDetailView.h; path = History/ZEHistoryDetailView.h; sourceTree = "<group>"; };
-		982CEA091C741E77008693C2 /* ZEHistoryDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEHistoryDetailView.m; path = History/ZEHistoryDetailView.m; sourceTree = "<group>"; };
 		982CEA0C1C7449F8008693C2 /* ZEPointAuditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEPointAuditViewController.h; path = ZEPointAudit/ZEPointAuditViewController.h; sourceTree = "<group>"; };
 		982CEA0D1C7449F8008693C2 /* ZEPointAuditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEPointAuditViewController.m; path = ZEPointAudit/ZEPointAuditViewController.m; sourceTree = "<group>"; };
 		982CEA0F1C744A11008693C2 /* ZEPointAuditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEPointAuditView.h; path = ZEPointAudit/ZEPointAuditView.h; sourceTree = "<group>"; };
@@ -242,6 +237,8 @@
 		98AEA3541CD1AFCC001C4AED /* ZEUserCenterVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEUserCenterVC.m; path = UserCenter/ZEUserCenterVC.m; sourceTree = "<group>"; };
 		98AEA3561CD1AFED001C4AED /* ZEUserCenterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEUserCenterView.h; path = UserCenter/ZEUserCenterView.h; sourceTree = "<group>"; };
 		98AEA3571CD1AFED001C4AED /* ZEUserCenterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEUserCenterView.m; path = UserCenter/ZEUserCenterView.m; sourceTree = "<group>"; };
+		98C0BADC1D7EAE9D007FDDC3 /* ZEEPM_TEAM_RATION_REGModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEEPM_TEAM_RATION_REGModel.h; path = Model/ZEEPM_TEAM_RATION_REGModel.h; sourceTree = "<group>"; };
+		98C0BADD1D7EAE9D007FDDC3 /* ZEEPM_TEAM_RATION_REGModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEEPM_TEAM_RATION_REGModel.m; path = Model/ZEEPM_TEAM_RATION_REGModel.m; sourceTree = "<group>"; };
 		98DAD9331C7EDFD200A1AB49 /* login_password@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "login_password@2x.png"; path = "SourceImage/login_password@2x.png"; sourceTree = "<group>"; };
 		98DAD9341C7EDFD200A1AB49 /* login_username@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "login_username@2x.png"; path = "SourceImage/login_username@2x.png"; sourceTree = "<group>"; };
 		98DB7C451C4F323A0046D405 /* ZEColorConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEColorConstant.h; path = Constant/ZEColorConstant.h; sourceTree = "<group>"; };
@@ -326,6 +323,8 @@
 		980C6A671D6BE27A00BDF47F /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				98C0BADC1D7EAE9D007FDDC3 /* ZEEPM_TEAM_RATION_REGModel.h */,
+				98C0BADD1D7EAE9D007FDDC3 /* ZEEPM_TEAM_RATION_REGModel.m */,
 				980C6A681D6BE2C500BDF47F /* ZEUUM_FUNCTION_MODEL.h */,
 				980C6A691D6BE2C500BDF47F /* ZEUUM_FUNCTION_MODEL.m */,
 				98947EA91D6C4D2800D1EE24 /* ZEEPM_TEAM_RATION_COMMON.h */,
@@ -545,10 +544,6 @@
 				9858D31A1C59C89300937D54 /* ZEHistoryModel.m */,
 				9858D31F1C5EF19800937D54 /* ZEAlertSearchView.h */,
 				9858D3201C5EF19800937D54 /* ZEAlertSearchView.m */,
-				982CEA051C741E59008693C2 /* ZEHistoryDetailVC.h */,
-				982CEA061C741E59008693C2 /* ZEHistoryDetailVC.m */,
-				982CEA081C741E77008693C2 /* ZEHistoryDetailView.h */,
-				982CEA091C741E77008693C2 /* ZEHistoryDetailView.m */,
 			);
 			name = History;
 			sourceTree = "<group>";
@@ -872,14 +867,13 @@
 				9858D3241C60413400937D54 /* ZEPointChooseTaskView.m in Sources */,
 				989B2C481C4DE7AA00F14EFA /* main.m in Sources */,
 				984F0DE71C75539D008106A5 /* ZEPointAuditModel.m in Sources */,
-				982CEA071C741E59008693C2 /* ZEHistoryDetailVC.m in Sources */,
 				987013D71D703C4C00CBD1B2 /* ZELeaderRegVC.m in Sources */,
+				98C0BADE1D7EAE9D007FDDC3 /* ZEEPM_TEAM_RATION_REGModel.m in Sources */,
 				98DB7C711C4F7D790046D405 /* ZEHistoryViewController.m in Sources */,
 				987013E01D7423F500CBD1B2 /* ZEChooseWorkerView.m in Sources */,
 				98947EAB1D6C4D2800D1EE24 /* ZEEPM_TEAM_RATION_COMMON.m in Sources */,
 				987013D11D7015B900CBD1B2 /* ZECalculateTotalPoint.m in Sources */,
 				982CEA111C744A11008693C2 /* ZEPointAuditView.m in Sources */,
-				982CEA0A1C741E77008693C2 /* ZEHistoryDetailView.m in Sources */,
 				9845DEC81D6AABC600895F1A /* ZELoginViewController.m in Sources */,
 				987B34B31C5214970035FB6B /* ZEPointRegModel.m in Sources */,
 				982F0C6A1C4E2D4600593946 /* ZEServerEngine.m in Sources */,
@@ -1048,7 +1042,7 @@
 				WARNING_CFLAGS = "";
 				ZENITH_APPNAME = "邵阳工分登记Debug";
 				ZENITH_BUNDLEID = "com.zenithElec.sy-pointReg-Debug";
-				ZENITH_SERVER = "http://120.27.152.63:8056/emarkspg_sy";
+				ZENITH_SERVER = "http://120.27.152.63:7001/emarkspg_sy";
 			};
 			name = Debug;
 		};
@@ -1074,7 +1068,7 @@
 				WARNING_CFLAGS = "";
 				ZENITH_APPNAME = "邵阳工分登记";
 				ZENITH_BUNDLEID = "com.zenithElec.sy-pointReg-Release";
-				ZENITH_SERVER = "http://120.27.152.63:8056/emarkspg_sy";
+				ZENITH_SERVER = "http://120.27.152.63:7001/emarkspg_sy";
 			};
 			name = Release;
 		};

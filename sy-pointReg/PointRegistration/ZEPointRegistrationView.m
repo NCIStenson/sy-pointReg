@@ -64,6 +64,8 @@
     UITableView * _contentTableView;
     UIView *navBar;
     
+    UITextField * _currentTextField;
+    
     float _allScore; // 工作得分
 }
 @property (nonatomic,strong) NSMutableArray * commmonRationTypeValueArr;  // 跟随任务的选项系数
@@ -77,9 +79,9 @@
 {
     self = [super initWithFrame:rect];
     if (self) {
-        self.USERCHOOSEDWORKERVALUEARR = [NSMutableArray array];
         self.CHOOSEDRATIONTYPEVALUEDic = [NSMutableDictionary dictionary];
         
+        self.USERCHOOSEDWORKERVALUEARR = [NSMutableArray array];
         self.CHOOSEDRATIONTYPEVALUEDic = [NSMutableDictionary dictionary];
         [self initNavBar];
         [self initView];
@@ -89,6 +91,8 @@
 
 - (void)initNavBar
 {
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldChanged:) name:UITextFieldTextDidChangeNotification object:textField];
+
     navBar = [[UIView alloc] initWithFrame:CGRectMake(kNavBarMarginLeft, kNavBarMarginTop, kNavBarWidth, kNavBarHeight)];
     [self addSubview:navBar];
 
@@ -182,10 +186,8 @@
 -(void)reloadContentView
 {
     [self isFollowTask];
-    self.USERCHOOSEDWORKERVALUEARR = [NSMutableArray array];
-    [self setWorkerDefaultData];
 
-//    [_contentTableView reloadData];
+    [self setWorkerDefaultData];
 }
 
 #pragma mark - initData
@@ -384,6 +386,7 @@
             field.textColor = MAIN_COLOR;
             field.tag = row;
             [cell.contentView addSubview:field];
+            [field addTarget:self  action:@selector(valueChanged:)  forControlEvents:UIControlEventEditingChanged];
             
             field.text = [self.CHOOSEDRATIONTYPEVALUEDic objectForKey:detailM.FIELDNAME];
         }
@@ -399,15 +402,16 @@
             cell.detailTextLabel.text = valueModel.QUOTIETYNAME;
         }else{
             UITextField * field = [[UITextField alloc]initWithFrame:CGRectMake(90.0f, 0, SCREEN_WIDTH - 105.0f, 44.0f)];
-            field.delegate = self;
-            field.keyboardType = UIKeyboardTypeDecimalPad;
-            field.font = [UIFont systemFontOfSize:14.0f];
+            field.delegate      = self;
+            field.keyboardType  = UIKeyboardTypeDecimalPad;
+            field.font          = [UIFont systemFontOfSize:14.0f];
             field.textAlignment = NSTextAlignmentRight;
-            field.textColor = MAIN_COLOR;
-            field.tag = row;
+            field.textColor     = MAIN_COLOR;
+            field.tag           = row;
             [cell.contentView addSubview:field];
+            [field addTarget:self  action:@selector(valueChanged:)  forControlEvents:UIControlEventEditingChanged];
             
-            field.text = [dic objectForKey:detailM.FIELDNAME];
+            field.text          = [dic objectForKey:detailM.FIELDNAME];
         }
     }else{
         if (row == 4 + self.commmonRationTypeValueArr.count + self.personalRationTypeValueArr.count) {
@@ -421,7 +425,7 @@
             field.textColor = MAIN_COLOR;
             [cell.contentView addSubview:field];
             field.tag = 10000;
-            if(_USERCHOOSEDWORKERVALUEARR.count > 0){
+            if(self.USERCHOOSEDWORKERVALUEARR.count > 0){
                 NSDictionary * dic = _USERCHOOSEDWORKERVALUEARR[0];
                 if ([ZEUtil isStrNotEmpty:[dic objectForKey:@"DESCR"]]) {
                     field.text = [dic objectForKey:@"DESCR"];
@@ -430,9 +434,9 @@
         }else if (row == 5 + self.commmonRationTypeValueArr.count + self.personalRationTypeValueArr.count){
             cell.textLabel.text = @"工时得分";
             cell.detailTextLabel.text = @"0分";
-            if(_USERCHOOSEDWORKERVALUEARR.count > 0){
+            if(self.USERCHOOSEDWORKERVALUEARR.count > 0){
                 NSDictionary * dic = _USERCHOOSEDWORKERVALUEARR[0];
-                if ([[dic objectForKey:@"WORKPOINTS"] integerValue] >0) {
+                if ([[dic objectForKey:@"WORKPOINTS"] doubleValue] >0) {
                     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@分",[dic objectForKey:@"WORKPOINTS"]];
                 }
             }
@@ -487,6 +491,29 @@
     }
 }
 
+-(void)valueChanged:(UITextField *)textField
+{
+    if (textField.tag > 4 + self.commmonRationTypeValueArr.count) {
+        NSDictionary * rationTypeDic = self.personalRationTypeValueArr[textField.tag - 4 - self.commmonRationTypeValueArr.count];
+        
+        ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:rationTypeDic];
+        
+        NSDictionary * dic = @{detailM.FIELDNAME:textField.text};
+        
+        NSMutableDictionary * changeDic = _USERCHOOSEDWORKERVALUEARR[0];
+        [changeDic setValuesForKeysWithDictionary:dic];
+        [_USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:0 withObject:changeDic];
+    }else if (textField.tag >= 4 ){
+        NSDictionary * rationTypeDic = self.commmonRationTypeValueArr[textField.tag - 4];
+        
+        ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:rationTypeDic];
+        NSDictionary * dic = @{detailM.FIELDNAME:textField.text};
+        
+        [self.CHOOSEDRATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
+    }
+    [self reloadUpadteDataTotalPoint];
+}
+
 #pragma mark - UITableViewDelegate
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -527,15 +554,15 @@
 }
 -(void)goSubmit{
     
-    NSLog(@">>  %@",self.CHOOSEDRATIONTYPEVALUEDic);
+    [self reloadUpadteData];
+    
+    NSLog(@">>  %@",self.USERCHOOSEDWORKERVALUEARR);
 //    [self calculationAllScore];
     
-    _allScore = 0;
-    [self endEditing:YES];
-    
-    if ([self.delegate respondsToSelector:@selector(goSubmit:withChoosedDic:)]) {
-        [self.delegate goSubmit:self withChoosedDic:self.CHOOSEDRATIONTYPEVALUEDic];
-    }
+//    [self endEditing:YES];
+//    if ([self.delegate respondsToSelector:@selector(goSubmit:withChoosedDic:)]) {
+//        [self.delegate goSubmit:self withChoosedDic:self.CHOOSEDRATIONTYPEVALUEDic];
+//    }
 
 }
 #pragma mark - ZEPointRegOptionViewDelegate
@@ -550,8 +577,6 @@
 -(void)didSelectOption:(id)object withRow:(NSInteger)row
 {
     UITableViewCell * cell = [_contentTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_currentSelectRow inSection:0]];
-
-    NSDictionary * choosedTaskDic = [[[ZEPointRegCache instance] getUserChoosedOptionDic] objectForKey:[ZEUtil getPointRegField:POINT_REG_TASK]];
 
     if (_currentSelectRow < 4) {
         [[ZEPointRegCache instance] setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_TASK]:object}];
@@ -636,11 +661,18 @@
     }
 }
 
+
+
 #pragma mark - UITextFieldDelegate
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     [self endEditing:YES];
+}
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    _currentTextField = textField;
+    _currentSelectRow = textField.tag;
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -650,7 +682,6 @@
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    
     NSMutableString * futureString = [NSMutableString stringWithString:textField.text];
     [futureString  insertString:string atIndex:range.location];
     
@@ -668,7 +699,6 @@
         }
         flag++;
     }
-    
     return YES;
 }
 
@@ -676,6 +706,9 @@
 {
     if (textField.tag % 10000 == 0) {
         NSDictionary * dic = @{@"DESCR":textField.text};
+        if (_USERCHOOSEDWORKERVALUEARR.count == 0) {
+            return;
+        }
         NSMutableDictionary * changeDic = _USERCHOOSEDWORKERVALUEARR[textField.tag / 10000 - 1];
         [changeDic setValuesForKeysWithDictionary:dic];
         [_USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:textField.tag / 10000 - 1 withObject:changeDic];
@@ -699,7 +732,43 @@
         
         [self.CHOOSEDRATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
     }
-    [self reloadUpadteData];
+    [self reloadUpadteDataTotalPoint];
+}
+
+
+-(void)reloadUpadteDataTotalPoint
+{
+    for (int i = 0 ; i < self.CHOOSEDRATIONTYPEVALUEDic.allKeys.count; i ++) {
+        id object = [self.CHOOSEDRATIONTYPEVALUEDic objectForKey:self.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]];
+        if ([object isKindOfClass:[NSDictionary class]]) {
+            [self.CHOOSEDRATIONTYPEVALUEDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[self.CHOOSEDRATIONTYPEVALUEDic.allKeys[i] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+        }else{
+            [self.CHOOSEDRATIONTYPEVALUEDic setObject:object forKey:[self.CHOOSEDRATIONTYPEVALUEDic.allKeys[i] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+        }
+    }
+    
+    NSMutableDictionary * defaultDic = [NSMutableDictionary dictionaryWithDictionary:self.USERCHOOSEDWORKERVALUEARR[0]];
+    for (int j = 0 ; j < defaultDic.allKeys.count; j ++) {
+        id object = [defaultDic objectForKey:defaultDic.allKeys[j]];
+        if ([object isKindOfClass:[NSDictionary class]]) {
+            [defaultDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+        }else{
+            [defaultDic setObject:object forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+        }
+    }
+    
+    [self.USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:0 withObject:defaultDic];
+    
+    [[ZECalculateTotalPoint instance] getTotalPointTaskDic:_CHOOSEDRATIONTYPEVALUEDic withPersonalDetailArr:_USERCHOOSEDWORKERVALUEARR];
+    
+    NSDictionary * resultDic = [[ZECalculateTotalPoint instance] getResultDic];
+    
+    self.CHOOSEDRATIONTYPEVALUEDic = [resultDic objectForKey:kFieldDic];
+    self.USERCHOOSEDWORKERVALUEARR = [NSMutableArray arrayWithArray:[resultDic objectForKey:kDefaultFieldDic]];
+    
+    NSIndexPath * allIndexPath = [NSIndexPath indexPathForRow:4 + self.commmonRationTypeValueArr.count + self.personalRationTypeValueArr.count + 1 inSection:0];
+    
+    [_contentTableView reloadRowsAtIndexPaths:@[allIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 /**
@@ -727,18 +796,20 @@
             [defaultDic setObject:object forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
         }
     }
-    [self.USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:0 withObject:defaultDic];
     
+    [self.USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:0 withObject:defaultDic];
+    NSLog(@" %@ ",self.USERCHOOSEDWORKERVALUEARR);
+
     [[ZECalculateTotalPoint instance] getTotalPointTaskDic:_CHOOSEDRATIONTYPEVALUEDic withPersonalDetailArr:_USERCHOOSEDWORKERVALUEARR];
     
+    NSLog(@" >>  %@",  [[ZECalculateTotalPoint instance] getResultDic]);
     NSDictionary * resultDic = [[ZECalculateTotalPoint instance] getResultDic];
     
     self.CHOOSEDRATIONTYPEVALUEDic = [resultDic objectForKey:kFieldDic];
-    self.USERCHOOSEDWORKERVALUEARR = [resultDic objectForKey:kDefaultFieldDic];
+    self.USERCHOOSEDWORKERVALUEARR = [NSMutableArray arrayWithArray:[resultDic objectForKey:kDefaultFieldDic]];
     
     
     [_contentTableView reloadData];
-
 }
 
 #pragma mark - 小数点四舍五入

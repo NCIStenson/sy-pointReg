@@ -36,8 +36,9 @@
 #import "ZEPointAuditView.h"
 #import "MJRefresh.h"
 
-#import "ZEPointAuditModel.h"
+//#import "ZEPointAuditModel.h"
 
+#import "ZEEPM_TEAM_RATION_REGModel.h"
 @interface ZEPointAuditView ()
 {
     UITableView * _contentTableView;
@@ -72,19 +73,7 @@
     }];
     navBar.backgroundColor = MAIN_NAV_COLOR;
     navBar.clipsToBounds = YES;
-    
-    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [rightBtn setTitle:@"批量审核" forState:UIControlStateNormal];
-    rightBtn.backgroundColor = [UIColor clearColor];
-    rightBtn.contentMode = UIViewContentModeScaleAspectFit;
-    [rightBtn addTarget:self action:@selector(goAudit) forControlEvents:UIControlEventTouchUpInside];
-    [navBar addSubview:rightBtn];
-    [rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.offset(kRightButtonMarginRight);
-        make.top.offset(kRightButtonMarginTop);
-        make.size.mas_equalTo(CGSizeMake(kRightButtonWidth, kRightButtonHeight));
-    }];
-    
+        
     UILabel *navTitleLabel = [UILabel new];
     navTitleLabel.backgroundColor = [UIColor clearColor];
     navTitleLabel.textAlignment = NSTextAlignmentCenter;
@@ -151,16 +140,17 @@
         }
         for (int i = 0; i < array.count ; i ++ ) {
             NSDictionary * dic = array[i];
-            ZEPointAuditModel * pointAM = [ZEPointAuditModel getDetailWithDic:dic];
-            
+            ZEEPM_TEAM_RATION_REGModel * pointAM = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:dic];
+            pointAM.ENDDATE = [pointAM.ENDDATE stringByReplacingOccurrencesOfString:@"00:00:00.0" withString:@""];
+
             if (_dateArr.count > 0) {
-                if([pointAM.TT_ENDDATE isEqualToString:[_dateArr lastObject]]){
+                if([pointAM.ENDDATE isEqualToString:[_dateArr lastObject]]){
                     [detailArr addObject:pointAM];
                     if (i == array.count - 1) {
                         [self.listDataArr addObject:detailArr];
                     }
                 }else{
-                    [_dateArr addObject:pointAM.TT_ENDDATE];
+                    [_dateArr addObject:pointAM.ENDDATE];
                     [self.listDataArr addObject:detailArr];
                     detailArr = [NSMutableArray array];
                     [detailArr addObject:pointAM];
@@ -169,7 +159,7 @@
                     }
                 }
             }else{
-                [_dateArr addObject:pointAM.TT_ENDDATE];
+                [_dateArr addObject:pointAM.ENDDATE];
                 [detailArr addObject:pointAM];
                 if (i == array.count - 1) {
                     [self.listDataArr addObject:detailArr];
@@ -278,7 +268,7 @@
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    ZEPointAuditModel * pointAM = nil;
+    ZEEPM_TEAM_RATION_REGModel * pointAM = nil;
     if ([ZEUtil isNotNull:self.listDataArr]) {
         NSArray * sectionDataArr = self.listDataArr[indexPath.section];
         if (sectionDataArr.count > indexPath.row) {
@@ -295,27 +285,27 @@
     [cellContent addSubview:imageView];
     
     UIImageView * maskImageView = [[UIImageView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 30.0f, 15.0f, 20.0f, 20.0f)];
-    if ([pointAM.TT_FLAG isEqualToString:@"未审核"]) {
+//    if ([pointAM.TT_FLAG isEqualToString:@"未审核"]) {
         [maskImageView setImage:[UIImage imageNamed:@"audit_no_icon.png"]];
-    }else{
-        [maskImageView setImage:[UIImage imageNamed:@"audit_yes_icon.png"]];
-    }
+//    }else{
+//        [maskImageView setImage:[UIImage imageNamed:@"audit_yes_icon.png"]];
+//    }
     [cellContent addSubview:maskImageView];
 
     UILabel * realHourLabel = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 80.0f, 0.0f, 50.0f, 50.0f)];
     realHourLabel.font = [UIFont systemFontOfSize:12.0f];
     realHourLabel.textColor = [UIColor lightGrayColor];
     realHourLabel.textAlignment = NSTextAlignmentRight;
-    realHourLabel.text = [NSString stringWithFormat:@"+%@",pointAM.REAL_HOUR];
+    realHourLabel.text = [NSString stringWithFormat:@"+%@",pointAM.STANDARDOPERATIONTIME];
     [cellContent addSubview:realHourLabel];
     
     UILabel * taskNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(65.0f, 5.0f, 200.0f, 20.0f)];
     taskNameLabel.font = [UIFont systemFontOfSize:15.0f];
-    taskNameLabel.text = pointAM.TT_TASK;
+    taskNameLabel.text = pointAM.RATIONNAME;
     [cellContent addSubview:taskNameLabel];
     
     UILabel * staffNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(65.0f, 27.0f, 200.0f, 20.0f)];
-    staffNameLabel.text = pointAM.TTP_NAME;
+    staffNameLabel.text = pointAM.PSNNAME;
     staffNameLabel.font = [UIFont systemFontOfSize:13.0f];
     [cellContent addSubview:staffNameLabel];
     
@@ -324,16 +314,16 @@
 #pragma mark - 删除功能
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ZEPointAuditModel * pointAM = nil;
+    ZEEPM_TEAM_RATION_REGModel * pointAM = nil;
     if ([ZEUtil isNotNull:self.listDataArr] && self.listDataArr.count > 0) {
         NSArray * sectionDataArr = self.listDataArr[indexPath.section];
         if (sectionDataArr.count > indexPath.row) {
             pointAM = sectionDataArr[indexPath.row];
         }
     }
-    if ([pointAM.TT_FLAG isEqualToString:@"未审核"]) {
-        return YES;
-    }
+//    if ([pointAM.TT_FLAG isEqualToString:@"未审核"]) {
+//        return YES;
+//    }
     return NO;
 }
 //设置编辑风格EditingStyle
@@ -348,7 +338,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ZEPointAuditModel * pointAM = nil;
+    ZEEPM_TEAM_RATION_REGModel * pointAM = nil;
     if ([ZEUtil isNotNull:self.listDataArr]) {
         NSArray * sectionDataArr = self.listDataArr[indexPath.section];
         if (sectionDataArr.count > indexPath.row) {
@@ -357,7 +347,7 @@
     }
     
     if ([self.delegate respondsToSelector:@selector(deleteNoAuditHistory:)]) {
-        [self.delegate deleteNoAuditHistory:pointAM.SEQKEY];
+//        [self.delegate deleteNoAuditHistory:pointAM.SEQKEY];
     }
 }
 
@@ -366,12 +356,12 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ZEPointAuditModel * pointAM = nil;
+    ZEEPM_TEAM_RATION_REGModel * pointAM = nil;
     if ([ZEUtil isNotNull:self.listDataArr]) {
         pointAM = self.listDataArr[indexPath.section][indexPath.row];
     }
     if ([self.delegate respondsToSelector:@selector(confirmWeatherAudit:withModel:)]) {
-        [self.delegate confirmWeatherAudit:self withModel:pointAM];
+//        [self.delegate confirmWeatherAudit:self withModel:pointAM];
     }
 }
 

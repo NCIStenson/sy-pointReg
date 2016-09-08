@@ -10,6 +10,7 @@
 #define ZEServerTableMessage_h
 
 #define UUM_USER                   @"UUM_USER"                  /***   用户信息表   ***/
+#define V_UUM_USER_ST              @"V_UUM_USER_ST"             /***   用户信息视图   ***/
 #define EPM_TEAM_K_VALUE           @"EPM_TEAM_K_VALUE"          /***   获取K值系数   ***/
 #define UUM_FUNCTION               @"UUM_FUNCTION"              /***   首页图标页面链接跳转   ***/
 #define EPM_TEAM_RATIONTYPE        @"EPM_TEAM_RATIONTYPE"       /***   分配类型   ***/

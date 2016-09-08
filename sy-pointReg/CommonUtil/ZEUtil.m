@@ -46,6 +46,16 @@
     }
 }
 
++ (BOOL)strIsEmpty:(NSString *)str
+{
+    if ([str isEqualToString:@"(null)"]) {
+        return YES;
+    }
+    if ([str isEqualToString:@""]) {
+        return YES;
+    }
+    return NO;
+}
 +(int)compareDate:(NSString*)date01 withDate:(NSString*)date02{
     int ci;
     NSDateFormatter *df = [[NSDateFormatter alloc] init];

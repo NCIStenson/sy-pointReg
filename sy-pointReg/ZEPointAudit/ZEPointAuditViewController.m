@@ -11,12 +11,12 @@
 #import "MBProgressHUD.h"
 #import "ZEAuditViewController.h"
 
-#import "ZEHistoryDetailVC.h"
+#import "ZEEPM_TEAM_RATION_REGModel.h"
 
 @interface ZEPointAuditViewController ()
 {
     ZEPointAuditView * _pointAuditView;
-    ZEPointAuditModel * _pointAuditM;
+    ZEEPM_TEAM_RATION_REGModel * _pointAuditM;
     NSInteger _currentPage;
 }
 @end
@@ -62,27 +62,50 @@
 /******  审核列表   ****/
 -(void)sendRequest
 {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    [ZEUserServer getPointAuditWithPage:[NSString stringWithFormat:@"%ld",(long)_currentPage] success:^(id data) {
-//        NSArray * dataArr = [data objectForKey:@"data"];
-//        if ([ZEUtil isNotNull:dataArr]) {
-//            if (_currentPage == 0) {
-//                [_pointAuditView reloadFirstView:dataArr];
-//            }else{
-//                [_pointAuditView reloadView:dataArr];
-//            }
-//            if (dataArr.count%20 == 0) {
-//                _currentPage += 1;
-//            }
-//        }else{
-//            [_pointAuditView loadNoMoreData];
-//            [_pointAuditView headerEndRefreshing];
-//        }
-//        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-//    } fail:^(NSError *errorCode) {
-//        [_pointAuditView headerEndRefreshing];
-//        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-//    }];
+    NSDictionary * parametersDic = @{@"start":[NSString stringWithFormat:@"%ld",(long)_currentPage * 20],
+                                     @"limit":@"20",
+                                     @"MASTERTABLE":EPM_TEAM_RATION_REG,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"ENDDATE",
+                                     @"WHERESQL":@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#' and status in ('10')",
+                                     @"METHOD":@"search",
+                                     @"DETAILTABLE":@"",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:_pointAuditView animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 NSLog(@"  ===   %@",data);
+                                 [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
+                                 NSArray * dataArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG];
+                                 
+                                 if ([ZEUtil isNotNull:dataArr] && dataArr.count > 0) {
+                                     if (_currentPage == 0) {
+                                         [_pointAuditView reloadFirstView:dataArr];
+                                     }else{
+                                         [_pointAuditView reloadView:dataArr];
+                                     }
+                                     if (dataArr.count%20 == 0) {
+                                         _currentPage += 1;
+                                     }
+                                 }else{
+                                     [_pointAuditView reloadFirstView:dataArr];
+                                     [_pointAuditView headerEndRefreshing];
+                                     [_pointAuditView loadNoMoreData];
+                                 }
+                                 
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
+                             }];
 }
 
 
@@ -104,14 +127,14 @@
     [self presentViewController:auditVC animated:YES completion:nil];
 }
 
--(void)confirmWeatherAudit:(ZEPointAuditView *)hisView withModel:(ZEPointAuditModel *)pointAM
-{
-    _pointAuditM = pointAM;
-    ZEHistoryDetailVC * detailVC = [[ZEHistoryDetailVC alloc]init];
-    detailVC.model = pointAM;
-    detailVC.enterType = ENTER_FIXED_POINTREG_TYPE_AUDIT;
-    [self presentViewController:detailVC animated:YES completion:nil];
-    
+//-(void)confirmWeatherAudit:(ZEPointAuditView *)hisView withModel:(ZEPointAuditModel *)pointAM
+//{
+//    _pointAuditM = pointAM;
+//    ZEHistoryDetailVC * detailVC = [[ZEHistoryDetailVC alloc]init];
+//    detailVC.model = pointAM;
+//    detailVC.enterType = ENTER_FIXED_POINTREG_TYPE_AUDIT;
+//    [self presentViewController:detailVC animated:YES completion:nil];
+
 //    if (IS_IOS8) {
 //        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"您确定审核该任务？" preferredStyle:UIAlertControllerStyleAlert];
 //        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定"
@@ -129,7 +152,7 @@
 //        alertView.delegate = self;
 //        [alertView show];
 //    }
-}
+//}
 
 -(void)deleteNoAuditHistory:(NSString *)seqkey
 {

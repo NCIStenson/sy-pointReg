@@ -15,6 +15,7 @@ static NSString * kUSERCODE         = @"kUSERCODE";
 static NSString * kISEXPERT         = @"kISEXPERT";
 static NSString * kUSERINFODic      = @"kUSERINFODic";
 static NSString * KValue            = @"KValue";
+static NSString * kISLEADER            = @"kISLEADER";
 
 @implementation ZESettingLocalData
 
@@ -78,7 +79,7 @@ static NSString * KValue            = @"KValue";
 }
 +(NSString *)getUSERNAME
 {
-    return [[self getUSERINFO] objectForKey:@"USERNAME"];
+    return [self Get:kUSERNAME];
 }
 +(void)deleteUSERNAME
 {
@@ -106,6 +107,28 @@ static NSString * KValue            = @"KValue";
 {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kISEXPERT];
 }
+
+#pragma mark - 是否是班组长
+/**
+ *  @author Stenson, 16-09-08 10:09:52
+ *
+ *  该登陆账号是否是班组长登陆
+ *
+ *  @param isLeader <#isLeader description#>
+ */
++(void)setISLEADER:(BOOL)isLeader
+{
+    [self Set:kISLEADER value:[NSString stringWithFormat:@"%d",isLeader]];
+}
++(BOOL)getISLEADER
+{
+    return [self Get:kISLEADER];
+}
++(void)deleteISLEADER
+{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kISLEADER];
+}
+
 
 #pragma mark - USERINFODic
 +(void)setUSERINFODic:(NSDictionary *)userinfo
@@ -163,6 +186,7 @@ static NSString * KValue            = @"KValue";
 #pragma mark - CLEAR
 +(void)clearLocalData
 {
+    [ZESettingLocalData deleteISLEADER];
     [ZESettingLocalData deleteCookie];
     [ZESettingLocalData deleteUSERNAME];
     [ZESettingLocalData deleteISEXPERT];

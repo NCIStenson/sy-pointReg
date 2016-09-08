@@ -29,7 +29,7 @@
 #define kNavTitleLabelMarginLeft 0.0f
 #define kNavTitleLabelMarginTop 20.0f
 
-#define kContentViewMarginTop   64.0f
+#define kContentViewMarginTop   NAV_HEIGHT
 #define kContentViewMarginLeft  0.0f
 #define kContentViewWidth       SCREEN_WIDTH
 #define kContentViewHeight      (SCREEN_HEIGHT - kNavBarHeight)
@@ -38,9 +38,10 @@
 #import "ZEHistoryView.h"
 #import "MJRefresh.h"
 #import "MJRefreshComponent.h"
-#import "ZEHistoryModel.h"
+#import "ZEEPM_TEAM_RATION_REGModel.h"
 #import "JCAlertView.h"
 #import "ZEAlertSearchView.h"
+
 @interface ZEHistoryView ()<UITableViewDataSource,UITableViewDelegate,ZEAlertSearchViewDlegate>
 {
     CGRect _viewFrame;
@@ -51,6 +52,12 @@
     NSInteger _currentMinDate;
     
     JCAlertView * _alertView;
+    
+    NSArray * auditArr;     //  已审核的状态
+    NSArray * noAuditArr;   //  未审核的状态
+    
+    NSArray * statusArr;
+    
 }
 @property (nonatomic,retain) NSMutableArray * dateArr;
 @property (nonatomic,retain) NSMutableArray * listDataArr;
@@ -62,6 +69,9 @@
     self = [super initWithFrame:rect];
     if (self) {
         _viewFrame = rect;
+        auditArr = @[@"8",@"4",@"2",@"7",@"6"];
+        noAuditArr = @[@"1",@"3",@"5",@"0",@"9",@"10"];
+        statusArr = @[@"未提交",@"班长登记",@"已汇总",@"主任退回",@"汇总提交",@"发布退回",@"待发布",@"已发布",@"已审核",@"已退回",@"待审核"];
         self.dateArr = [NSMutableArray array];
         self.listDataArr = [NSMutableArray array];
         [self initNavBar];
@@ -163,17 +173,19 @@
         }
         for (int i = 0; i < array.count ; i ++ ) {
             NSDictionary * dic = array[i];
-            ZEHistoryModel * hisModel = [ZEHistoryModel getDetailWithDic:dic];
+            ZEEPM_TEAM_RATION_REGModel * hisModel = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:dic];
+            
+            hisModel.ENDDATE = [hisModel.ENDDATE stringByReplacingOccurrencesOfString:@"00:00:00.0" withString:@""];
             
             if (_dateArr.count > 0) {
-                if([hisModel.TT_ENDDATE isEqualToString:[_dateArr lastObject]]){
+                if([hisModel.ENDDATE isEqualToString:[_dateArr lastObject]]){
                     [detailArr addObject:hisModel];
                     
                     if (i == array.count - 1) {
                         [self.listDataArr addObject:detailArr];
                     }
                 }else{
-                    [_dateArr addObject:hisModel.TT_ENDDATE];
+                    [_dateArr addObject:hisModel.ENDDATE];
                     [self.listDataArr addObject:detailArr];
                     detailArr = [NSMutableArray array];
                     [detailArr addObject:hisModel];                    
@@ -183,7 +195,7 @@
 
                 }
             }else{
-                [_dateArr addObject:hisModel.TT_ENDDATE];
+                [_dateArr addObject:hisModel.ENDDATE];
                 [detailArr addObject:hisModel];
                 if (i == array.count - 1) {
                     [self.listDataArr addObject:detailArr];
@@ -312,7 +324,7 @@
     for (UIView * view in cell.contentView.subviews) {
         [view removeFromSuperview];
     }
-    ZEHistoryModel * hisMod = nil;
+    ZEEPM_TEAM_RATION_REGModel * hisMod = nil;
     if ([ZEUtil isNotNull:self.listDataArr]) {
         NSArray * sectionDataArr = self.listDataArr[indexPath.section];
         if (sectionDataArr.count > indexPath.row) {
@@ -328,28 +340,20 @@
     [imageView setImage:[UIImage imageNamed:@"epm_work_icon.png"]];
     [cellContent addSubview:imageView];
     
-    UIImageView * maskImageView = [[UIImageView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 30.0f, 15.0f, 20.0f, 20.0f)];
-    if ([hisMod.TT_FLAG isEqualToString:@"未审核"]) {
-        [maskImageView setImage:[UIImage imageNamed:@"audit_no_icon.png"]];
-    }else{
-        [maskImageView setImage:[UIImage imageNamed:@"audit_yes_icon.png"]];
-    }
-    [cellContent addSubview:maskImageView];
-
-    UILabel * realHourLabel = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 80.0f, 0.0f, 50.0f, 50.0f)];
+    UILabel * realHourLabel = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 80.0f, 0.0f, 70.0f, 50.0f)];
     realHourLabel.font = [UIFont systemFontOfSize:12.0f];
     realHourLabel.textColor = [UIColor lightGrayColor];
     realHourLabel.textAlignment = NSTextAlignmentRight;
-    realHourLabel.text = [NSString stringWithFormat:@"+%@",hisMod.REAL_HOUR];
+    realHourLabel.text = statusArr[[hisMod.STATUS integerValue]];
     [cellContent addSubview:realHourLabel];
 
     UILabel * taskNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(65.0f, 5.0f, 200.0f, 20.0f)];
     taskNameLabel.font = [UIFont systemFontOfSize:15.0f];
-    taskNameLabel.text = hisMod.TT_TASK;
+    taskNameLabel.text = hisMod.RATIONNAME;
     [cellContent addSubview:taskNameLabel];
     
     UILabel * staffNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(65.0f, 27.0f, 200.0f, 20.0f)];
-    staffNameLabel.text = [hisMod.integration objectForKey:@"TTP_NAME"];
+    staffNameLabel.text = hisMod.PSNNAME;
     staffNameLabel.font = [UIFont systemFontOfSize:13.0f];
     [cellContent addSubview:staffNameLabel];
     
@@ -359,16 +363,30 @@
 #pragma mark - 删除功能
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ZEHistoryModel * hisMod = nil;
+    ZEEPM_TEAM_RATION_REGModel * hisMod = nil;
     if ([ZEUtil isNotNull:self.listDataArr] && self.listDataArr.count > 0) {
         NSArray * sectionDataArr = self.listDataArr[indexPath.section];
         if (sectionDataArr.count > indexPath.row) {
             hisMod = sectionDataArr[indexPath.row];
         }
     }
-    if ([hisMod.TT_FLAG isEqualToString:@"未审核"]) {
-        return YES;
+    
+    NSArray * leaderDeleteStatusArr = @[@"0",@"1",@"2",@"3",@"8",@"9",@"10"];
+    NSArray * commonDeleteStatusArr = @[@"0",@"9",@"10"];
+    
+    NSArray * deleteArr = nil;
+    if ([ZESettingLocalData getISLEADER]) {
+        deleteArr = leaderDeleteStatusArr;
+    }else{
+        deleteArr = commonDeleteStatusArr;
     }
+    
+    for (NSString * str in deleteArr) {
+        if ([str isEqualToString:hisMod.STATUS]) {
+            return YES;
+        }
+    }
+
     return NO;
 }
 //设置编辑风格EditingStyle
@@ -383,7 +401,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ZEHistoryModel * hisMod = nil;
+    ZEEPM_TEAM_RATION_REGModel * hisMod = nil;
     if ([ZEUtil isNotNull:self.listDataArr]) {
         NSArray * sectionDataArr = self.listDataArr[indexPath.section];
         if (sectionDataArr.count > indexPath.row) {
@@ -392,19 +410,21 @@
     }
     
     if ([self.delegate respondsToSelector:@selector(deleteHistory:)]) {
-        [self.delegate deleteHistory:hisMod.seqkey];
+        [self.delegate deleteHistory:hisMod.SEQKEY];
     }
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ZEHistoryModel * hisMod = nil;
+    ZEEPM_TEAM_RATION_REGModel * hisMod = nil;
     if ([ZEUtil isNotNull:self.listDataArr]) {
         hisMod = self.listDataArr[indexPath.section][indexPath.row];
     }
-        
+    
+    NSLog(@" ....   %@",hisMod.SEQKEY);
+    
     if ([self.delegate respondsToSelector:@selector(enterDetailView:)]) {
-        [self.delegate enterDetailView:hisMod];
+        [self.delegate enterDetailView:hisMod.SEQKEY];
     }
 }
 

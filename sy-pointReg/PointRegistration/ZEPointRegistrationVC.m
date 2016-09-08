@@ -39,7 +39,6 @@
     
     _pointView = [[ZEPointRegistrationView alloc]initWithFrame:self.view.frame];
     _pointView.delegate = self;
-    _pointView.historyModel = _hisModel;
     [self.view addSubview:_pointView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAllTaskView) name:kShowAllTaskList object:nil];
@@ -152,8 +151,8 @@
     if ([[[[ZEPointRegCache instance]getRATIONTYPEVALUE] allKeys] count] > 0) {
         return;
     }
-    NSString * valueStr = [NSString stringWithFormat:@"QUOTIETY%ldCODE",number];
-    NSString * WHERESQL = [NSString stringWithFormat:@"suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode in (select case (select count(1) from EPM_TEAM_RATIONTYPEVALUE t where t.suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode = '#SECORGCODE#') when 0 then '-1' else '#SECORGCODE#' end from dual)",number,number];
+    NSString * valueStr = [NSString stringWithFormat:@"QUOTIETY%ldCODE",(long)number];
+    NSString * WHERESQL = [NSString stringWithFormat:@"suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode in (select case (select count(1) from EPM_TEAM_RATIONTYPEVALUE t where t.suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode = '#SECORGCODE#') when 0 then '-1' else '#SECORGCODE#' end from dual)",(long)number,(long)number];
     NSDictionary * parametersDic = @{@"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATIONTYPEVALUE,
                                      @"MENUAPP":@"EMARK_APP",

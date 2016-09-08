@@ -71,6 +71,17 @@
 +(NSString *)getKValue;
 +(void)deleteKValue;
 
+/**
+ *  @author Stenson, 16-09-08 10:09:52
+ *
+ *  该登陆账号是否是班组长登陆
+ *
+ *  @param isLeader <#isLeader description#>
+ */
++(void)setISLEADER:(BOOL)isLeader;
++(BOOL)getISLEADER;
++(void)deleteISLEADER;
+
 /******** 修改昵称 *******/
 +(void)changeNICKNAME:(NSString *)nickname;
 /*********** 获取用户昵称 ********/

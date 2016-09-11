@@ -65,9 +65,13 @@
 @property (nonatomic,copy) NSString * SYSDEPTID;
 @property (nonatomic,copy) NSString * SYSUPDATEDATE;
 @property (nonatomic,copy) NSString * SYSUPDATORID;
+@property (nonatomic,copy) NSString * SUMPOINTS;
 
 @property (nonatomic,copy) NSString * UNIT;
 @property (nonatomic,copy) NSString * WORKINGPROCEDURE;
+
+//  汇总表数据
+@property (nonatomic,copy) NSString * FINALSCORE;
 
 
 +(ZEEPM_TEAM_RATION_REGModel *)getDetailWithDic:(NSDictionary *)dic;

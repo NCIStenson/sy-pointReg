@@ -10,4 +10,10 @@
 
 @interface ZELeaderRegVC : ZESettingRootVC
 
+@property (nonatomic,assign) ENTER_PERSON_POINTREG_TYPE regType;
+
+@property (nonnull,nonatomic,strong) NSDictionary * defaultDic;
+@property (nonnull,nonatomic,strong) NSArray * defaultDetailArr;
+
+
 @end

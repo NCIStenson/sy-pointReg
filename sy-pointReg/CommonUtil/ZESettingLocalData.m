@@ -6,8 +6,6 @@
 //  Copyright © 2016年 Zenith Electronic. All rights reserved.
 //
 
-#import "ZESetLocalData.h"
-
 static NSString * kUserInformation  = @"keyUserInformation";
 static NSString * kSignCookie       = @"keySIGNCOOKIE";
 static NSString * kUSERNAME         = @"kUSERNAME";
@@ -146,12 +144,6 @@ static NSString * kISLEADER            = @"kISLEADER";
 }
 
 /******** 修改昵称 *******/
-+(void)changeNICKNAME:(NSString *)nickname
-{
-    NSMutableDictionary * userinfoDic = [NSMutableDictionary dictionaryWithDictionary: [self getUSERINFO]];
-    [userinfoDic setValue:nickname forKey:@"USERNAME"];
-    [self Set:kUSERINFODic value:userinfoDic];
-}
 
 +(NSString *)getNICKNAME
 {

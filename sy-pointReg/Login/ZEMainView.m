@@ -22,6 +22,11 @@
 #define kNavTitleLabelHeight                                            44.0f
 #define kNavTitleLabelMarginLeft    (kNavBarWidth - kNavTitleLabelWidth) / 2.0f
 #define kNavTitleLabelMarginTop                                         20.0f
+// 导航栏内左侧按钮
+#define kLeftButtonWidth 40.0f + 16.0f
+#define kLeftButtonHeight 40.0f
+#define kLeftButtonMarginLeft 10.0f
+#define kLeftButtonMarginTop 20.0f + 2.0f
 
 // 导航栏右侧按钮
 #define kRightButtonWidth 60.0f
@@ -67,10 +72,21 @@
     _titleLabel.textAlignment     = NSTextAlignmentCenter;
     _titleLabel.textColor         = [UIColor whiteColor];
     _titleLabel.font              = [UIFont systemFontOfSize:22.0f];
-    _titleLabel.text              = @"工分登记";
+    _titleLabel.text              = @"工时登记";
     [navBar addSubview:_titleLabel];
 
     [self addSubview:navBar];
+    
+    UIButton * _leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _leftBtn.frame = CGRectMake(kLeftButtonMarginLeft, kLeftButtonMarginTop, kLeftButtonWidth, kLeftButtonHeight);
+    _leftBtn.backgroundColor = [UIColor clearColor];
+    _leftBtn.contentMode = UIViewContentModeScaleAspectFit;
+    _leftBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+//    [_leftBtn addTarget:self action:@selector(leftBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_leftBtn setTitle:[ZESettingLocalData getNICKNAME] forState:UIControlStateNormal];
+
+    [navBar addSubview:_leftBtn];
+
     
     UIButton * _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _rightBtn.frame = CGRectMake(kRightButtonMarginLeft, kRightButtonMarginTop, kRightButtonWidth, kRightButtonHeight);
@@ -85,7 +101,6 @@
     [_rightBtn addTarget:self action:@selector(logout) forControlEvents:UIControlEventTouchUpInside];
     [navBar addSubview:_rightBtn];
 
-    
 
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(kScrollViewMarginLeft, kScrollViewMarginTop, kScrollViewWidth, kScrollViewlHeight)];
     scrollView.showsVerticalScrollIndicator = NO;
@@ -136,11 +151,11 @@
         switch (i) {
             case 0:
                 [enterBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
-                [enterBtn addTarget:self action:@selector(goLeaderView) forControlEvents:UIControlEventTouchUpInside];
+                [enterBtn addTarget:self action:@selector(goPointReg) forControlEvents:UIControlEventTouchUpInside];
                 break;
             case 1:
                 [enterBtn setImage:[UIImage imageNamed:@"icon_point"] forState:UIControlStateNormal];
-                [enterBtn addTarget:self action:@selector(goPointReg) forControlEvents:UIControlEventTouchUpInside];
+                [enterBtn addTarget:self action:@selector(goLeaderView) forControlEvents:UIControlEventTouchUpInside];
                 
                 break;
             case 2:
@@ -150,13 +165,14 @@
                 break;
             case 3:
             {
-                //                if(![ZESetLocalData getRoleFlag]){
-                //                    break;
-                //                }
                 [enterBtn addTarget:self action:@selector(goPointAudit) forControlEvents:UIControlEventTouchUpInside];
                 [enterBtn setImage:[UIImage imageNamed:@"icon_audit"] forState:UIControlStateNormal];
             }
                 break;
+            case 4:
+            {
+                [enterBtn addTarget:self action:@selector(goPointQuery) forControlEvents:UIControlEventTouchUpInside];
+            }
             default:
                 break;
         }
@@ -197,10 +213,10 @@
         [self.delegate logout];
     }
 }
--(void)goUserCenter
+-(void)goPointQuery
 {
-    if ([self.delegate respondsToSelector:@selector(goUserCenter)]) {
-        [self.delegate goUserCenter];
+    if ([self.delegate respondsToSelector:@selector(goPointQuery)]) {
+        [self.delegate goPointQuery];
     }
 }
 

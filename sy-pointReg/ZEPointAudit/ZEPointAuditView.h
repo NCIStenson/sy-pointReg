@@ -25,7 +25,7 @@
 /**
  *  是否审核
  */
-//-(void)confirmWeatherAudit:(ZEPointAuditView *)hisView withModel:(ZEPointAuditModel *)pointAM;
+-(void)enterDetailView:(NSString *)seqkey;
 
 /**
  *  审核界面

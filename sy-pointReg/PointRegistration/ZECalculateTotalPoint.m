@@ -22,6 +22,9 @@ static ZECalculateTotalPoint * pointRegCahe = nil;
     NSMutableArray * _personalDataArr;
     NSMutableDictionary * _taskDic;
     
+    NSMutableArray * _orginPersonalDataArr;
+    NSDictionary * _originTaskDic;
+    
     float _resultPoint;
 }
 @end
@@ -88,9 +91,10 @@ static ZECalculateTotalPoint * pointRegCahe = nil;
             NSString * formulaquotiety = detailM.FORMULA;
             NSString * isration = detailM.ISRATION;
             NSString * minvalue = detailM.MINVALUE;
-
+            
             if([isration boolValue]){
-                NSString * QUOTIETY = [NSString stringWithFormat:@"QUOTIETY%d",j];
+                NSString * QUOTIETY = [detailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""];
+
                 NSString * quotietytemp= [NSString stringWithFormat:@"%@",[_taskDic objectForKey:QUOTIETY]];
                 if([ZEUtil strIsEmpty:quotietytemp]){
                     if([type integerValue] == 1||[type integerValue] == 2){
@@ -101,7 +105,7 @@ static ZECalculateTotalPoint * pointRegCahe = nil;
                     }
                 }
             }else{
-                NSString * QUOTIETY = [NSString stringWithFormat:@"QUOTIETY%d",j];
+                NSString * QUOTIETY = [detailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""];
                 NSString * quotietytemp= [NSString stringWithFormat:@"%@",[personalDic objectForKey:QUOTIETY]];
                 if([ZEUtil strIsEmpty:quotietytemp]){
                     if([type integerValue] == 1||[type integerValue] == 2){
@@ -120,7 +124,7 @@ static ZECalculateTotalPoint * pointRegCahe = nil;
 
             if ([isselect boolValue] && ![isration boolValue]) {
                 
-                NSString * QUOTIETY = [NSString stringWithFormat:@"QUOTIETY%d",j];
+                NSString * QUOTIETY = [detailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""];
                 
                 if (![ZEUtil strIsEmpty:formulaquotiety]) {
                     formulaquotiety = [self getRationTypeValue:formulaquotiety withTaskDic:_taskDic withPersonalData:_personalDataArr[i]];
@@ -132,6 +136,7 @@ static ZECalculateTotalPoint * pointRegCahe = nil;
                 if (![ZEUtil strIsEmpty:type]) {
                     if ([type integerValue] == 1 || [type integerValue] == 2) {
                         NSString * temp = [NSString stringWithFormat:@"%@",[personalDic objectForKey:QUOTIETY]];
+
                         if ([ZEUtil strIsEmpty:temp] || [temp doubleValue] == 0) {
                             temp = @"1";
                         }
@@ -199,195 +204,30 @@ static ZECalculateTotalPoint * pointRegCahe = nil;
 
 -(void)getTotalPointTaskDic:(NSDictionary *)rationDic withPersonalDetailArr:(NSArray *)personalData
 {
+    _originTaskDic = rationDic;
+    _orginPersonalDataArr = [NSMutableArray arrayWithArray:personalData];
+    
     _taskDic = [NSMutableDictionary dictionaryWithDictionary:rationDic];
     _personalDataArr = [NSMutableArray arrayWithArray:personalData];
-    
+        
     [self calcul];
 }
-////    ZEEPM_TEAM_RATION_COMMON * taskM = [ZEEPM_TEAM_RATION_COMMON getDetailWithDic:rationDic];
-//    
-//    /**
-//     *  @author Stenson, 16-09-03 17:09:33
-//     *
-//     *  获取缓存中 分配类型系数列表
-//     */
-//    NSDictionary * coefficientDic = [[ZEPointRegCache instance] getDistributionTypeCoefficient];
-//    
-//    /**
-//     *  @author Stenson, 16-09-05 09:09:39
-//     *
-//     *  获取到总公式
-//     */
-//
-//    for (NSDictionary * dic in [[ZEPointRegCache instance] getDistributionTypeCaches]) {
-//        ZEEPM_TEAM_RATIONTYPEDETAIL * RATIONTYPEDETAIL = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:dic];
-//        if ([RATIONTYPEDETAIL.RATIONTYPECODE isEqualToString:taskM.RATIONTYPE]) {
-//            float totalPoint = [[self getRationTypeValue:RATIONTYPEDETAIL.FORMULA withTaskDic:rationDic withPersonalData:nil] floatValue];
-//            _resultPoint = totalPoint;
-//        }
-//    }
-//    /**
-//     *  @author Stenson, 16-09-03 17:09:53
-//     *
-//     *  获取选定的任务类型的分配系数列表
-//     */
-//    NSArray * coefficientArr = [coefficientDic objectForKey:taskM.RATIONTYPE];
-//    
-//    for (int i = 0 ; i < coefficientArr.count; i ++) {
-//        
-//        ZEEPM_TEAM_RATIONTYPEDETAIL * rationTypeDetailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:coefficientArr[i]];
-//        /**
-//         *  @author Stenson, 16-09-03 17:09:35
-//         *
-//         *  选定的系数列表 是否跟随任务
-//         */
-//        if ([rationTypeDetailM.ISRATION boolValue]) {
-//            if ([ZEUtil isStrNotEmpty:rationTypeDetailM.FORMULA]) {
-//            }
-//        }else{
-//            if ([ZEUtil isStrNotEmpty:rationTypeDetailM.FORMULA]) {
-//                for (int j = 0 ; j < personalData.count; j ++) {
-//        
-//                    float coefficentPoint = [[self getRationTypeValue:rationTypeDetailM.FORMULA withTaskDic:rationDic withPersonalData:personalData[j]] floatValue];
-//                    
-//                    if (coefficentPoint < [rationTypeDetailM.MINVALUE floatValue]) {
-//                        coefficentPoint = [rationTypeDetailM.MINVALUE floatValue];
-//                    }
-//                    
-//                    NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithDictionary:personalData[j]];
-//                    
-//                    float personalAspect = [[dic objectForKey:[rationTypeDetailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]] floatValue];
-//                    
-//                    float finalPoint = 0.0f;
-//                    
-//                    if ([rationTypeDetailM.TYPE integerValue] == 1) {
-//                        //  如果是分摊法 计算个人占总体的比例
-//                        float denominator = 0.0f;
-//                        for (int h = 0; h < personalData.count; h ++) {
-//                            NSDictionary * calculateDenoPersonData = personalData[h];
-//                            denominator += [[calculateDenoPersonData objectForKey:[rationTypeDetailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]] floatValue];
-//                        }
-//                        finalPoint = [self calculateStandardPointRideCoefficent:_resultPoint
-//                                                  coefficientPoint:coefficentPoint
-//                                              rationTypeDetailType:rationTypeDetailM.TYPE
-//                                                withPersonalAspect:personalAspect / denominator];
-//                        
-//                    }else{
-//                        finalPoint = [self calculateStandardPointRideCoefficent:_resultPoint
-//                                                                 coefficientPoint:coefficentPoint
-//                                                             rationTypeDetailType:rationTypeDetailM.TYPE
-//                                                               withPersonalAspect:0.0f];
-//                    }
-//                    
-//                    [dic setObject:[NSString stringWithFormat:@"%.2f",coefficentPoint] forKey:[rationTypeDetailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
-//                    
-//                    [dic setObject:[NSString stringWithFormat:@"%.2f",finalPoint] forKey:@"WORKPOINTS"];
-//                    [dic setObject:[NSString stringWithFormat:@"%.2f",finalPoint] forKey:@"SUMPOINTS"];
-//
-//                    [_personalDataArr replaceObjectAtIndex:j withObject:dic];
-//                }
-//            }else{
-//                for (int j = 0 ; j < personalData.count; j ++) {
-//                    
-//                    NSDictionary * personDic = personalData[j];
-//                    
-//                    NSString * coefficentValue = [personDic objectForKey:[rationTypeDetailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
-//                    NSLog(@" =====  %f ",_resultPoint);
-//                    float finalPoint = 0.0f;
-//                    finalPoint = [self calculateStandardPointRideCoefficent:_resultPoint
-//                                              coefficientPoint:[coefficentValue floatValue]
-//                                          rationTypeDetailType:rationTypeDetailM.TYPE
-//                                            withPersonalAspect:0.0f];
-//                    
-//                    NSLog(@" %f =====  %f ",[coefficentValue floatValue],_resultPoint);
-//
-//                    
-//                    
-//                    NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithDictionary:personalData[j]];
-//                    
-//                    [dic setObject:[NSString stringWithFormat:@"%.2f",finalPoint] forKey:@"WORKPOINTS"];
-//                    [dic setObject:[NSString stringWithFormat:@"%.2f",finalPoint] forKey:@"SUMPOINTS"];
-//
-//                    [_personalDataArr replaceObjectAtIndex:j withObject:dic];
-//                }
-//            }
-//        }
-    
-        
-//        if (i == coefficientArr.count - 1) {
-//            for (int j = 0 ; j < _personalDataArr.count; j ++) {
-//                NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithDictionary:personalData[j]];
-////                if(j == _personalDataArr.count - 1){
-//                    [dic setObject:[NSString stringWithFormat:@"%.2f",_resultPoint] forKey:@"WORKPOINTS"];
-//                    [dic setObject:[NSString stringWithFormat:@"%.2f",_resultPoint] forKey:@"SUMPOINTS"];
-////                }
-//                [_personalDataArr replaceObjectAtIndex:j withObject:dic];
-//            }
-//        }
-//    }
-//}
-
-/**
- *  @author Stenson, 16-09-06 00:09:50
- *
- *  根据type类型进行计算总分
- *
- *  @param standardPoint 原始分值
- *  @param coeffPoint    系数值
- *  @param type          分摊类型
- *  @param aspect        按工分*系数分配时 个人 占 该系数总 的比值
- *
- *  @return 返回总分
- */
--(float)calculateStandardPointRideCoefficent:(float)standardPoint
-                        coefficientPoint:(float)coeffPoint
-                       rationTypeDetailType:(id)type
-                         withPersonalAspect:(float)aspect
-{
-    /**
-     *  @author Stenson, 16-09-05 10:09:12
-     *
-     *  根据该系数的类型 进行计算总分
-     *      1  按系数均摊
-     *      2  按系数倍乘
-     *      3  加分项
-     *      4  不参与计算
-     */
-    
-    switch ([type integerValue])
-    {
-        case 1:
-        {
-            _resultPoint = standardPoint * aspect * coeffPoint;
-        }
-            break;
-        case 2:
-        {
-            _resultPoint = standardPoint * coeffPoint;
-        }
-            break;
-        case 3:
-        {
-            _resultPoint = standardPoint + coeffPoint;
-        }
-            break;
-        case 4:
-        {
-            
-        }
-            break;
-            
-        default:
-            break;
-    }
-    return _resultPoint;
-}
-
 
 -(NSDictionary *)getResultDic
 {
-    return @{kFieldDic:_taskDic,
-             kDefaultFieldDic:_personalDataArr};
+    for (int i = 0 ; i < _orginPersonalDataArr.count; i ++) {
+        NSMutableDictionary * originDic = [NSMutableDictionary dictionaryWithDictionary: _orginPersonalDataArr[i]];
+        
+        NSDictionary * changeDic = _personalDataArr[i];
+        
+        [originDic setObject:[changeDic objectForKey:@"SUMPOINTS"] forKey:@"SUMPOINTS"];
+        [originDic setObject:[changeDic objectForKey:@"WORKPOINTS"] forKey:@"WORKPOINTS"];
+        
+        [_orginPersonalDataArr replaceObjectAtIndex:i withObject:originDic];
+    }
+    
+    return @{kFieldDic:_originTaskDic,
+             kDefaultFieldDic:_orginPersonalDataArr};
 }
 
 -(NSString *)getRationTypeValue:(NSString *)formula
@@ -419,7 +259,7 @@ static ZECalculateTotalPoint * pointRegCahe = nil;
             value = [personalDic objectForKey:[NSString stringWithFormat:@"%@",resultStr]];
         }
 
-        formula = [formula stringByReplacingCharactersInRange:replaceRange withString:value];
+        formula = [formula stringByReplacingCharactersInRange:replaceRange withString:[NSString stringWithFormat:@"%@",value]];
         strLength = formula.length;
         strLength = resultRange.location;
     }

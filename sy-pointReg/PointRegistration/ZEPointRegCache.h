@@ -91,4 +91,6 @@
  */
 - (void)clear;
 
+-(void)cacheShareType:(UIView *)view;
+
 @end

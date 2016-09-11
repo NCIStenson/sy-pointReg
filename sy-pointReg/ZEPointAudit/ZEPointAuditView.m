@@ -43,6 +43,7 @@
 {
     UITableView * _contentTableView;
     NSInteger _currentSelectRow;
+    NSArray * statusArr;
 }
 @property (nonatomic,retain) NSMutableArray * dateArr;
 @property (nonatomic,retain) NSMutableArray * listDataArr;
@@ -54,6 +55,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        statusArr = @[@"未提交",@"班长登记",@"已汇总",@"主任退回",@"汇总提交",@"发布退回",@"待发布",@"已发布",@"已审核",@"已退回",@"待审核"];
+
         [self initNavBar];
         [self initView];
     }
@@ -284,19 +287,12 @@
     [imageView setImage:[UIImage imageNamed:@"epm_work_icon.png"]];
     [cellContent addSubview:imageView];
     
-    UIImageView * maskImageView = [[UIImageView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 30.0f, 15.0f, 20.0f, 20.0f)];
-//    if ([pointAM.TT_FLAG isEqualToString:@"未审核"]) {
-        [maskImageView setImage:[UIImage imageNamed:@"audit_no_icon.png"]];
-//    }else{
-//        [maskImageView setImage:[UIImage imageNamed:@"audit_yes_icon.png"]];
-//    }
-    [cellContent addSubview:maskImageView];
 
-    UILabel * realHourLabel = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 80.0f, 0.0f, 50.0f, 50.0f)];
+    UILabel * realHourLabel = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 80.0f, 0.0f, 70.0f, 50.0f)];
     realHourLabel.font = [UIFont systemFontOfSize:12.0f];
     realHourLabel.textColor = [UIColor lightGrayColor];
     realHourLabel.textAlignment = NSTextAlignmentRight;
-    realHourLabel.text = [NSString stringWithFormat:@"+%@",pointAM.STANDARDOPERATIONTIME];
+    realHourLabel.text = statusArr[[pointAM.STATUS integerValue]];
     [cellContent addSubview:realHourLabel];
     
     UILabel * taskNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(65.0f, 5.0f, 200.0f, 20.0f)];
@@ -314,17 +310,32 @@
 #pragma mark - 删除功能
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ZEEPM_TEAM_RATION_REGModel * pointAM = nil;
+    ZEEPM_TEAM_RATION_REGModel * hisMod = nil;
     if ([ZEUtil isNotNull:self.listDataArr] && self.listDataArr.count > 0) {
         NSArray * sectionDataArr = self.listDataArr[indexPath.section];
         if (sectionDataArr.count > indexPath.row) {
-            pointAM = sectionDataArr[indexPath.row];
+            hisMod = sectionDataArr[indexPath.row];
         }
     }
-//    if ([pointAM.TT_FLAG isEqualToString:@"未审核"]) {
-//        return YES;
-//    }
+    
+    NSArray * leaderDeleteStatusArr = @[@"0",@"1",@"2",@"3",@"8",@"9",@"10"];
+    NSArray * commonDeleteStatusArr = @[@"0",@"9",@"10"];
+    
+    NSArray * deleteArr = nil;
+    if ([ZESettingLocalData getISLEADER]) {
+        deleteArr = leaderDeleteStatusArr;
+    }else{
+        deleteArr = commonDeleteStatusArr;
+    }
+    
+    for (NSString * str in deleteArr) {
+        if ([str isEqualToString:hisMod.STATUS]) {
+            return YES;
+        }
+    }
+    
     return NO;
+
 }
 //设置编辑风格EditingStyle
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -347,7 +358,7 @@
     }
     
     if ([self.delegate respondsToSelector:@selector(deleteNoAuditHistory:)]) {
-//        [self.delegate deleteNoAuditHistory:pointAM.SEQKEY];
+        [self.delegate deleteNoAuditHistory:pointAM.SEQKEY];
     }
 }
 
@@ -360,8 +371,8 @@
     if ([ZEUtil isNotNull:self.listDataArr]) {
         pointAM = self.listDataArr[indexPath.section][indexPath.row];
     }
-    if ([self.delegate respondsToSelector:@selector(confirmWeatherAudit:withModel:)]) {
-//        [self.delegate confirmWeatherAudit:self withModel:pointAM];
+    if ([self.delegate respondsToSelector:@selector(enterDetailView:)]) {
+        [self.delegate enterDetailView:pointAM.SEQKEY];
     }
 }
 

@@ -32,8 +32,8 @@
 #define kDefaultFieldDic @"defaultFieldDic"
 
 #define kLEADERPOINTREG @"20"  //  班组长录入
-#define kCOMMONPOINTREG @"10"  //  个人录入
 
+#define kNOTISEARCHPOINT @"kSearchPoint"
 
 #define Zenith_Server [[[NSBundle mainBundle] infoDictionary] objectForKey:@"ZenithServerAddress"]
 

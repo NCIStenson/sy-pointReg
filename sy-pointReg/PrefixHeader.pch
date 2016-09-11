@@ -18,7 +18,7 @@
 #import "ZEUtil.h"
 #import "UIImage+ZEImage.h"
 #import "Masonry.h"
-#import "ZESetLocalData.h"
+#import "ZESettingLocalData.h"
 #import "ZEUserServer.h"
 #import "ZEPackageServerData.h"
 #import "ZEServerTableMessage.h"

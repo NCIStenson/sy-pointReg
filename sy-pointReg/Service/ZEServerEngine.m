@@ -7,7 +7,6 @@
 //
 
 #import "ZEServerEngine.h"
-#import "ZESetLocalData.h"
 
 #import "ZELoginViewController.h"
 #define kServerErrorNotLogin                @"E020601" // 用户未登陆

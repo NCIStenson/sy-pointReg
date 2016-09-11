@@ -25,7 +25,7 @@ static ZEEPM_TEAM_RATION_REGModel * model = nil;
     model.DESCR                 = [dic objectForKey:@"DESCR"];
     model.DISPATCHTYPE          = [dic objectForKey:@"DISPATCHTYPE"];
     model.DISPLAYORDER          = [dic objectForKey:@"DISPLAYORDER"];
-    model.ENDDATE               = [dic objectForKey:@"ENDDATE"];
+    model.ENDDATE               = [[dic objectForKey:@"ENDDATE"] stringByReplacingOccurrencesOfString:@" 00:00:00.0" withString:@""];
     model.FUNCTIONMODEL         = [dic objectForKey:@"FUNCTIONMODEL"];
     model.ORGCODE               = [dic objectForKey:@"ORGCODE"];
     model.PERIODCODE            = [dic objectForKey:@"PERIODCODE"];
@@ -66,6 +66,8 @@ static ZEEPM_TEAM_RATION_REGModel * model = nil;
     model.SYSUPDATORID          = [dic objectForKey:@"SYSUPDATORID"];
     model.UNIT                  = [dic objectForKey:@"UNIT"];
     model.WORKINGPROCEDURE      = [dic objectForKey:@"WORKINGPROCEDURE"];
+    model.SUMPOINTS             = [dic objectForKey:@"SUMPOINTS"];
+    model.FINALSCORE            = [dic objectForKey:@"FINALSCORE"];
     
     return model;
 }

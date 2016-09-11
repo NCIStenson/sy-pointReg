@@ -31,9 +31,9 @@
  */
 -(void)goPointAudit;
 /**
- *  退出登录
+ *  工时查看
  */
--(void)goUserCenter;
+-(void)goPointQuery;
 /**
  *  退出登录
  */

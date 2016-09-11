@@ -12,9 +12,11 @@
 #import "ZEPointRegistrationVC.h"
 #import "ZEHistoryViewController.h"
 #import "ZEPointAuditViewController.h"
-#import "ZEUserCenterVC.h"
+#import "ZEPointQueryVC.h"
 #import "ZELoginViewController.h"
 #import "ZEPointRegCache.h"
+
+
 @interface ZEMainViewController ()
 {
     ZEMainView * mainView;
@@ -60,6 +62,8 @@
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
+    
+    [[ZEPointRegCache instance]cacheShareType:self.view];
 }
 
 -(void)initView
@@ -99,6 +103,7 @@
 -(void)goPointReg
 {
     ZEPointRegistrationVC * pointVC = [[ZEPointRegistrationVC alloc]init];
+    pointVC.regType = ENTER_PERSON_POINTREG_TYPE_DEFAULT;
     [self.navigationController pushViewController:pointVC animated:YES];
 }
 
@@ -112,10 +117,10 @@
     ZEPointAuditViewController * pointAuditVC = [[ZEPointAuditViewController alloc]init];
     [self.navigationController pushViewController:pointAuditVC animated:YES];
 }
--(void)goUserCenter
+-(void)goPointQuery
 {
-    ZEUserCenterVC * userCenterVC = [[ZEUserCenterVC alloc]init];
-    [self.navigationController pushViewController:userCenterVC animated:YES];
+    ZEPointQueryVC * PointQueryVC = [[ZEPointQueryVC alloc]init];
+    [self.navigationController pushViewController:PointQueryVC animated:YES];
 }
 
 -(void)logout{

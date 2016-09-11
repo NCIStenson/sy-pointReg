@@ -13,6 +13,8 @@
 
 #import "ZEEPM_TEAM_RATION_REGModel.h"
 
+#import "ZEPointRegistrationVC.h"
+
 @interface ZEPointAuditViewController ()
 {
     ZEPointAuditView * _pointAuditView;
@@ -127,49 +129,85 @@
     [self presentViewController:auditVC animated:YES completion:nil];
 }
 
-//-(void)confirmWeatherAudit:(ZEPointAuditView *)hisView withModel:(ZEPointAuditModel *)pointAM
-//{
-//    _pointAuditM = pointAM;
-//    ZEHistoryDetailVC * detailVC = [[ZEHistoryDetailVC alloc]init];
-//    detailVC.model = pointAM;
-//    detailVC.enterType = ENTER_FIXED_POINTREG_TYPE_AUDIT;
-//    [self presentViewController:detailVC animated:YES completion:nil];
-
-//    if (IS_IOS8) {
-//        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"您确定审核该任务？" preferredStyle:UIAlertControllerStyleAlert];
-//        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定"
-//                                                           style:UIAlertActionStyleDefault
-//                                                         handler:^(UIAlertAction * _Nonnull action) {
-//                                                             [self confirmAudit:pointAM.SEQKEY];
-//                                                         }];
-//        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil];
-//        [alertController addAction:okAction];
-//        [alertController addAction:cancelAction];
-//        [self presentViewController:alertController animated:YES completion:nil];
-//        
-//    }else{
-//        UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"提示" message:@"您确定审核该任务？" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
-//        alertView.delegate = self;
-//        [alertView show];
-//    }
-//}
-
 -(void)deleteNoAuditHistory:(NSString *)seqkey
 {
-//    __block ZEPointAuditViewController * safeSelf = self;
-//    [ZEUserServer deleteTeamTask:seqkey success:^(id data) {
-//        if ([ZEUtil isNotNull:data]) {
-//            if ([[data objectForKey:@"data"] integerValue] == 1) {
-//                _currentPage = 0 ;
-//                [safeSelf sendRequest];
-//            }else{
-//                [ZEUtil showAlertView:@"删除失败，请重试" viewController:self];
-//            }
-//        }
-//    } fail:^(NSError *errorCode) {
-//        
-//    }];
+    NSDictionary * parametersDic = @{@"MASTERTABLE":EPM_TEAM_RATION_REG,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"WHERESQL":@"",
+                                     @"METHOD":@"delete",
+                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"TASKID",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSDictionary * fieldsDic =@{@"SEQKEY":seqkey};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    __block ZEPointAuditViewController * safeSelf = self;
+    
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 _currentPage = 0 ;
+                                [safeSelf sendRequest];
+                            } fail:^(NSError *errorCode) {
+                                 
+                             }];
 }
+
+-(void)enterDetailView:(NSString *)seqkey
+{
+    
+    NSDictionary * parametersDic = @{@"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"SYSCREATEDATE",
+                                     @"WHERESQL":[NSString stringWithFormat:@"SEQKEY=%@",seqkey],
+                                     @"METHOD":@"search",
+                                     @"MASTERTABLE":EPM_TEAM_RATION_REG,
+                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"TASKID",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:_pointAuditView animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
+                                 [self goChageVC:data];
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
+                             }];
+    
+}
+
+-(void)goChageVC:(NSDictionary *)dic
+{
+    ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:[ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0]];
+    NSLog(@">>>  %@",model.SELF);
+    if ([model.SELF isEqualToString:@"self"]) {
+        NSLog(@"自己录入的");
+        ZEPointRegistrationVC * pointRegVC = [[ZEPointRegistrationVC alloc]init];
+        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_AUDIT;
+        pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
+        pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        [self.navigationController pushViewController:pointRegVC animated:YES];
+        
+    }else if([model.SELF isEqualToString:@"leader"]){
+        NSLog(@"负责人录入");
+    }else{
+        NSLog(@" 班组长录入 ");
+    }
+}
+
 
 -(void)goBack
 {

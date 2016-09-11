@@ -67,6 +67,9 @@
                                                        failBlock(errorCode);
                                                    }
                                                } fail:^(NSError *errorCode) {
+                                                   [ZESettingLocalData clearLocalData];
+                                                   [ZEUserServer logoutSucce];
+
                                                    failBlock(errorCode);
                                                }];
 }

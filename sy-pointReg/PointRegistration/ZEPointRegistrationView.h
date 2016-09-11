@@ -21,7 +21,7 @@
 /**
  *  提交
  */
--(void)goSubmit:(ZEPointRegistrationView *)pointRegView withChoosedDic:(NSDictionary *)dic;
+-(void)goSubmit:(ZEPointRegistrationView *)pointRegView;
 
 /**
  *  返回扫描界面
@@ -57,7 +57,7 @@
 
 @property (nonatomic,assign) id <ZEPointRegistrationViewDelegate> delegate;
 
--(id)initWithFrame:(CGRect)rect;
+-(id)initWithFrame:(CGRect)rect withDafaulDic:(NSDictionary *)dic withDefaultDetailArr:(NSArray *)arr withEnterType:(ENTER_PERSON_POINTREG_TYPE)type;
 
 -(void)showListView:(NSArray *)listArr withLevel:(TASK_LIST_LEVEL)level withPointReg:(POINT_REG)pointReg;
 /**

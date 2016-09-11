@@ -53,9 +53,6 @@
     
     JCAlertView * _alertView;
     
-    NSArray * auditArr;     //  已审核的状态
-    NSArray * noAuditArr;   //  未审核的状态
-    
     NSArray * statusArr;
     
 }
@@ -69,8 +66,6 @@
     self = [super initWithFrame:rect];
     if (self) {
         _viewFrame = rect;
-        auditArr = @[@"8",@"4",@"2",@"7",@"6"];
-        noAuditArr = @[@"1",@"3",@"5",@"0",@"9",@"10"];
         statusArr = @[@"未提交",@"班长登记",@"已汇总",@"主任退回",@"汇总提交",@"发布退回",@"待发布",@"已发布",@"已审核",@"已退回",@"待审核"];
         self.dateArr = [NSMutableArray array];
         self.listDataArr = [NSMutableArray array];
@@ -420,8 +415,6 @@
     if ([ZEUtil isNotNull:self.listDataArr]) {
         hisMod = self.listDataArr[indexPath.section][indexPath.row];
     }
-    
-    NSLog(@" ....   %@",hisMod.SEQKEY);
     
     if ([self.delegate respondsToSelector:@selector(enterDetailView:)]) {
         [self.delegate enterDetailView:hisMod.SEQKEY];

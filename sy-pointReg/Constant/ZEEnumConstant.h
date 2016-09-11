@@ -49,6 +49,7 @@ typedef NS_ENUM (NSInteger,TASK_LIST_LEVEL){
 
 /* 进入不可以修改的工分登记界面 */
 typedef NS_ENUM (NSInteger,ENTER_PERSON_POINTREG_TYPE){
+    ENTER_PERSON_POINTREG_TYPE_DEFAULT,
     ENTER_PERSON_POINTREG_TYPE_HISTORY,      //历史进入工分登记固定页面
     ENTER_PERSON_POINTREG_TYPE_AUDIT,    //审核进入工分登记固定页面
 };

@@ -83,7 +83,6 @@
 +(void)deleteISLEADER;
 
 /******** 修改昵称 *******/
-+(void)changeNICKNAME:(NSString *)nickname;
 /*********** 获取用户昵称 ********/
 +(NSString *)getNICKNAME;
 

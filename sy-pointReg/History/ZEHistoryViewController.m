@@ -12,6 +12,7 @@
 #import "ZEUserServer.h"
 
 #import "ZEPointRegistrationVC.h"
+#import "ZELeaderRegVC.h"
 
 #import "ZEPointRegCache.h"
 #import "ZEEPM_TEAM_RATION_REGModel.h"
@@ -67,7 +68,7 @@
                                      @"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATION_REG,
                                      @"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"ENDDATE",
+                                     @"ORDERSQL":@"ENDDATE DESC",
                                      @"WHERESQL":@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#'",
                                      @"METHOD":@"search",
                                      @"DETAILTABLE":@"",
@@ -111,13 +112,14 @@
 -(void)searchHistoryStartDate:(NSString *)startDate withEndDate:(NSString *)endDate
 {
     [_historyView showAlertView:YES];
-    
+    NSString * whereSQL = [NSString stringWithFormat:@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#' and enddate>=to_date('%@','yyyy-mm-dd') and enddate<=to_date('%@','yyyy-mm-dd')",startDate,endDate];
+
     NSDictionary * parametersDic = @{@"start":[NSString stringWithFormat:@"%ld",(long)_currentPage * 20],
                                      @"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATION_REG,
                                      @"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"ENDDATE",
-                                     @"WHERESQL":@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#'",
+                                     @"ORDERSQL":@"ENDDATE DESC",
+                                     @"WHERESQL":whereSQL,
                                      @"METHOD":@"search",
                                      @"DETAILTABLE":@"",
                                      @"MASTERFIELD":@"SEQKEY",
@@ -134,7 +136,7 @@
     [MBProgressHUD showHUDAddedTo:_historyView animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
-                                 
+                                 NSLog(@">>>  %@",data);
                                  NSArray * dataArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG];
                                  
                                  if ([ZEUtil isNotNull:dataArr] && dataArr.count > 0) {
@@ -186,9 +188,9 @@
     _endDate     = endDate;
     
     if ([startDate isEqualToString:@"开始日期"]) {
-        _startDate = @"null";
+        _startDate = @"";
     }else if ([endDate isEqualToString:@"结束日期"]){
-        _endDate = @"null";
+        _endDate = @"";
     }
     [self searchHistoryStartDate:_startDate withEndDate:_endDate];
 
@@ -200,7 +202,7 @@
     _currentPage = 0;
     _startDate = @"null";
     _endDate = @"null";
-    [self searchHistoryStartDate:@"null" withEndDate:@"null"];
+    [self sendRequest];
 }
 
 -(void)loadMoreData:(ZEHistoryView *)hisView
@@ -214,7 +216,6 @@
 
 -(void)enterDetailView:(NSString *)seqkey
 {
-
     NSDictionary * parametersDic = @{@"MENUAPP":@"EMARK_APP",
                                      @"ORDERSQL":@"SYSCREATEDATE",
                                      @"WHERESQL":[NSString stringWithFormat:@"SEQKEY=%@",seqkey],
@@ -235,7 +236,6 @@
     [MBProgressHUD showHUDAddedTo:_historyView animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
-                                 NSLog(@"  =========  %@",data);
                                  [MBProgressHUD hideHUDForView:_historyView animated:YES];
                                  [self goChageVC:data];
                              } fail:^(NSError *errorCode) {
@@ -251,20 +251,26 @@
     if ([model.SELF isEqualToString:@"self"]) {
         NSLog(@"自己录入的");
         ZEPointRegistrationVC * pointRegVC = [[ZEPointRegistrationVC alloc]init];
-        pointRegVC.defaultDic = [ZEUtil getServerDic:dic withTabelName:EPM_TEAM_RATION_REG];
-        pointRegVC.defaultDetailDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
+        pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
+        pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
         [self.navigationController pushViewController:pointRegVC animated:YES];
         
     }else if([model.SELF isEqualToString:@"leader"]){
         NSLog(@"负责人录入");
     }else{
         NSLog(@" 班组长录入 ");
+        ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
+        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
+        pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
+        pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        [self.navigationController pushViewController:pointRegVC animated:YES];
+        
     }
 }
 
 -(void)deleteHistory:(NSString *)seqkey
 {
-    
     NSDictionary * parametersDic = @{@"MASTERTABLE":EPM_TEAM_RATION_REG,
                                      @"MENUAPP":@"EMARK_APP",
                                      @"WHERESQL":@"",

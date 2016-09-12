@@ -81,7 +81,7 @@
 {
     UILabel * titleLab = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, 44.0f)];
     titleLab.text = @"请选择";
-    titleLab.backgroundColor = MAIN_COLOR;
+    titleLab.backgroundColor = MAIN_NAV_COLOR;
     titleLab.textColor = [UIColor whiteColor];
     titleLab.textAlignment = NSTextAlignmentCenter;
     [self addSubview:titleLab];

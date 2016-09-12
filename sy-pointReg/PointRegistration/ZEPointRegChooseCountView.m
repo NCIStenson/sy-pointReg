@@ -35,7 +35,7 @@
 {
     UILabel * titleLab = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, 44.0f)];
     titleLab.text = @"请选择";
-    titleLab.backgroundColor = MAIN_COLOR;
+    titleLab.backgroundColor = MAIN_NAV_COLOR;
     titleLab.textColor = [UIColor whiteColor];
     titleLab.textAlignment = NSTextAlignmentCenter;
     [self addSubview:titleLab];
@@ -51,7 +51,7 @@
         optionBtn.frame = CGRectMake(0 + _viewFrame.size.width / 2 * i , 244.0f, _viewFrame.size.width / 2, 44.0f);
         [optionBtn setTitle:@"取消" forState:UIControlStateNormal];
         [optionBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [optionBtn setBackgroundColor:MAIN_COLOR];
+        [optionBtn setBackgroundColor:MAIN_NAV_COLOR];
         optionBtn.tag = i;
         [optionBtn addTarget:self action:@selector(chooseDateBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:optionBtn];

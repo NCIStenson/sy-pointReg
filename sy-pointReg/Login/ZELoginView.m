@@ -12,13 +12,13 @@
 #define kUsernameLabWidth       40.0f
 #define kUsernameLabHeight      30.0f
 
-#define kPasswordLabMarginLeft  kUsernameLabMarginLeft
-#define kPasswordLabMarginTop   kUsernameLabMarginTop + 55.0f
+#define kPasswordLabMarginLeft  10.0f
+#define kPasswordLabMarginTop   15.0f
 #define kPasswordLabWidth       kUsernameLabWidth
 #define kPasswordLabHeight      kUsernameLabHeight
 
 #define kUsernameFieldMarginLeft  95.0f
-#define kUsernameFieldMarginTop   kUsernameLabMarginTop - 10.0f
+#define kUsernameFieldMarginTop   50.0f
 #define kUsernameFieldWidth       (SCREEN_WIDTH - 80.0f - kUsernameLabWidth - 15.0f)
 #define kUsernameFieldHeight      40.0f
 
@@ -31,7 +31,7 @@
 #define kLoginBtnWidth (_viewFrame.size.width - 60.0f)
 #define kLoginBtnHeight 40.0f
 #define kLoginBtnToLeft (SCREEN_WIDTH - kLoginBtnWidth) / 2
-#define kLoginBtnToTop 340.0f
+#define kLoginBtnToTop 200.0f
 
 #define kNavTitleLabelWidth SCREEN_WIDTH
 #define kNavTitleLabelHeight 150.0f
@@ -71,15 +71,6 @@
 #pragma mark - custom view init
 - (void)initInputView
 {    
-    UIImageView * logoImageView = [[UIImageView alloc]init];
-    [logoImageView setImage:[UIImage imageNamed:@"logo.png"]];
-    logoImageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self addSubview:logoImageView];
-    [logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.rightMargin.offset(kNavTitleLabelMarginLeft);
-        make.top.offset(kNavTitleLabelMarginTop);
-        make.size.mas_equalTo(CGSizeMake(kNavTitleLabelWidth, kNavTitleLabelHeight));
-    }];
     
     UIView * inputMessageBackView = [[UIView alloc]init];
     [self addSubview:inputMessageBackView];
@@ -93,12 +84,12 @@
     for (int i = 0 ; i < 2; i ++) {
 
         CALayer * vLineLayer = [CALayer layer];
-        vLineLayer.frame = CGRectMake(kLoginBtnToLeft + i * kLoginBtnWidth, kUsernameFieldMarginTop, 0.5, 100);
+        vLineLayer.frame = CGRectMake(kLoginBtnToLeft + i * kLoginBtnWidth, kUsernameFieldMarginTop, 1, 100);
         vLineLayer.backgroundColor = LINECOLOR;
         [self.layer addSublayer:vLineLayer];
         
         UIImageView * usernameImage = [[UIImageView alloc]initWithFrame:self.frame];
-        [self addSubview:usernameImage];
+        [inputMessageBackView addSubview:usernameImage];
         
         UITextField * field = [[UITextField alloc]init];
         field.delegate      = self;
@@ -137,12 +128,11 @@
         }else {
             
             CALayer * lineLayer = [CALayer layer];
-            lineLayer.frame = CGRectMake(kLoginBtnToLeft, kPasswordLabMarginTop + kPasswordFieldHeight - 5.0f, kLoginBtnWidth, 1);
+            lineLayer.frame = CGRectMake(kLoginBtnToLeft, 150.0f, kLoginBtnWidth, 1);
             lineLayer.backgroundColor = LINECOLOR;
             [self.layer addSublayer:lineLayer];
 
             field.placeholder = @"请输入用户名";
-            field.text = @"xiaomc1";
 
             [field mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.offset(kUsernameFieldMarginLeft);
@@ -153,8 +143,8 @@
             usernameImage.image = [UIImage imageNamed:@"login_username.png" color:MAIN_LINE_COLOR];
 
             [usernameImage mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(kUsernameLabMarginLeft);
-                make.top.mas_equalTo(kUsernameLabMarginTop + 3.0f);
+                make.left.mas_equalTo(kPasswordLabMarginLeft);
+                make.top.mas_equalTo(kPasswordLabMarginTop + 50.0f);
                 make.size.mas_equalTo(CGSizeMake(kUsernameLabWidth, kUsernameLabHeight));
             }];
         }

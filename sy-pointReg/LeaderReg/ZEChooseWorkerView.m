@@ -19,14 +19,17 @@
     CGRect _viewFrame;
     UITableView * _optionTableView;
     NSMutableArray * _maskArr;
+    
 }
 @property (nonatomic,retain) NSArray * optionsArray;
+
+@property (nonatomic,strong) NSMutableArray * choosedWorkerArr;
 
 @end
 
 @implementation ZEChooseWorkerView
 
--(id)initWithOptionArr:(NSArray *)options
+-(id)initWithOptionArr:(NSArray *)options withWorkerList:(NSArray *)choosedWorker
 {
     float viewH = 0;
     if ((options.count + 2 ) * 44.0f > kMaxHeight) {
@@ -37,10 +40,8 @@
     self = [super initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 40, viewH)];
     if (self) {
         _optionsArray = options;
-        _maskArr = [NSMutableArray arrayWithCapacity:_optionsArray.count];
-        for (int i = 0; i < _optionsArray.count; i ++) {
-            [_maskArr addObject:[NSString stringWithFormat:@"0"]];
-        }
+        self.choosedWorkerArr = [NSMutableArray arrayWithArray:choosedWorker];
+        
         _viewFrame = CGRectMake(0, 0, SCREEN_WIDTH - 40, viewH);
         self.backgroundColor = [UIColor whiteColor];
         self.clipsToBounds = YES;
@@ -53,9 +54,18 @@
 
 -(void)initData
 {
-    _maskArr = [NSMutableArray array];
+    _maskArr = [NSMutableArray arrayWithCapacity:_optionsArray.count];
     for (int i = 0; i < _optionsArray.count; i ++) {
-        [_maskArr addObject:@"0"];
+        NSDictionary * allWorkerList = _optionsArray[i];
+        NSString * isMask = @"0";
+        for (int j = 0; j < self.choosedWorkerArr.count;j++ ) {
+            NSDictionary * choosedWorkerList = self.choosedWorkerArr[j];
+            if ([[allWorkerList objectForKey:@"PSNNUM"] isEqualToString:[choosedWorkerList objectForKey:@"PSNNUM"]]) {
+                isMask = @"1";
+                break;
+            }
+        }
+        [_maskArr addObject:isMask];
     }
 }
 
@@ -63,7 +73,7 @@
 {
     UILabel * titleLab = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, 44.0f)];
     titleLab.text = @"请选择";
-    titleLab.backgroundColor = MAIN_COLOR;
+    titleLab.backgroundColor = MAIN_NAV_COLOR;
     titleLab.textColor = [UIColor whiteColor];
     titleLab.textAlignment = NSTextAlignmentCenter;
     [self addSubview:titleLab];
@@ -79,7 +89,7 @@
         optionBtn.frame = CGRectMake(0 + _viewFrame.size.width / 2 * i , _viewFrame.size.height - 44.0f, _viewFrame.size.width / 2, 44.0f);
         [optionBtn setTitle:@"取消" forState:UIControlStateNormal];
         [optionBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [optionBtn setBackgroundColor:MAIN_COLOR];
+        [optionBtn setBackgroundColor:MAIN_NAV_COLOR];
         optionBtn.tag = i;
         [optionBtn addTarget:self action:@selector(chooseWorkerBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:optionBtn];
@@ -93,7 +103,6 @@
     lineLayer.backgroundColor = [MAIN_LINE_COLOR CGColor];
     [self.layer addSublayer:lineLayer];
     
-    if (_viewFrame.size.height != kMaxHeight) _optionTableView.scrollEnabled = NO;
     [_optionTableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(kOptionViewMarginLeft);
         make.top.offset(kOptionViewMarginTop);

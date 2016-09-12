@@ -295,7 +295,7 @@
                                                                                         @"RATIONCODE":taskDetailM.RATIONCODE,
                                                                                         @"RATIONID":taskDetailM.SEQKEY,
                                                                                         @"ADDMODE":kCOMMONPOINTREG,
-                                                                                        @"STATUS":@"10"}];
+                                                                                        @"STATUS":[ZESettingLocalData getISLEADER] ? @"1" : @"10"}];
     
     for (NSInteger i = 0 ; i < _pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {
         NSString * keyStr = _pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i];
@@ -331,6 +331,7 @@
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  [ZEUtil showAlertView:@"提交成功" viewController:self];
+                                 [_pointView submitSuccessReloadContentView];
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
@@ -368,7 +369,7 @@
                                                                                         @"RATIONCODE":taskDetailM.RATIONCODE,
                                                                                         @"RATIONID":taskDetailM.SEQKEY,
                                                                                         @"ADDMODE":kCOMMONPOINTREG,
-                                                                                        @"STATUS":@"10",
+                                                                                        @"STATUS":[ZESettingLocalData getISLEADER] ? @"1" : @"10",
                                                                                         @"SEQKEY":[_pointView.CHOOSEDRATIONTYPEVALUEDic objectForKey:@"SEQKEY"]}];
     
     for (NSInteger i = 0 ; i < _pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {
@@ -382,7 +383,7 @@
     NSMutableArray * personalArr = [NSMutableArray array];
     for (NSInteger i = 0; i < _pointView.USERCHOOSEDWORKERVALUEARR.count; i ++) {
         NSDictionary * dic = _pointView.USERCHOOSEDWORKERVALUEARR[i];
-        NSMutableDictionary * personalDic =  [NSMutableDictionary dictionaryWithDictionary: @{@"STATUS":@"10",
+        NSMutableDictionary * personalDic =  [NSMutableDictionary dictionaryWithDictionary: @{@"STATUS":[ZESettingLocalData getISLEADER] ? @"1" : @"10",
                                                                                               @"SEQKEY":[dic objectForKey:@"SEQKEY"],
                                                                                               @"WORKPOINTS":[dic objectForKey:@"WORKPOINTS"],
                                                                                               @"TASKID":@"",

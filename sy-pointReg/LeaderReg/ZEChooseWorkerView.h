@@ -22,6 +22,6 @@
 
 @property (nonatomic,weak) id <ZEChooseWorkerViewDelegate>delegate;
 
--(id)initWithOptionArr:(NSArray *)options;
+-(id)initWithOptionArr:(NSArray *)options withWorkerList:(NSArray *)choosedWorker;
 
 @end

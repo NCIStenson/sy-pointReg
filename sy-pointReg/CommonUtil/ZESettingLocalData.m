@@ -99,7 +99,7 @@ static NSString * kISLEADER            = @"kISLEADER";
 }
 +(BOOL)getISEXPERT
 {
-    return [self Get:kISEXPERT];
+    return [[self Get:kISEXPERT] boolValue];
 }
 +(void)deleteISEXPERT
 {
@@ -120,7 +120,7 @@ static NSString * kISLEADER            = @"kISLEADER";
 }
 +(BOOL)getISLEADER
 {
-    return [self Get:kISLEADER];
+    return [[self Get:kISLEADER] boolValue];
 }
 +(void)deleteISLEADER
 {

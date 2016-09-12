@@ -40,7 +40,7 @@
 }
 -(void)sendRequest
 {
-    NSString * whereSQL = [NSString stringWithFormat:@"psnnum='%@' and suitunit='%@' and PERIODCODE='%@' and status in ('2','3','4','5','6','7')",[ZESettingLocalData getUSERCODE],@"SYBDYWS",_PERIODCODE];
+    NSString * whereSQL = [NSString stringWithFormat:@"psnnum='#PSNNUM#' and suitunit='#SUITUNIT#' and PERIODCODE='%@' and status in ('2','3','4','5','6','7')",_PERIODCODE];
     
     NSDictionary * parametersDic = @{@"start":@"0",
                                      @"limit":@"2000",
@@ -60,15 +60,17 @@
                                                                            withFields:@[fieldsDic]
                                                                        withPARAMETERS:parametersDic
                                                                        withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __block ZESumDeatilVC * safeSelf = self;
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  if ([[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG_DETAIL] count] > 0) {
                                      safeSelf.listArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG_DETAIL];
                                      [_contentTableView reloadData];
                                  }
                              } fail:^(NSError *errorCode) {
-                                 
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
 }
 

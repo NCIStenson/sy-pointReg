@@ -46,7 +46,7 @@
                                      @"MASTERTABLE":EPM_TEAM_RESULT,
                                      @"MENUAPP":@"EMARK_APP",
                                      @"ORDERSQL":@"DISPLAYORDER",
-                                     @"WHERESQL":[NSString stringWithFormat:@"psnnum='%@' and suitunit='%@' AND substr(PERIODCODE,0,4)='2016'",[ZESettingLocalData getUSERCODE],@"SYBDYWS"],
+                                     @"WHERESQL":[NSString stringWithFormat:@"psnnum='#PSNNUM#' and suitunit='#SUITUNIT#' AND substr(PERIODCODE,0,4)='%@'",[[ZEUtil getCurrentMonth] substringToIndex:4]],
                                      @"METHOD":@"search",
                                      @"DETAILTABLE":@"",
                                      @"MASTERFIELD":@"SEQKEY",
@@ -60,16 +60,17 @@
                                                                            withFields:@[fieldsDic]
                                                                        withPARAMETERS:parametersDic
                                                                        withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __block ZEPointSearchVC * safeSelf = self;
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
-                                 NSLog(@" =========   %@ " ,data);
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  if ([[ZEUtil getServerData:data withTabelName:EPM_TEAM_RESULT] count] > 0) {
                                      safeSelf.listArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RESULT];
                                      [_contentTableView reloadData];
                                  }
                              } fail:^(NSError *errorCode) {
-                                 
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
 }
 

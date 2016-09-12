@@ -135,6 +135,7 @@
         [enterBtn setImage:[UIImage imageNamed:@"home_toolkit"] forState:UIControlStateNormal];
         [scrollView addSubview:enterBtn];
         [enterBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+      //  enterBtn.imageView.contentMode = UIViewContentModeScaleAspectFit;
         
         UILabel * tipsLabel     = [[UILabel alloc]init];
         tipsLabel.font          = [UIFont systemFontOfSize:14];
@@ -148,34 +149,53 @@
         [enterBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
         tipsLabel.text  = UUMFUNCTIONM.FUNCTIONNAME;
         
-        switch (i) {
-            case 0:
-                [enterBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
-                [enterBtn addTarget:self action:@selector(goPointReg) forControlEvents:UIControlEventTouchUpInside];
-                break;
-            case 1:
-                [enterBtn setImage:[UIImage imageNamed:@"icon_point"] forState:UIControlStateNormal];
-                [enterBtn addTarget:self action:@selector(goLeaderView) forControlEvents:UIControlEventTouchUpInside];
-                
-                break;
-            case 2:
-                [enterBtn setImage:[UIImage imageNamed:@"icon_history_big"] forState:UIControlStateNormal];
-                [enterBtn addTarget:self action:@selector(goHistory) forControlEvents:UIControlEventTouchUpInside];
-                
-                break;
-            case 3:
-            {
-                [enterBtn addTarget:self action:@selector(goPointAudit) forControlEvents:UIControlEventTouchUpInside];
-                [enterBtn setImage:[UIImage imageNamed:@"icon_audit"] forState:UIControlStateNormal];
-            }
-                break;
-            case 4:
-            {
-                [enterBtn addTarget:self action:@selector(goPointQuery) forControlEvents:UIControlEventTouchUpInside];
-            }
-            default:
-                break;
+        if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_01"]) {
+            [enterBtn setImage:[UIImage imageNamed:@"home_personalskills"] forState:UIControlStateNormal];
+            [enterBtn addTarget:self action:@selector(goPointReg) forControlEvents:UIControlEventTouchUpInside];
+        }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_02"]){
+            [enterBtn setImage:[UIImage imageNamed:@"home_expertsassess"] forState:UIControlStateNormal];
+            [enterBtn addTarget:self action:@selector(goLeaderView) forControlEvents:UIControlEventTouchUpInside];
+        }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_03"]){
+            [enterBtn setImage:[UIImage imageNamed:@"home_expertsassess"] forState:UIControlStateNormal];
+            [enterBtn addTarget:self action:@selector(goLeaderView) forControlEvents:UIControlEventTouchUpInside];
+        }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_04"]){
+            [enterBtn setImage:[UIImage imageNamed:@"home_foreman"] forState:UIControlStateNormal];
+            [enterBtn addTarget:self action:@selector(goHistory) forControlEvents:UIControlEventTouchUpInside];
+        }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_05"]){
+            [enterBtn setImage:[UIImage imageNamed:@"home_good"] forState:UIControlStateNormal];
+            [enterBtn addTarget:self action:@selector(goPointAudit) forControlEvents:UIControlEventTouchUpInside];
+        }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_06"]){
+            [enterBtn setImage:[UIImage imageNamed:@"home_toolkit"] forState:UIControlStateNormal];
+            [enterBtn addTarget:self action:@selector(goPointQuery) forControlEvents:UIControlEventTouchUpInside];
         }
+//        switch (UUMFUNCTIONM.FUNCTIONCODE) {
+//            case 0:
+//                [enterBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
+//                [enterBtn addTarget:self action:@selector(goPointReg) forControlEvents:UIControlEventTouchUpInside];
+//                break;
+//            case 1:
+//                [enterBtn setImage:[UIImage imageNamed:@"icon_point"] forState:UIControlStateNormal];
+//                [enterBtn addTarget:self action:@selector(goLeaderView) forControlEvents:UIControlEventTouchUpInside];
+//                
+//                break;
+//            case 2:
+//                [enterBtn setImage:[UIImage imageNamed:@"icon_history_big"] forState:UIControlStateNormal];
+//                [enterBtn addTarget:self action:@selector(goHistory) forControlEvents:UIControlEventTouchUpInside];
+//                
+//                break;
+//            case 3:
+//            {
+//                [enterBtn addTarget:self action:@selector(goPointAudit) forControlEvents:UIControlEventTouchUpInside];
+//                [enterBtn setImage:[UIImage imageNamed:@"icon_audit"] forState:UIControlStateNormal];
+//            }
+//                break;
+//            case 4:
+//            {
+//                [enterBtn addTarget:self action:@selector(goPointQuery) forControlEvents:UIControlEventTouchUpInside];
+//            }
+//            default:
+//                break;
+//        }
         
     }
 }

@@ -77,6 +77,9 @@
  *  刷新表
  */
 -(void)reloadContentView;
-
+/**
+ *  提交成功
+ */
+-(void)submitSuccessReloadContentView;
 
 @end

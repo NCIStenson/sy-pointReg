@@ -79,6 +79,11 @@
 -(void)reloadContentView;
 
 /**
+ *  提交成功
+ */
+
+-(void)submitSuccessReloadContentView;
+/**
  *  显示隐藏加载菊花
  */
 -(void)showProgress;

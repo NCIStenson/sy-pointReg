@@ -304,7 +304,10 @@
             return @"发生日期";
             break;
         case POINT_REG_WORKING_HOURS:
-            return @"核定工时";
+            return @"标准工时";
+            break;
+        case POINT_REG_WORKING_POINTS:
+            return @"标准工分";
             break;
         case POINT_REG_TYPE:
             return @"分摊类型";
@@ -414,6 +417,16 @@
     }else{
         return NO;
     }
+}
+
++(NSString *)getCurrentMonth
+{
+    NSDate * date = [NSDate date];
+    NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"YYYYMM"];
+    NSString * dateStr = [formatter stringFromDate:date];
+    
+    return dateStr;
 }
 
 

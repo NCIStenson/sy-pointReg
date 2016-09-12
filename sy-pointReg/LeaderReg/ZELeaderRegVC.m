@@ -163,8 +163,8 @@
     if ([[[[ZEPointRegCache instance]getRATIONTYPEVALUE] allKeys] count] > 0) {
         return;
     }
-    NSString * valueStr = [NSString stringWithFormat:@"QUOTIETY%ldCODE",number];
-    NSString * WHERESQL = [NSString stringWithFormat:@"suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode in (select case (select count(1) from EPM_TEAM_RATIONTYPEVALUE t where t.suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode = '#SECORGCODE#') when 0 then '-1' else '#SECORGCODE#' end from dual)",number,number];
+    NSString * valueStr = [NSString stringWithFormat:@"QUOTIETY%ldCODE",(long)number];
+    NSString * WHERESQL = [NSString stringWithFormat:@"suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode in (select case (select count(1) from EPM_TEAM_RATIONTYPEVALUE t where t.suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode = '#SECORGCODE#') when 0 then '-1' else '#SECORGCODE#' end from dual)",(long)number,number];
     NSDictionary * parametersDic = @{@"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATIONTYPEVALUE,
                                      @"MENUAPP":@"EMARK_APP",
@@ -485,7 +485,7 @@
                                                                                         @"RATIONCODE":taskDetailM.RATIONCODE,
                                                                                         @"RATIONID":taskDetailM.SEQKEY,
                                                                                         @"ADDMODE":kLEADERPOINTREG,
-                                                                                        @"STATUS":[ZESettingLocalData getISLEADER] ? @"1" : @"10"}];
+                                                                                        @"STATUS":@"10"}];
     
     for (NSInteger i = 0 ; i < _leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {
         NSString * keyStr = _leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i];
@@ -537,6 +537,7 @@
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  [ZEUtil showAlertView:@"提交成功" viewController:self];
+                                 [_leaderRegView submitSuccessReloadContentView];
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
@@ -574,7 +575,7 @@
                                                                                         @"RATIONCODE":taskDetailM.RATIONCODE,
                                                                                         @"RATIONID":taskDetailM.SEQKEY,
                                                                                         @"ADDMODE":kLEADERPOINTREG,
-                                                                                        @"STATUS":[ZESettingLocalData getISLEADER] ? @"1" : @"10",
+                                                                                        @"STATUS": @"10",
                                                                                         @"SEQKEY":[_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:@"SEQKEY"]}];
     
     for (NSInteger i = 0 ; i < _leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {
@@ -615,14 +616,10 @@
     }
     [personalArr insertObject:defaultDic atIndex:0];
     
-    NSLog(@" personalArr  ====   %@ ",personalArr);
-    
     NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:tableNameArr
                                                                            withFields:personalArr
                                                                        withPARAMETERS:parametersDic
                                                                        withActionFlag:nil];
-    NSLog(@">>>  %@",packageDic);
-    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
@@ -662,7 +659,7 @@
                                                                                         @"RATIONCODE":taskDetailM.RATIONCODE,
                                                                                         @"RATIONID":taskDetailM.SEQKEY,
                                                                                         @"ADDMODE":kLEADERPOINTREG,
-                                                                                        @"STATUS":[ZESettingLocalData getISLEADER] ? @"1" : @"8",
+                                                                                        @"STATUS":@"8",
                                                                                         @"SEQKEY":[_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:@"SEQKEY"]}];
     
     for (NSInteger i = 0 ; i < _leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {

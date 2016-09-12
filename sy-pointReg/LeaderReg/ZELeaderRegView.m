@@ -6,6 +6,8 @@
 //  Copyright © 2016年 Zenith Electronic. All rights reserved.
 //
 
+#define kDefaultRows  5
+
 #define kContentViewMarginTop   64.0f
 #define kContentViewMarginLeft  0.0f
 #define kContentViewWidth       SCREEN_WIDTH
@@ -86,6 +88,28 @@
     self.USERCHOOSEDWORKERVALUEARR = [NSMutableArray array];
     [self setWorkerDefaultData];
 }
+
+-(void)submitSuccessReloadContentView
+{
+    self.commmonRationTypeValueArr = [NSMutableArray array];
+    self.personalRationTypeValueArr = [NSMutableArray array];
+    self.USERCHOOSEDWORKERVALUEARR = [NSMutableArray array];
+    self.CHOOSEDRATIONTYPEVALUEDic = [NSMutableDictionary dictionary];
+    [[ZEPointRegCache instance] clearUserOptions];
+    [self setDate];
+    [_contentTableView  reloadData];
+}
+-(void)setDate
+{
+    NSDate * date = [NSDate date];
+    NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"YYYY-MM-dd"];
+    NSString * dateStr = [formatter stringFromDate:date];
+    
+    [[ZEPointRegCache instance]setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_DATE]:dateStr}];
+}
+
+
 #pragma mark - 修改数据时  默认的数据
 
 -(void)initDefaultData
@@ -277,7 +301,6 @@
     }
     
     [self reloadUpadteData];
-
 }
 
 -(void)showListView:(NSArray *)listArr withLevel:(TASK_LIST_LEVEL)level withPointReg:(POINT_REG)pointReg
@@ -305,7 +328,7 @@
 
 -(void)showWorkerListView:(NSArray *)arr
 {
-    ZEChooseWorkerView * chooseTaskView = [[ZEChooseWorkerView alloc]initWithOptionArr:arr];
+    ZEChooseWorkerView * chooseTaskView = [[ZEChooseWorkerView alloc]initWithOptionArr:arr withWorkerList:_choosedWorkerArr];
     chooseTaskView.delegate = self;
     _alertView = [[JCAlertView alloc]initWithCustomView:chooseTaskView dismissWhenTouchedBackground:YES];
     [_alertView show];
@@ -353,9 +376,9 @@
 {
     if (section == 0) {
         if(_enterType == ENTER_PERSON_POINTREG_TYPE_DEFAULT){
-            return 5 + self.commmonRationTypeValueArr.count;
+            return kDefaultRows + 1 + self.commmonRationTypeValueArr.count;
         }else{
-            return 4 + self.commmonRationTypeValueArr.count;
+            return kDefaultRows + self.commmonRationTypeValueArr.count;
         }
     }
     return self.personalRationTypeValueArr.count + 2;
@@ -416,10 +439,7 @@
         }else if (indexPath.row ==  self.personalRationTypeValueArr.count + 1){
             cell.textLabel.text = @"工时得分";
             cell.detailTextLabel.text = @"0分";
-            if ([[dic objectForKey:@"WORKPOINTS"] doubleValue] >0) {
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@分",[dic objectForKey:@"WORKPOINTS"]];
-            }
-
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@分",[dic objectForKey:@"WORKPOINTS"]];
         }
     }else{
         
@@ -453,21 +473,24 @@
     NSDictionary * choosedOptionDic = [[ZEPointRegCache instance] getUserChoosedOptionDic];
     NSDictionary * choosedTaskDic = [choosedOptionDic objectForKey:[ZEUtil getPointRegField:POINT_REG_TASK]];
     
-    if (row == self.commmonRationTypeValueArr.count + 4) {
+    if (row == self.commmonRationTypeValueArr.count + kDefaultRows) {
+        cell.detailTextLabel.text = @"";
+        cell.textLabel.text = @"";
+        
         UILabel * addWorkerLab     = [UILabel new];
         addWorkerLab.font          = [UIFont systemFontOfSize:14];
         addWorkerLab.frame         = CGRectMake(0, 0, SCREEN_WIDTH, 44.0f);
-        addWorkerLab.text          = @"添加作人员";
+        addWorkerLab.text          = @"添加工作人员";
         addWorkerLab.textAlignment = NSTextAlignmentCenter;
         addWorkerLab.textColor     = MAIN_COLOR;
         [cell.contentView addSubview:addWorkerLab];
-    }else if (row < 4){
+    }else if (row < kDefaultRows){
         cell.detailTextLabel.textColor = MAIN_COLOR;
         cell.textLabel.text = [ZEUtil getPointRegInformation:row];
         cell.detailTextLabel.text = @"请选择";
-    }else if (row < self.commmonRationTypeValueArr.count + 4){
+    }else if (row < self.commmonRationTypeValueArr.count + kDefaultRows){
         
-        NSDictionary * rationTypeDic = self.commmonRationTypeValueArr[row - 4];
+        NSDictionary * rationTypeDic = self.commmonRationTypeValueArr[row - kDefaultRows];
         ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:rationTypeDic];
         cell.textLabel.text = detailM.FIELDDISPLAY;
         cell.detailTextLabel.text = @"";
@@ -486,8 +509,6 @@
             field.tag = row;
             [cell.contentView addSubview:field];
             [field addTarget:self  action:@selector(valueChanged:)  forControlEvents:UIControlEventEditingChanged];
-            NSLog( @" %@  =======  " ,detailM.FIELDNAME);
-            NSLog( @" %@  =======  " , [self.CHOOSEDRATIONTYPEVALUEDic objectForKey:detailM.FIELDNAME]);
             field.text = [NSString stringWithFormat:@"%@",[self.CHOOSEDRATIONTYPEVALUEDic objectForKey:detailM.FIELDNAME]];
         }
     }
@@ -508,12 +529,19 @@
             cell.detailTextLabel.text = dateStr;
         }
             break;
-            
+        case POINT_REG_WORKING_POINTS:
+        {
+            if ([ZEUtil isNotNull:choosedTaskDic]) {
+                ZEEPM_TEAM_RATION_COMMON * taskM = [ZEEPM_TEAM_RATION_COMMON getDetailWithDic:choosedTaskDic];
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@",taskM.STDSCORE];
+            }
+        }
+            break;
         case POINT_REG_WORKING_HOURS:
         {
             if ([ZEUtil isNotNull:choosedTaskDic]) {
                 ZEEPM_TEAM_RATION_COMMON * taskM = [ZEEPM_TEAM_RATION_COMMON getDetailWithDic:choosedTaskDic];
-                cell.detailTextLabel.text = taskM.STDSCORE;
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@",taskM.STANDARDOPERATIONTIME];
             }
         }
             break;
@@ -549,20 +577,20 @@
     
     if(indexPath.section == 0){
         
-        if (indexPath.row < 4) {
-            if (indexPath.row == 3) {
+        if (indexPath.row < kDefaultRows) {
+            if (indexPath.row == 3 || indexPath.row == 4) {
                 return;
             }
             if ([self.delegate respondsToSelector:@selector(didSelectRowAtIndexpath:)]) {
                 [self.delegate didSelectRowAtIndexpath:indexPath];
             }
-        }else if (indexPath.row == self.commmonRationTypeValueArr.count + 4){
+        }else if (indexPath.row == self.commmonRationTypeValueArr.count + kDefaultRows){
             if ([self.delegate respondsToSelector:@selector(showWorkerListView)]) {
                 [self.delegate showWorkerListView];
             }
-        }else if(indexPath.row < 4 + self.commmonRationTypeValueArr.count){
+        }else if(indexPath.row < kDefaultRows + self.commmonRationTypeValueArr.count){
             
-            NSDictionary * rationTypeDic = self.commmonRationTypeValueArr[indexPath.row - 4];
+            NSDictionary * rationTypeDic = self.commmonRationTypeValueArr[indexPath.row - kDefaultRows];
             ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:rationTypeDic];
             
             //    避免点击输入框周围 弹出提示框
@@ -570,7 +598,7 @@
                 return;
             }
             
-            ZEEPM_TEAM_RATIONTYPEDETAIL * model = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:self.commmonRationTypeValueArr[indexPath.row - 4]];
+            ZEEPM_TEAM_RATIONTYPEDETAIL * model = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:self.commmonRationTypeValueArr[indexPath.row - kDefaultRows]];
             if([self.delegate respondsToSelector:@selector(showRATIONTYPEVALUE:)]){
                 [self.delegate showRATIONTYPEVALUE:model.FIELDNAME];
             }
@@ -615,14 +643,14 @@
         ZEEPM_TEAM_RATION_COMMON * taskM = [ZEEPM_TEAM_RATION_COMMON getDetailWithDic:choosedTaskDic];
         NSArray * cacheDisType = [[[ZEPointRegCache instance] getDistributionTypeCoefficient] objectForKey:taskM.RATIONTYPE];
         
-        if (_currentSelectIndexPath.row < 4) {
+        if (_currentSelectIndexPath.row < kDefaultRows) {
             [[ZEPointRegCache instance] setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_TASK]:object}];
             [self reloadContentView];
-        }else if (_currentSelectIndexPath.row < cacheDisType.count + 4){
+        }else if (_currentSelectIndexPath.row < cacheDisType.count + kDefaultRows){
             ZEEPM_TEAM_RATIONTYPEDETAIL * model = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:object];
             cell.detailTextLabel.text = model.QUOTIETYNAME;
             
-            ZEEPM_TEAM_RATIONTYPEDETAIL *cacheDisTypeM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:_commmonRationTypeValueArr[_currentSelectIndexPath.row - 4]];
+            ZEEPM_TEAM_RATIONTYPEDETAIL *cacheDisTypeM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:_commmonRationTypeValueArr[_currentSelectIndexPath.row - kDefaultRows]];
             NSDictionary * dic = @{cacheDisTypeM.FIELDNAME:object};
             [self.CHOOSEDRATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
             [self reloadUpadteData];
@@ -699,6 +727,65 @@
     
     [self reloadContentView];
 }
+
+-(void)setChangeChoosedWorker
+{
+    NSMutableArray * choosedArr = [NSMutableArray array];
+    
+    for (int j = 0; j < _choosedWorkerArr.count; j ++) {
+        NSDictionary * listDic = _choosedWorkerArr[j];
+        BOOL isMask = NO;
+        for (int i = 0; i < self.USERCHOOSEDWORKERVALUEARR.count ; i ++) {
+            NSDictionary * dic = self.USERCHOOSEDWORKERVALUEARR[i];
+            if ([[listDic objectForKey:@"PSNNUM"] isEqualToString:[dic objectForKey:@"PSNNUM"]]) {
+                NSLog(@">>>>  %@",[dic objectForKey:@"PSNNUM"]);
+                isMask = YES;
+            }
+            if ( i == self.USERCHOOSEDWORKERVALUEARR.count - 1 && !isMask) {
+                [self.USERCHOOSEDWORKERVALUEARR removeObject:dic];
+            }
+        }
+        
+        if (!isMask) {
+            
+        }
+    }
+    
+    
+    NSMutableDictionary * defaultDic = [NSMutableDictionary dictionary];
+    for (NSDictionary * dic in _choosedWorkerArr) {
+        defaultDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        
+        for (NSDictionary * dic in self.personalRationTypeValueArr) {
+            ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:dic];
+            if (![detailM.FIELDEDITOR boolValue]) {
+                NSDictionary * valueDic = [[ZEPointRegCache instance] getRATIONTYPEVALUE];
+                //          展示默认的选项值
+                if ([[valueDic objectForKey:detailM.FIELDNAME] isKindOfClass:[NSArray class]]) {
+                    for (NSDictionary * valueDetailDic in [valueDic objectForKey:detailM.FIELDNAME]) {
+                        ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:valueDetailDic];
+                        if ([valueModel.DEFAULTCODE isEqualToString:@"true"]) {
+                            NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
+                            [defaultDic setValuesForKeysWithDictionary:dic];
+                        }
+                    }
+                }
+            }else{
+                NSDictionary * dic = @{detailM.FIELDNAME:@"1"};
+                [defaultDic setValuesForKeysWithDictionary:dic];
+            }
+        }
+        [defaultDic setValue:@"" forKey:@"DESCR"];
+        [defaultDic setValue:@"0" forKey:@"WORKPOINTS"];
+        [defaultDic setValue:@"0" forKey:@"SUMPOINTS"];
+        [defaultDic setValue:[dic objectForKey:@"PSNNUM"] forKey:@"PSNNUM"];
+        [defaultDic setValue:[dic objectForKey:@"PSNNAME"] forKey:@"PSNNAME"];
+        [self.USERCHOOSEDWORKERVALUEARR addObject:defaultDic];
+    }
+    
+    [self reloadUpadteData];
+}
+
 
 #pragma mark - UITextFieldDelegate
 
@@ -794,7 +881,7 @@
         [changeDic setValuesForKeysWithDictionary:dic];
         [_USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:textField.tag / 100 - 1 withObject:changeDic];
     }else{
-        NSDictionary * rationTypeDic = self.commmonRationTypeValueArr[textField.tag - 4];
+        NSDictionary * rationTypeDic = self.commmonRationTypeValueArr[textField.tag - kDefaultRows];
         
         ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:rationTypeDic];
         NSDictionary * dic = @{detailM.FIELDNAME:textField.text};

@@ -154,7 +154,7 @@
             [enterBtn addTarget:self action:@selector(goPointReg) forControlEvents:UIControlEventTouchUpInside];
         }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_02"]){
             [enterBtn setImage:[UIImage imageNamed:@"home_expertsassess"] forState:UIControlStateNormal];
-            [enterBtn addTarget:self action:@selector(goLeaderView) forControlEvents:UIControlEventTouchUpInside];
+            [enterBtn addTarget:self action:@selector(goChargeView) forControlEvents:UIControlEventTouchUpInside];
         }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_03"]){
             [enterBtn setImage:[UIImage imageNamed:@"home_expertsassess"] forState:UIControlStateNormal];
             [enterBtn addTarget:self action:@selector(goLeaderView) forControlEvents:UIControlEventTouchUpInside];
@@ -168,44 +168,21 @@
             [enterBtn setImage:[UIImage imageNamed:@"home_toolkit"] forState:UIControlStateNormal];
             [enterBtn addTarget:self action:@selector(goPointQuery) forControlEvents:UIControlEventTouchUpInside];
         }
-//        switch (UUMFUNCTIONM.FUNCTIONCODE) {
-//            case 0:
-//                [enterBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
-//                [enterBtn addTarget:self action:@selector(goPointReg) forControlEvents:UIControlEventTouchUpInside];
-//                break;
-//            case 1:
-//                [enterBtn setImage:[UIImage imageNamed:@"icon_point"] forState:UIControlStateNormal];
-//                [enterBtn addTarget:self action:@selector(goLeaderView) forControlEvents:UIControlEventTouchUpInside];
-//                
-//                break;
-//            case 2:
-//                [enterBtn setImage:[UIImage imageNamed:@"icon_history_big"] forState:UIControlStateNormal];
-//                [enterBtn addTarget:self action:@selector(goHistory) forControlEvents:UIControlEventTouchUpInside];
-//                
-//                break;
-//            case 3:
-//            {
-//                [enterBtn addTarget:self action:@selector(goPointAudit) forControlEvents:UIControlEventTouchUpInside];
-//                [enterBtn setImage:[UIImage imageNamed:@"icon_audit"] forState:UIControlStateNormal];
-//            }
-//                break;
-//            case 4:
-//            {
-//                [enterBtn addTarget:self action:@selector(goPointQuery) forControlEvents:UIControlEventTouchUpInside];
-//            }
-//            default:
-//                break;
-//        }
-        
     }
 }
 
 #pragma mark - SelfDelegate
+-(void)goChargeView
+{
+    if ([self.delegate respondsToSelector:@selector(goLeaderView:) ]) {
+        [self.delegate goLeaderView:ENTER_MANYPERSON_POINTREG_TYPE_CHARGE];
+    }
+}
 
 -(void)goLeaderView
 {
-    if ([self.delegate respondsToSelector:@selector(goLeaderView) ]) {
-        [self.delegate goLeaderView];
+    if ([self.delegate respondsToSelector:@selector(goLeaderView:) ]) {
+        [self.delegate goLeaderView:ENTER_MANYPERSON_POINTREG_TYPE_LEADER];
     }
 }
 

@@ -589,7 +589,7 @@
         {
             if ([ZEUtil isNotNull:choosedTaskDic]) {
                 ZEEPM_TEAM_RATION_COMMON * taskM = [ZEEPM_TEAM_RATION_COMMON getDetailWithDic:choosedTaskDic];
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@",taskM.STANDARDOPERATIONTIME];
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@",taskM.STDSCORE];
             }
         }
             break;
@@ -598,7 +598,7 @@
         {
             if ([ZEUtil isNotNull:choosedTaskDic]) {
                 ZEEPM_TEAM_RATION_COMMON * taskM = [ZEEPM_TEAM_RATION_COMMON getDetailWithDic:choosedTaskDic];
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", taskM.STDSCORE];
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", taskM.STANDARDOPERATIONTIME];
             }
         }
             break;

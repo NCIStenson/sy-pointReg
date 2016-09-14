@@ -24,5 +24,7 @@
 #define EPM_BASE_REL                 @"EPM_BASE_REL"                /***   班组长登记人员列表  ***/
 #define V_EPM_TEAM_RATION_REG_PERSUM @"V_EPM_TEAM_RATION_REG_PERSUM"/***   个人登记人员列表  ***/
 #define EPM_TEAM_RESULT              @"EPM_TEAM_RESULT"             /***   个人登记人员列表  ***/
+#define SNOW_APP_VERSION             @"SNOW_APP_VERSION"            /***   版本更新信息表  ***/
+#define SNOW_MOBILE_DEVICE           @"SNOW_MOBILE_DEVICE"            /***   设备列表  ***/
 
 #endif /* ZEServerTableMessage_h */

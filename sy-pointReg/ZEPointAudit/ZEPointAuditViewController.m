@@ -14,7 +14,8 @@
 #import "ZEEPM_TEAM_RATION_REGModel.h"
 
 #import "ZEPointRegistrationVC.h"
-
+#import "ZECacheParameters.h"
+#import "ZELeaderRegVC.h"
 @interface ZEPointAuditViewController ()
 {
     ZEPointAuditView * _pointAuditView;
@@ -100,6 +101,10 @@
                                          _currentPage += 1;
                                      }
                                  }else{
+                                     if (_currentPage > 0) {
+                                         [_pointAuditView loadNoMoreData];
+                                         return ;
+                                     }
                                      [_pointAuditView reloadFirstView:dataArr];
                                      [_pointAuditView headerEndRefreshing];
                                      [_pointAuditView loadNoMoreData];
@@ -108,6 +113,7 @@
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
                              }];
+    [ZECacheParameters startCache];
 }
 
 
@@ -192,7 +198,7 @@
 -(void)goChageVC:(NSDictionary *)dic
 {
     ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:[ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0]];
-    NSLog(@">>>  %@",model.SELF);
+
     if ([model.SELF isEqualToString:@"self"]) {
         NSLog(@"自己录入的");
         ZEPointRegistrationVC * pointRegVC = [[ZEPointRegistrationVC alloc]init];
@@ -202,9 +208,20 @@
         [self.navigationController pushViewController:pointRegVC animated:YES];
         
     }else if([model.SELF isEqualToString:@"leader"]){
-        NSLog(@"负责人录入");
+        ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
+        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_AUDIT;
+        pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_CHARGE;
+        pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
+        pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        [self.navigationController pushViewController:pointRegVC animated:YES];
     }else{
         NSLog(@" 班组长录入 ");
+        ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
+        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_AUDIT;
+        pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_LEADER;
+        pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
+        pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        [self.navigationController pushViewController:pointRegVC animated:YES];
     }
 }
 

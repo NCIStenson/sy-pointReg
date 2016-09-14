@@ -9,8 +9,17 @@
 #import "ZEPackageServerData.h"
 #import "ZEUserServer.h"
 #import "ZELoginViewController.h"
-@implementation ZEUserServer
 
+@interface ZEUserServer ()
+
+{
+    BOOL _isShowAlert;
+}
+
+@property (nonatomic,assign) BOOL isShowAlert;
+@end
+
+@implementation ZEUserServer
 
 +(void)loginWithNum:(NSString *)username
        withPassword:(NSString *)password
@@ -59,24 +68,53 @@
                                                    if ([ZEUtil isSuccess:[data objectForKey:@"RETMSG"]]) {
                                                        successBlock(data);
                                                    }else{
-                                                       [ZESettingLocalData clearLocalData];
-                                                       NSLog(@" failBlock ==  %@ ",[data objectForKey:@"RETMSG"]);
-                                                       NSLog(@" failData ==  %@ ",data);
-                                                       [ZEUserServer logoutSucce];
+//                                                       [ZESettingLocalData clearLocalData];
+//                                                       NSLog(@" failBlock ==  %@ ",[data objectForKey:@"RETMSG"]);
+//                                                       NSLog(@" failData ==  %@ ",data);
+//                                                       [ZEUserServer logoutSucce];
                                                        NSError *errorCode = nil;
                                                        failBlock(errorCode);
                                                    }
                                                } fail:^(NSError *errorCode) {
-                                                   [ZESettingLocalData clearLocalData];
-                                                   [ZEUserServer logoutSucce];
+//                                                   [ZESettingLocalData clearLocalData];
+//                                                   [ZEUserServer logoutSucce];
 
+                                                   failBlock(errorCode);
+                                               }];
+}
+
++(void)getDataWithJsonDic:(NSDictionary *)dic
+            showAlertView:(BOOL)showAlert
+                  success:(ServerResponseSuccessBlock)successBlock
+                     fail:(ServerResponseFailBlock)failBlock
+{
+    NSString * commonServer = [NSString stringWithFormat: @"%@/do/app/uiaction",Zenith_Server];
+    [[ZEServerEngine sharedInstance]requestWithJsonDic:dic
+                                     withServerAddress:commonServer
+                                               success:^(id data) {
+                                                   if ([ZEUtil isSuccess:[data objectForKey:@"RETMSG"]]) {
+                                                       successBlock(data);
+                                                   }else{
+                                                       if (showAlert) {
+                                                           [ZESettingLocalData clearLocalData];
+                                                           NSLog(@" failBlock ==  %@ ",[data objectForKey:@"RETMSG"]);
+                                                           NSLog(@" failData ==  %@ ",data);
+                                                           [ZEUserServer logoutSucce];
+                                                           NSError *errorCode = nil;
+                                                           failBlock(errorCode);
+                                                       }
+                                                   }
+                                               } fail:^(NSError *errorCode) {
+                                                   if (showAlert) {
+                                                       [ZESettingLocalData clearLocalData];
+                                                       [ZEUserServer logoutSucce];
+                                                   }
                                                    failBlock(errorCode);
                                                }];
 }
 
 +(void)logoutSucce
 {
-    
     UIAlertController * alertC = [UIAlertController alertControllerWithTitle:nil message:@"登陆过期，请重新登陆。" preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction * action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
     }];

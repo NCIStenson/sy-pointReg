@@ -95,6 +95,7 @@
     self.personalRationTypeValueArr = [NSMutableArray array];
     self.USERCHOOSEDWORKERVALUEARR = [NSMutableArray array];
     self.CHOOSEDRATIONTYPEVALUEDic = [NSMutableDictionary dictionary];
+    _choosedWorkerArr = nil;
     [[ZEPointRegCache instance] clearUserOptions];
     [self setDate];
     [_contentTableView  reloadData];
@@ -725,63 +726,70 @@
     _choosedWorkerArr = choosedWorker;
     [_alertView dismissWithCompletion:nil];
     
-    [self reloadContentView];
+    [self setChangeChoosedWorker];
 }
 
 -(void)setChangeChoosedWorker
 {
-    NSMutableArray * choosedArr = [NSMutableArray array];
-    
     for (int j = 0; j < _choosedWorkerArr.count; j ++) {
         NSDictionary * listDic = _choosedWorkerArr[j];
         BOOL isMask = NO;
+
         for (int i = 0; i < self.USERCHOOSEDWORKERVALUEARR.count ; i ++) {
             NSDictionary * dic = self.USERCHOOSEDWORKERVALUEARR[i];
             if ([[listDic objectForKey:@"PSNNUM"] isEqualToString:[dic objectForKey:@"PSNNUM"]]) {
-                NSLog(@">>>>  %@",[dic objectForKey:@"PSNNUM"]);
                 isMask = YES;
-            }
-            if ( i == self.USERCHOOSEDWORKERVALUEARR.count - 1 && !isMask) {
-                [self.USERCHOOSEDWORKERVALUEARR removeObject:dic];
             }
         }
         
         if (!isMask) {
+            NSMutableDictionary * defaultDic = [NSMutableDictionary dictionary];
+            defaultDic = [NSMutableDictionary dictionaryWithDictionary:listDic];
             
-        }
-    }
-    
-    
-    NSMutableDictionary * defaultDic = [NSMutableDictionary dictionary];
-    for (NSDictionary * dic in _choosedWorkerArr) {
-        defaultDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-        
-        for (NSDictionary * dic in self.personalRationTypeValueArr) {
-            ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:dic];
-            if (![detailM.FIELDEDITOR boolValue]) {
-                NSDictionary * valueDic = [[ZEPointRegCache instance] getRATIONTYPEVALUE];
-                //          展示默认的选项值
-                if ([[valueDic objectForKey:detailM.FIELDNAME] isKindOfClass:[NSArray class]]) {
-                    for (NSDictionary * valueDetailDic in [valueDic objectForKey:detailM.FIELDNAME]) {
-                        ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:valueDetailDic];
-                        if ([valueModel.DEFAULTCODE isEqualToString:@"true"]) {
-                            NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
-                            [defaultDic setValuesForKeysWithDictionary:dic];
+            for (NSDictionary * dic in self.personalRationTypeValueArr) {
+                ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:dic];
+                if (![detailM.FIELDEDITOR boolValue]) {
+                    NSDictionary * valueDic = [[ZEPointRegCache instance] getRATIONTYPEVALUE];
+                    //          展示默认的选项值
+                    if ([[valueDic objectForKey:detailM.FIELDNAME] isKindOfClass:[NSArray class]]) {
+                        for (NSDictionary * valueDetailDic in [valueDic objectForKey:detailM.FIELDNAME]) {
+                            ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:valueDetailDic];
+                            if ([valueModel.DEFAULTCODE isEqualToString:@"true"]) {
+                                NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
+                                [defaultDic setValuesForKeysWithDictionary:dic];
+                            }
                         }
                     }
+                }else{
+                    NSDictionary * dic = @{detailM.FIELDNAME:@"1"};
+                    [defaultDic setValuesForKeysWithDictionary:dic];
                 }
-            }else{
-                NSDictionary * dic = @{detailM.FIELDNAME:@"1"};
-                [defaultDic setValuesForKeysWithDictionary:dic];
+            }
+            [defaultDic setValue:@"" forKey:@"DESCR"];
+            [defaultDic setValue:@"0" forKey:@"WORKPOINTS"];
+            [defaultDic setValue:@"0" forKey:@"SUMPOINTS"];
+            [defaultDic setValue:[listDic objectForKey:@"PSNNUM"] forKey:@"PSNNUM"];
+            [defaultDic setValue:[listDic objectForKey:@"PSNNAME"] forKey:@"PSNNAME"];
+            [self.USERCHOOSEDWORKERVALUEARR addObject:defaultDic];
+        }
+    }
+
+    
+    for (int i = 0; i < self.USERCHOOSEDWORKERVALUEARR.count ; i ++) {
+        NSDictionary * dic = self.USERCHOOSEDWORKERVALUEARR[i];
+        BOOL isMask = false;
+        for (int j = 0; j < _choosedWorkerArr.count; j ++) {
+            NSDictionary * listDic = _choosedWorkerArr[j];
+            if ([[listDic objectForKey:@"PSNNUM"] isEqualToString:[dic objectForKey:@"PSNNUM"]]) {
+                isMask = YES;
             }
         }
-        [defaultDic setValue:@"" forKey:@"DESCR"];
-        [defaultDic setValue:@"0" forKey:@"WORKPOINTS"];
-        [defaultDic setValue:@"0" forKey:@"SUMPOINTS"];
-        [defaultDic setValue:[dic objectForKey:@"PSNNUM"] forKey:@"PSNNUM"];
-        [defaultDic setValue:[dic objectForKey:@"PSNNAME"] forKey:@"PSNNAME"];
-        [self.USERCHOOSEDWORKERVALUEARR addObject:defaultDic];
+        if (!isMask) {
+            [self.USERCHOOSEDWORKERVALUEARR removeObject:self.USERCHOOSEDWORKERVALUEARR[i]];
+        }
     }
+    
+    
     
     [self reloadUpadteData];
 }

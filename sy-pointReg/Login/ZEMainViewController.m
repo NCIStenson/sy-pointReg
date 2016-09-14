@@ -16,7 +16,7 @@
 #import "ZELoginViewController.h"
 #import "ZEPointRegCache.h"
 
-
+#import "SvUDIDTools.h"
 @interface ZEMainViewController ()
 {
     ZEMainView * mainView;
@@ -34,6 +34,187 @@
     
     [self sendRequest];
 }
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    /***** 检测更新  *****/
+    [self checkUpdate];
+    [self storeSystemInfo];
+    
+    self.tabBarController.tabBar.tintColor = MAIN_NAV_COLOR;
+    self.tabBarController.tabBar.hidden = NO;
+}
+
+-(void)storeSystemInfo
+{
+    NSDictionary * parametersDic = @{@"MASTERTABLE":SNOW_MOBILE_DEVICE,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"",
+                                     @"WHERESQL":@"",
+                                     @"start":@"0",
+                                     @"limit":@"2000",
+                                     @"METHOD":@"search",
+                                     @"DETAILTABLE":@"",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSDictionary * fieldsDic =@{@"IMEI":[SvUDIDTools UDID],
+                                @"SEQKEY":@"",
+                                @"LOGINTIMES":@""};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[SNOW_MOBILE_DEVICE]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 if([[ZEUtil getServerData:data withTabelName:SNOW_MOBILE_DEVICE] count] == 0){
+                                     [self insertSystemInfo];
+                                 }else{
+                                     [self updateSystemInfo:[ZEUtil getServerData:data withTabelName:SNOW_MOBILE_DEVICE][0]];
+                                 }
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+}
+-(void)insertSystemInfo
+{
+    NSDictionary * parametersDic = @{@"MASTERTABLE":SNOW_MOBILE_DEVICE,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"",
+                                     @"WHERESQL":@"",
+                                     @"start":@"0",
+                                     @"limit":@"20",
+                                     @"METHOD":@"addSave",
+                                     @"DETAILTABLE":@"",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSMutableDictionary * fieldsDic = [NSMutableDictionary dictionaryWithDictionary:[ZEUtil getSystemInfo]];
+    [fieldsDic setObject:@"1" forKey:@"LOGINTIMES"];
+    [fieldsDic setObject:@"true" forKey:@"ISENABLE"];
+    [fieldsDic setObject:[ZEUtil getCurrentDate:@"YYYY-MM-dd"] forKey:@"FIRSTUSE"];
+    [fieldsDic setObject:[ZEUtil getCurrentDate:@"YYYY-MM-dd"] forKey:@"LATESTUSE"];
+    [fieldsDic setObject:[ZEUtil getCurrentDate:@"YYYY-MM-dd"] forKey:@"SYSCREATEDATE"];
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[SNOW_MOBILE_DEVICE]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 
+                                 if([[ZEUtil getServerData:data withTabelName:SNOW_MOBILE_DEVICE] count] == 0){
+                                     
+                                 }else{
+                                     
+                                 }
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+    
+
+}
+
+-(void)updateSystemInfo:(NSDictionary *)dic
+{
+    long loginTimes = [[dic objectForKey:@"LOGINTIMES"] integerValue];
+    loginTimes += 1;
+    
+    NSDictionary * parametersDic = @{@"MASTERTABLE":SNOW_MOBILE_DEVICE,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"",
+                                     @"WHERESQL":@"",
+                                     @"start":@"0",
+                                     @"limit":@"20",
+                                     @"METHOD":@"updateSave",
+                                     @"DETAILTABLE":@"",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSMutableDictionary * fieldsDic = [NSMutableDictionary dictionaryWithDictionary:@{@"IMEI":[SvUDIDTools UDID],
+                                                                                      @"SEQKEY":[dic objectForKey:@"SEQKEY"],
+                                                                                      @"LOGINTIMES":[NSString stringWithFormat:@"%ld",loginTimes],
+                                                                                      @"LATESTUSE":[ZEUtil getCurrentDate:@"YYYY-MM-dd"],
+                                                                                      @"SYSUPDATEDATE":[ZEUtil getCurrentDate:@"YYYY-MM-dd"]}];
+    
+    [fieldsDic setObject:[ZESettingLocalData getUSERNAME] forKey:@"USERACCOUNT"];
+    [fieldsDic setObject:[ZESettingLocalData getNICKNAME] forKey:@"PSNNAME"];
+    [fieldsDic setObject:[ZESettingLocalData getUSERCODE] forKey:@"PSNNUM"];
+
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[SNOW_MOBILE_DEVICE]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 if([[ZEUtil getServerData:data withTabelName:SNOW_MOBILE_DEVICE] count] == 0){
+                                     
+                                 }else{
+                                     
+                                 }
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+
+}
+
+
+-(void)checkUpdate
+{
+    NSDictionary * parametersDic = @{@"MASTERTABLE":SNOW_APP_VERSION,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"",
+                                     @"WHERESQL":@"MOBILETYPE='2'",
+                                     @"start":@"0",
+                                     @"METHOD":@"search",
+                                     @"DETAILTABLE":@"",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSDictionary * fieldsDic =@{@"MOBILETYPE":@"",
+                                @"VERSIONCODE":@"",
+                                @"VERSIONNAME":@"",
+                                @"FILEURL":@"",
+                                @"FILEURL2":@"",
+                                @"TYPE":@""};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[SNOW_APP_VERSION]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                 if ([[ZEUtil getServerData:data withTabelName:SNOW_APP_VERSION] count] > 0) {
+                                     NSDictionary * dic = [ZEUtil getServerData:data withTabelName:SNOW_APP_VERSION][0];
+                                     NSString* localVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+                                     if ([localVersion floatValue] < [[dic objectForKey:@"VERSIONNAME"] floatValue]) {
+                                         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"经检测当前版本不是最新版本，点击确定跳转更新。" preferredStyle:UIAlertControllerStyleAlert];
+                                         UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                                             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/cn/app/id1103160566?mt=8"]];
+                                         }];
+                                         [alertController addAction:okAction];
+                                         [self presentViewController:alertController animated:YES completion:nil];
+
+                                     }
+                                 }
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+    
+}
+
 -(void)sendRequest
 {
     NSDictionary * parametersDic = @{@"limit":@"20",
@@ -56,14 +237,13 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  [mainView reloadHomeView:[ZEUtil getServerData:data withTabelName:UUM_FUNCTION]];
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
-    
-    [[ZEPointRegCache instance]cacheShareType:self.view];
 }
 
 -(void)initView
@@ -73,13 +253,6 @@
     [self.view addSubview:mainView];
 }
 
-
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:YES];
-    self.tabBarController.tabBar.tintColor = MAIN_NAV_COLOR;
-    self.tabBarController.tabBar.hidden = NO;
-}
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:YES];
@@ -94,9 +267,10 @@
 
 #pragma mark - ZEMainViewDelegate
 
--(void)goLeaderView
+-(void)goLeaderView:(ENTER_MANYPERSON_POINTREG_TYPE)type
 {
     ZELeaderRegVC * leaderVC = [[ZELeaderRegVC alloc]init];
+    leaderVC.isLeaderOrCharge = type;
     [self.navigationController pushViewController:leaderVC animated:YES];
 }
 
@@ -125,30 +299,19 @@
 
 -(void)logout{
     
-    if (IS_IOS8) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"切换账号需重新登录？"
-                                                                                 message:nil
-                                                                          preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定"
-                                                           style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                                                               [self requestLogout];
-                                                           }];
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
-                                                               style:UIAlertActionStyleDefault handler:nil];
-        
-        [alertController addAction:okAction];
-        [alertController addAction:cancelAction];
-        [self presentViewController:alertController animated:YES completion:nil];
-        
-    }else{
-        UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"密码不能为空"
-                                                            message:nil
-                                                           delegate:self
-                                                  cancelButtonTitle:@"确定"
-                                                  otherButtonTitles:@"取消", nil];
-        [alertView show];
-    }
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"切换账号需重新登录？"
+                                                                             message:nil
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定"
+                                                       style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                                                           [self requestLogout];
+                                                       }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消"
+                                                           style:UIAlertActionStyleDefault handler:nil];
     
+    [alertController addAction:okAction];
+    [alertController addAction:cancelAction];
+    [self presentViewController:alertController animated:YES completion:nil];
     
 }
 -(void)requestLogout

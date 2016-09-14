@@ -54,4 +54,10 @@ typedef NS_ENUM (NSInteger,ENTER_PERSON_POINTREG_TYPE){
     ENTER_PERSON_POINTREG_TYPE_HISTORY,      //历史进入工分登记固定页面
     ENTER_PERSON_POINTREG_TYPE_AUDIT,    //审核进入工分登记固定页面
 };
+
+/* 进入多人工分登记界面 */
+typedef NS_ENUM (NSInteger,ENTER_MANYPERSON_POINTREG_TYPE){
+    ENTER_MANYPERSON_POINTREG_TYPE_LEADER,      //班组长进入工分登记固定页面
+    ENTER_MANYPERSON_POINTREG_TYPE_CHARGE,      //负责人进入工分登记固定页面
+};
 #endif /* ZEEnumConstant_h */

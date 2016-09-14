@@ -19,6 +19,7 @@
 #include <arpa/inet.h>
 
 #import <sys/utsname.h>
+#import "SvUDIDTools.h"
 @implementation ZEUtil
 
 + (BOOL)isNotNull:(id)object
@@ -97,6 +98,7 @@
     return width;
 }
 
+
 + (NSDictionary *)getSystemInfo
 {
     NSMutableDictionary *infoDic = [[NSMutableDictionary alloc] init];
@@ -105,21 +107,21 @@
     
     NSString *systemName = [[UIDevice currentDevice] systemName];
     
-    NSString *device = [[UIDevice currentDevice] model];
+//    NSString *device = [[UIDevice currentDevice] model];
     
-    NSDictionary *bundleInfo = [[NSBundle mainBundle] infoDictionary];
+//    NSDictionary *bundleInfo = [[NSBundle mainBundle] infoDictionary];
     
-    NSString *appVersion = [bundleInfo objectForKey:@"CFBundleShortVersionString"];
+//    NSString *appVersion = [bundleInfo objectForKey:@"CFBundleShortVersionString"];
+//    
+//    NSString *appBuildVersion = [bundleInfo objectForKey:@"CFBundleVersion"];
     
-    NSString *appBuildVersion = [bundleInfo objectForKey:@"CFBundleVersion"];
+//    NSArray *languageArray = [NSLocale preferredLanguages];
     
-    NSArray *languageArray = [NSLocale preferredLanguages];
+//    NSString *language = [languageArray objectAtIndex:0];
     
-    NSString *language = [languageArray objectAtIndex:0];
+//    NSLocale *locale = [NSLocale currentLocale];
     
-    NSLocale *locale = [NSLocale currentLocale];
-    
-    NSString *country = [locale localeIdentifier];
+//    NSString *country = [locale localeIdentifier];
     
     NSString* userPhoneName = [[UIDevice currentDevice] name];
     
@@ -128,25 +130,22 @@
     sysctlbyname("hw.machine", NULL, &size, NULL, 0);
     char *machine = (char*)malloc(size);
     sysctlbyname("hw.machine", machine, &size, NULL, 0);
-    NSString *deviceModel = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+//    NSString *deviceModel = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
     free(machine);
-    [infoDic setObject:country forKey:@"country"];
-    [infoDic setObject:language forKey:@"language"];
-    [infoDic setObject:[ZEUtil correspondVersion] forKey:@"brand"];
-    [infoDic setObject:@"Apple" forKey:@"model"];
-    [infoDic setObject:@"" forKey:@"iMEI"];
-    [infoDic setObject:[ZEUtil getIPAddress] forKey:@"ip"];
-    [infoDic setObject:@"" forKey:@"telnumber"];
-    [infoDic setObject:[ZEUtil macaddress] forKey:@"mac"];
-    [infoDic setObject:userPhoneName forKey:@"iPhoneName"];
-    [infoDic setObject:systemName forKey:@"systemName"];
-    [infoDic setObject:systemVersion forKey:@"operatingSystem"];
-    [infoDic setObject:device forKey:@"device"];
-    [infoDic setObject:deviceModel forKey:@"deviceModel"];
-    [infoDic setObject:appVersion forKey:@"versonCode"];
-    [infoDic setObject:appBuildVersion forKey:@"versionName"];
-    [infoDic setObject:@"1" forKey:@"apptype"];
-    
+    [infoDic setObject:[ZEUtil correspondVersion] forKey:@"BRAND"];
+    [infoDic setObject:[[SvUDIDTools UDID] stringByReplacingOccurrencesOfString:@"-" withString:@""] forKey:@"IMEI"];
+    [infoDic setObject:[ZEUtil getIPAddress] forKey:@"IP"];
+    [infoDic setObject:[ZEUtil macaddress] forKey:@"MAC"];
+    [infoDic setObject:[self correspondVersion] forKey:@"PHONEMODEL"];
+    [infoDic setObject:systemName forKey:@"SYS"];
+    [infoDic setObject:systemVersion forKey:@"SYSVERSION"];
+    [infoDic setObject:userPhoneName forKey:@"SYSVERSIONCODE"];
+    [infoDic setObject:@"" forKey:@"TELNUMBER"];
+    if(![ZEUtil strIsEmpty:[ZESettingLocalData getUSERNAME]]){
+        [infoDic setObject:[ZESettingLocalData getUSERNAME] forKey:@"USERACCOUNT"];
+        [infoDic setObject:[ZESettingLocalData getNICKNAME] forKey:@"PSNNAME"];
+        [infoDic setObject:[ZESettingLocalData getUSERCODE] forKey:@"PSNNUM"];
+    }
     return infoDic;
 }
 
@@ -424,6 +423,15 @@
     NSDate * date = [NSDate date];
     NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
     [formatter setDateFormat:@"YYYYMM"];
+    NSString * dateStr = [formatter stringFromDate:date];
+    
+    return dateStr;
+}
++(NSString *)getCurrentDate:(NSString *)dateFormatter
+{
+    NSDate * date = [NSDate date];
+    NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:dateFormatter];
     NSString * dateStr = [formatter stringFromDate:date];
     
     return dateStr;

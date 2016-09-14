@@ -58,6 +58,21 @@
                      fail:(ServerResponseFailBlock)failBlock;
 
 /**
+ *  @author Stenson, 16-08-11 14:08:36
+ *
+ *  将封装好的Json格式字符上传至服务器
+ *
+ *  @param dic          封装好的Json字符
+ *  @param successBlock 登陆成功返回
+ *  @param failBlock    请求失败返回
+ */
++(void)getDataWithJsonDic:(NSDictionary *)dic
+            showAlertView:(BOOL)showAlert
+                  success:(ServerResponseSuccessBlock)successBlock
+                     fail:(ServerResponseFailBlock)failBlock;
+
+
+/**
  *  @author Stenson, 16-08-17 09:08:56
  *
  *  执行网络请求前进行查询操作

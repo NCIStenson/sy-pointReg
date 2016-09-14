@@ -10,7 +10,9 @@
 
 @interface ZELeaderRegVC : ZESettingRootVC
 
-@property (nonatomic,assign) ENTER_PERSON_POINTREG_TYPE regType;
+@property (nonatomic,assign) ENTER_PERSON_POINTREG_TYPE regType; // 审核修改或者 历史修改
+
+@property (nonatomic,assign) ENTER_MANYPERSON_POINTREG_TYPE isLeaderOrCharge; // 负责人录入或者班组长录入
 
 @property (nonnull,nonatomic,strong) NSDictionary * defaultDic;
 @property (nonnull,nonatomic,strong) NSArray * defaultDetailArr;

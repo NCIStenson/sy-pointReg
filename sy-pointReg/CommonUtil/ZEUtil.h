@@ -71,9 +71,10 @@
 /**
  *  @author Stenson, 16-09-12 11:09:03
  *
- *  获取当前时间月份
+ *  <#Description#>
  *
  *  @return <#return value description#>
  */
 +(NSString *)getCurrentMonth;
++(NSString *)getCurrentDate:(NSString *)dateFormatter;
 @end

@@ -34,6 +34,9 @@
 {
     [super viewDidLoad];
     self.title = @"班组长工时登记";
+    if(_isLeaderOrCharge == ENTER_MANYPERSON_POINTREG_TYPE_CHARGE){
+        self.title = @"负责人工时登记";
+    }
     [self cacheShareType];
     [self initView];
     [self setDate];
@@ -73,7 +76,12 @@
     [formatter setDateFormat:@"YYYY-MM-dd"];
     NSString * dateStr = [formatter stringFromDate:date];
     
-    [[ZEPointRegCache instance]setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_DATE]:dateStr}];
+    if(_regType == ENTER_PERSON_POINTREG_TYPE_DEFAULT){
+        [[ZEPointRegCache instance]setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_DATE]:dateStr}];
+    }else{
+        dateStr = [[_defaultDic objectForKey:@"ENDDATE"] stringByReplacingOccurrencesOfString:@" 00:00:00.0" withString:@""];
+        [[ZEPointRegCache instance]setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_DATE]:dateStr}];
+    }
 }
 #pragma mark - 缓存分摊类型
 
@@ -164,7 +172,7 @@
         return;
     }
     NSString * valueStr = [NSString stringWithFormat:@"QUOTIETY%ldCODE",(long)number];
-    NSString * WHERESQL = [NSString stringWithFormat:@"suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode in (select case (select count(1) from EPM_TEAM_RATIONTYPEVALUE t where t.suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode = '#SECORGCODE#') when 0 then '-1' else '#SECORGCODE#' end from dual)",(long)number,number];
+    NSString * WHERESQL = [NSString stringWithFormat:@"suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode in (select case (select count(1) from EPM_TEAM_RATIONTYPEVALUE t where t.suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode = '#SECORGCODE#') when 0 then '-1' else '#SECORGCODE#' end from dual)",(long)number,(long)number];
     NSDictionary * parametersDic = @{@"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATIONTYPEVALUE,
                                      @"MENUAPP":@"EMARK_APP",
@@ -455,9 +463,16 @@
 #pragma mark - 新增数据
 -(void)submitMessageToServer
 {
-    
-    NSLog(@" 班组长登记工分内容 >>>  %@",_leaderRegView.CHOOSEDRATIONTYPEVALUEDic);
-    NSLog(@" 班组长登记工分员工内容 >>>  %@",_leaderRegView.USERCHOOSEDWORKERVALUEARR);
+    NSString * status = @"";
+    NSString * isSelf = @"";
+    if (_isLeaderOrCharge == ENTER_MANYPERSON_POINTREG_TYPE_LEADER) {
+        status = @"1";
+        isSelf = @"";
+    }else{
+        status = @"10";
+        isSelf = @"leader";
+    }
+
     
     NSDictionary * parametersDic =@{
                                     @"MENUAPP":@"EMARK_APP",
@@ -468,7 +483,7 @@
                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
                                     @"MASTERFIELD":@"SEQKEY",
                                     @"DETAILFIELD":@"TASKID",
-                                    @"self":@"",
+                                    @"self":isSelf,
                                     @"CLASSNAME":@"com.nci.app.biz.team.AppTeamRationReg",
                                     };
     
@@ -478,6 +493,7 @@
     
     NSString * dateStr = [[[ZEPointRegCache instance] getUserChoosedOptionDic] objectForKey:[ZEUtil getPointRegField:POINT_REG_DATE]];
     
+    
     NSMutableDictionary * defaultDic = [NSMutableDictionary dictionaryWithDictionary: @{@"ENDDATE":dateStr,
                                                                                         @"RATIONNAME":taskDetailM.RATIONNAME,
                                                                                         @"STDSCORE":taskDetailM.STDSCORE,
@@ -485,7 +501,7 @@
                                                                                         @"RATIONCODE":taskDetailM.RATIONCODE,
                                                                                         @"RATIONID":taskDetailM.SEQKEY,
                                                                                         @"ADDMODE":kLEADERPOINTREG,
-                                                                                        @"STATUS":@"10"}];
+                                                                                        @"STATUS":status}];
     
     for (NSInteger i = 0 ; i < _leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {
         NSString * keyStr = _leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i];
@@ -500,7 +516,7 @@
     for (NSInteger i = 0; i < _leaderRegView.USERCHOOSEDWORKERVALUEARR.count; i ++) {
         NSMutableDictionary * personalDic =  [NSMutableDictionary dictionaryWithDictionary: _leaderRegView.USERCHOOSEDWORKERVALUEARR[i]];
         [personalDic removeObjectForKey:@"QSPOINTS"];
-        [personalDic setObject:[ZESettingLocalData getISLEADER] ? @"1" : @"10" forKey:@"STATUS"];
+        [personalDic setObject:status forKey:@"STATUS"];
         if (![ZEUtil strIsEmpty:[NSString stringWithFormat:@"%@",[ZESettingLocalData getKValue]]]) {
             [personalDic setObject:[ZESettingLocalData getKValue] forKey:@"K"];
         }
@@ -516,9 +532,6 @@
         [tableNameArr addObject:EPM_TEAM_RATION_REG_DETAIL];
     }
     
-    NSLog(@" tableNameArr >>>   %@",tableNameArr);
-    NSLog(@" tableNameArr > >>>   %@",personalArr);
-    
     NSMutableArray * fieldsArr = [NSMutableArray arrayWithArray:personalArr];
     
 //    把任务信息插入到第一条数据
@@ -528,9 +541,6 @@
                                                                            withFields:fieldsArr
                                                                        withPARAMETERS:parametersDic
                                                                        withActionFlag:nil];
-    
-    NSLog(@" packageDic >>>   %@",packageDic);
-    
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
@@ -546,9 +556,16 @@
 #pragma mark - 更新数据
 -(void)updateMessageToServer
 {
-    NSLog(@" 班组长登记工分内容 >>>  %@",_leaderRegView.CHOOSEDRATIONTYPEVALUEDic);
-    NSLog(@" 班组长登记工分员工内容 >>>  %@",_leaderRegView.USERCHOOSEDWORKERVALUEARR);
-    
+    NSString * status = @"";
+    NSString * isSelf = @"";
+    if (_isLeaderOrCharge == ENTER_MANYPERSON_POINTREG_TYPE_LEADER) {
+        status = @"1";
+        isSelf = @"";
+    }else{
+        status = @"10";
+        isSelf = @"leader";
+    }
+
     NSDictionary * parametersDic =@{
                                     @"MENUAPP":@"EMARK_APP",
                                     @"ORDERSQL":@"",
@@ -558,7 +575,7 @@
                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
                                     @"MASTERFIELD":@"SEQKEY",
                                     @"DETAILFIELD":@"TASKID",
-                                    @"self":@"",
+                                    @"self":isSelf,
                                     @"CLASSNAME":@"com.nci.app.biz.team.AppTeamRationReg",
                                     };
     
@@ -575,7 +592,7 @@
                                                                                         @"RATIONCODE":taskDetailM.RATIONCODE,
                                                                                         @"RATIONID":taskDetailM.SEQKEY,
                                                                                         @"ADDMODE":kLEADERPOINTREG,
-                                                                                        @"STATUS": @"10",
+                                                                                        @"STATUS": [choosedTaskDic objectForKey:@"STATUS"],
                                                                                         @"SEQKEY":[_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:@"SEQKEY"]}];
     
     for (NSInteger i = 0 ; i < _leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {
@@ -591,7 +608,7 @@
 
     for (NSInteger i = 0; i < _leaderRegView.USERCHOOSEDWORKERVALUEARR.count; i ++) {
         NSDictionary * dic = _leaderRegView.USERCHOOSEDWORKERVALUEARR[i];
-        NSMutableDictionary * personalDic =  [NSMutableDictionary dictionaryWithDictionary: @{@"STATUS":[ZESettingLocalData getISLEADER] ? @"1" : @"10",
+        NSMutableDictionary * personalDic =  [NSMutableDictionary dictionaryWithDictionary: @{@"STATUS":[dic objectForKey:@"STATUS"],
                                                                                               @"SEQKEY":[dic objectForKey:@"SEQKEY"],
                                                                                               @"WORKPOINTS":[dic objectForKey:@"WORKPOINTS"],
                                                                                               @"TASKID":@"",
@@ -633,6 +650,15 @@
 #pragma mark - 新增数据
 -(void)updateAuditMessageToServer
 {
+    NSString * status = @"";
+    NSString * isSelf = @"";
+    if (_isLeaderOrCharge == ENTER_MANYPERSON_POINTREG_TYPE_LEADER) {
+        status = @"1";
+        isSelf = @"";
+    }else{
+        status = @"10";
+        isSelf = @"leader";
+    }
     NSDictionary * parametersDic =@{
                                     @"MENUAPP":@"EMARK_APP",
                                     @"ORDERSQL":@"",
@@ -642,7 +668,7 @@
                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
                                     @"MASTERFIELD":@"SEQKEY",
                                     @"DETAILFIELD":@"TASKID",
-                                    @"self":@"",
+                                    @"self":isSelf,
                                     @"CLASSNAME":@"com.nci.app.biz.team.AppTeamRationReg",
                                     };
     

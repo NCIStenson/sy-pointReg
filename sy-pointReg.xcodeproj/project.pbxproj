@@ -89,6 +89,7 @@
 		98D965DE1D8684CB00BC1216 /* home_expertsassess@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98D965D91D8684CB00BC1216 /* home_expertsassess@3x.png */; };
 		98D965DF1D8684CB00BC1216 /* home_toolkit@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98D965DA1D8684CB00BC1216 /* home_toolkit@3x.png */; };
 		98D965E01D8684CB00BC1216 /* home_good@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98D965DB1D8684CB00BC1216 /* home_good@3x.png */; };
+		98D965E31D87D01300BC1216 /* SvUDIDTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 98D965E21D87D01300BC1216 /* SvUDIDTools.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		98DAD9351C7EDFD200A1AB49 /* login_password@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98DAD9331C7EDFD200A1AB49 /* login_password@2x.png */; };
 		98DAD9361C7EDFD200A1AB49 /* login_username@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98DAD9341C7EDFD200A1AB49 /* login_username@2x.png */; };
 		98DB7C501C4F4FA70046D405 /* ZEUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 98DB7C4F1C4F4FA70046D405 /* ZEUtil.m */; };
@@ -261,6 +262,8 @@
 		98D965D91D8684CB00BC1216 /* home_expertsassess@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home_expertsassess@3x.png"; path = "SourceImage/home_expertsassess@3x.png"; sourceTree = "<group>"; };
 		98D965DA1D8684CB00BC1216 /* home_toolkit@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home_toolkit@3x.png"; path = "SourceImage/home_toolkit@3x.png"; sourceTree = "<group>"; };
 		98D965DB1D8684CB00BC1216 /* home_good@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home_good@3x.png"; path = "SourceImage/home_good@3x.png"; sourceTree = "<group>"; };
+		98D965E11D87D01300BC1216 /* SvUDIDTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SvUDIDTools.h; path = CommonUtil/JCAlertView/SvUDIDTools.h; sourceTree = "<group>"; };
+		98D965E21D87D01300BC1216 /* SvUDIDTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SvUDIDTools.m; path = CommonUtil/JCAlertView/SvUDIDTools.m; sourceTree = "<group>"; };
 		98DAD9331C7EDFD200A1AB49 /* login_password@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "login_password@2x.png"; path = "SourceImage/login_password@2x.png"; sourceTree = "<group>"; };
 		98DAD9341C7EDFD200A1AB49 /* login_username@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "login_username@2x.png"; path = "SourceImage/login_username@2x.png"; sourceTree = "<group>"; };
 		98DB7C451C4F323A0046D405 /* ZEColorConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEColorConstant.h; path = Constant/ZEColorConstant.h; sourceTree = "<group>"; };
@@ -539,6 +542,8 @@
 				98DB7CB01C50ACCD0046D405 /* JCAlertView */,
 				98DB7C4E1C4F4FA70046D405 /* ZEUtil.h */,
 				98DB7C4F1C4F4FA70046D405 /* ZEUtil.m */,
+				98D965E11D87D01300BC1216 /* SvUDIDTools.h */,
+				98D965E21D87D01300BC1216 /* SvUDIDTools.m */,
 				987B34AE1C5203450035FB6B /* ZESettingLocalData.h */,
 				987B34AF1C5203450035FB6B /* ZESettingLocalData.m */,
 				98DB7C511C4F52050046D405 /* UIImage+ZEImage.h */,
@@ -736,7 +741,7 @@
 				TargetAttributes = {
 					989B2C421C4DE7AA00F14EFA = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = CJ8CND7Y24;
+						DevelopmentTeam = S2548HAYNX;
 						ProvisioningStyle = Automatic;
 					};
 					989B2C5B1C4DE7AA00F14EFA = {
@@ -894,6 +899,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98D965E31D87D01300BC1216 /* SvUDIDTools.m in Sources */,
 				981F30251CE05C0800F39537 /* ZESettingVC.m in Sources */,
 				987013DD1D73CA0300CBD1B2 /* ZECacheParameters.m in Sources */,
 				98DB7C501C4F4FA70046D405 /* ZEUtil.m in Sources */,
@@ -1078,8 +1084,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ripeng Zhao (8BJ5KF4673)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ripeng Zhao (8BJ5KF4673)";
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/sy-pointReg/PrefixHeader.pch";
@@ -1087,9 +1093,9 @@
 				INFOPLIST_FILE = "$(SRCROOT)/sy-pointReg/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.zenithElec.sy-pointReg-Debug";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zenithElec.gfdj-guangdong";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "5f92bb69-ab07-435d-97f9-0ea99425d95b";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WARNING_CFLAGS = "";
@@ -1105,17 +1111,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ripeng Zhao (8BJ5KF4673)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ripeng Zhao (8BJ5KF4673)";
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/sy-pointReg/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/sy-pointReg/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.zenithElec.sy-pointReg-Debug";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zenithElec.gfdj-guangdong";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "5f92bb69-ab07-435d-97f9-0ea99425d95b";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WARNING_CFLAGS = "";

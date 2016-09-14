@@ -14,7 +14,7 @@
  *
  *  进入扫描页面
  */
--(void)goLeaderView;
+-(void)goLeaderView:(ENTER_MANYPERSON_POINTREG_TYPE)type;
 
 /**
  *  进入工分登记页面

@@ -67,8 +67,12 @@
     NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
     [formatter setDateFormat:@"YYYY-MM-dd"];
     NSString * dateStr = [formatter stringFromDate:date];
-    
-    [[ZEPointRegCache instance]setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_DATE]:dateStr}];
+    if(_regType == ENTER_PERSON_POINTREG_TYPE_DEFAULT){
+        [[ZEPointRegCache instance]setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_DATE]:dateStr}];
+    }else{
+        dateStr = [[_defaultDic objectForKey:@"ENDDATE"] stringByReplacingOccurrencesOfString:@" 00:00:00.0" withString:@""];
+        [[ZEPointRegCache instance]setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_DATE]:dateStr}];
+    }
 }
 
 #pragma mark - 缓存常用任务列表
@@ -295,11 +299,11 @@
                                                                                         @"RATIONCODE":taskDetailM.RATIONCODE,
                                                                                         @"RATIONID":taskDetailM.SEQKEY,
                                                                                         @"ADDMODE":kCOMMONPOINTREG,
-                                                                                        @"STATUS":[ZESettingLocalData getISLEADER] ? @"1" : @"10"}];
+                                                                                        @"STATUS": @"10"}];
     
     for (NSInteger i = 0 ; i < _pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {
         NSString * keyStr = _pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i];
-        
+    
         if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
             [defaultDic setObject:[_pointView.CHOOSEDRATIONTYPEVALUEDic objectForKey:_pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]] forKey:_pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]];
         }
@@ -309,7 +313,7 @@
     for (NSInteger i = 0; i < _pointView.USERCHOOSEDWORKERVALUEARR.count; i ++) {
         NSMutableDictionary * personalDic =  [NSMutableDictionary dictionaryWithDictionary: _pointView.USERCHOOSEDWORKERVALUEARR[i]];
         [personalDic removeObjectForKey:@"QSPOINTS"];
-
+        [personalArr setValue:@"10" forKey:@"STATUS"];
         for (NSInteger j = 0 ; j < personalDic.allKeys.count ; j++) {
             NSString * keyStr = personalDic.allKeys[j];
             if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
@@ -369,7 +373,7 @@
                                                                                         @"RATIONCODE":taskDetailM.RATIONCODE,
                                                                                         @"RATIONID":taskDetailM.SEQKEY,
                                                                                         @"ADDMODE":kCOMMONPOINTREG,
-                                                                                        @"STATUS":[ZESettingLocalData getISLEADER] ? @"1" : @"10",
+                                                                                        @"STATUS": @"10",
                                                                                         @"SEQKEY":[_pointView.CHOOSEDRATIONTYPEVALUEDic objectForKey:@"SEQKEY"]}];
     
     for (NSInteger i = 0 ; i < _pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {
@@ -383,7 +387,8 @@
     NSMutableArray * personalArr = [NSMutableArray array];
     for (NSInteger i = 0; i < _pointView.USERCHOOSEDWORKERVALUEARR.count; i ++) {
         NSDictionary * dic = _pointView.USERCHOOSEDWORKERVALUEARR[i];
-        NSMutableDictionary * personalDic =  [NSMutableDictionary dictionaryWithDictionary: @{@"STATUS":[ZESettingLocalData getISLEADER] ? @"1" : @"10",
+        
+        NSMutableDictionary * personalDic =  [NSMutableDictionary dictionaryWithDictionary: @{@"STATUS":[dic objectForKey:@"STATUS"],
                                                                                               @"SEQKEY":[dic objectForKey:@"SEQKEY"],
                                                                                               @"WORKPOINTS":[dic objectForKey:@"WORKPOINTS"],
                                                                                               @"TASKID":@"",

@@ -17,6 +17,8 @@
 #import "ZEPointRegCache.h"
 #import "ZEEPM_TEAM_RATION_REGModel.h"
 
+#import "ZECacheParameters.h"
+
 @interface ZEHistoryViewController ()<ZEHistoryViewDelegate>
 {
     ZEHistoryView * _historyView;
@@ -99,6 +101,11 @@
                                          _currentPage += 1;
                                      }
                                  }else{
+                                     if (_currentPage > 0) {
+                                         [_historyView loadNoMoreData];
+                                         return ;
+                                     }
+                                     
                                      [_historyView reloadFirstView:dataArr];
                                      [_historyView headerEndRefreshing];
                                      [_historyView loadNoMoreData];
@@ -107,6 +114,9 @@
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:_historyView animated:YES];
                              }];
+    
+    [ZECacheParameters startCache];
+    
 }
 
 -(void)searchHistoryStartDate:(NSString *)startDate withEndDate:(NSString *)endDate
@@ -172,9 +182,9 @@
 
 -(void)beginSearch:(ZEHistoryView *)hisView withStartDate:(NSString *)startDate withEndDate:(NSString *)endDate
 {
-    if ([startDate isEqualToString:@"开始日期"]&&[endDate isEqualToString:@"结束日期"]) {
+    if ([startDate isEqualToString:@"开始日期"]||[endDate isEqualToString:@"结束日期"]) {
         [hisView showAlertView:YES];
-        [ZEUtil showAlertView:@"请至少选择一个日期" viewController:self];
+        [ZEUtil showAlertView:@"请选择日期" viewController:self];
         return;
     }
     if ([ZEUtil compareDate:startDate withDate:endDate] == -1) {
@@ -247,7 +257,7 @@
 -(void)goChageVC:(NSDictionary *)dic
 {
     ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:[ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0]];
-    NSLog(@">>>  %@",model.SELF);
+
     if ([model.SELF isEqualToString:@"self"]) {
         NSLog(@"自己录入的");
         ZEPointRegistrationVC * pointRegVC = [[ZEPointRegistrationVC alloc]init];
@@ -255,13 +265,18 @@
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
         [self.navigationController pushViewController:pointRegVC animated:YES];
-        
     }else if([model.SELF isEqualToString:@"leader"]){
-        NSLog(@"负责人录入");
+        ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
+        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
+        pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_CHARGE;
+        pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
+        pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        [self.navigationController pushViewController:pointRegVC animated:YES];
     }else{
         NSLog(@" 班组长录入 ");
         ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
         pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
+        pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_LEADER;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
         [self.navigationController pushViewController:pointRegVC animated:YES];

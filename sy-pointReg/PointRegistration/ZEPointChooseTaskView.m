@@ -70,6 +70,18 @@
             }
         }
     }
+
+    for (int i = 0 ; i < _kindTaskArr.count; i ++) {
+        for (int j = i + 1; j < _kindTaskArr.count ; j ++) {
+            if ([_kindTaskArr[i] isEqualToString:_kindTaskArr[j]]) {
+                NSMutableArray * arr =  [NSMutableArray arrayWithArray: _detailTaskArr[i]];
+                [arr addObjectsFromArray:_detailTaskArr[j]];
+                [_kindTaskArr removeObjectAtIndex:j];
+                [_detailTaskArr removeObjectAtIndex:j];
+                [_detailTaskArr replaceObjectAtIndex:i withObject:arr];
+            }
+        }
+    }
     
     _maskArr = [NSMutableArray array];
     for (int i = 0; i < _kindTaskArr.count; i ++) {

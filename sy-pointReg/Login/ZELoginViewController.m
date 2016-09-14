@@ -123,8 +123,6 @@
                                      @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
                                      };
     
-    NSLog(@"%@",[ZESettingLocalData getUSERNAME]);
-    
     NSDictionary * fieldsDic =@{@"USERACCOUNT":[ZESettingLocalData getUSERNAME],
                                 @"USERID":@"",
                                 @"USERNAME":@"",

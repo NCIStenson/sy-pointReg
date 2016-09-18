@@ -421,7 +421,7 @@
     if (indexPath.row >= self.personalRationTypeValueArr.count) {
         if (indexPath.row ==  self.personalRationTypeValueArr.count) {
             cell.textLabel.text = @"个人说明";
-            
+            cell.detailTextLabel.text = @"";
             UITextField * field = [[UITextField alloc]initWithFrame:CGRectMake(90.0f, 0, SCREEN_WIDTH - 105.0f, 44.0f)];
             field.delegate = self;
             field.placeholder = @"工时登记情况";
@@ -440,7 +440,7 @@
         }else if (indexPath.row ==  self.personalRationTypeValueArr.count + 1){
             cell.textLabel.text = @"工时得分";
             cell.detailTextLabel.text = @"0分";
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@分",[dic objectForKey:@"WORKPOINTS"]];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f分",[[dic objectForKey:@"WORKPOINTS"] floatValue]];
         }
     }else{
         
@@ -453,6 +453,8 @@
             ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:[dic objectForKey:detailM.FIELDNAME]];
             cell.detailTextLabel.text = valueModel.QUOTIETYNAME;
         }else{
+            cell.detailTextLabel.text = @"";
+
             UITextField * field = [[UITextField alloc]initWithFrame:CGRectMake(90.0f, 0, SCREEN_WIDTH - 105.0f, 44.0f)];
             field.delegate = self;
             field.keyboardType = UIKeyboardTypeDecimalPad;
@@ -500,7 +502,8 @@
             ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:[self.CHOOSEDRATIONTYPEVALUEDic objectForKey:detailM.FIELDNAME]];
             cell.detailTextLabel.text = valueModel.QUOTIETYNAME;
         }else{
-        
+            cell.detailTextLabel.text = @"";
+
             UITextField * field = [[UITextField alloc]initWithFrame:CGRectMake(90.0f, 0, SCREEN_WIDTH - 105.0f, 44.0f)];
             field.delegate = self;
             field.keyboardType = UIKeyboardTypeDecimalPad;
@@ -579,6 +582,9 @@
     if(indexPath.section == 0){
         
         if (indexPath.row < kDefaultRows) {
+            if (_enterType == ENTER_PERSON_POINTREG_TYPE_HISTORY || _enterType == ENTER_PERSON_POINTREG_TYPE_AUDIT) {
+                return;
+            }
             if (indexPath.row == 3 || indexPath.row == 4) {
                 return;
             }

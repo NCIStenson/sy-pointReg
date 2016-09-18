@@ -147,7 +147,7 @@ static const char kKeyChainUDIDAccessGroup[] = "YOURAPPID.com.cnblogs.smileEvday
     
     // set Attr Description for query
     [dictForQuery setValue:[NSString stringWithUTF8String:kKeychainUDIDItemIdentifier]
-                    forKey:kSecAttrDescription];
+                    forKey:(NSString *)kSecAttrDescription];
     
     // set Attr Identity for query
     NSData *keychainItemID = [NSData dataWithBytes:kKeychainUDIDItemIdentifier
@@ -190,7 +190,7 @@ static const char kKeyChainUDIDAccessGroup[] = "YOURAPPID.com.cnblogs.smileEvday
         NSLog(@"KeyChain Item: %@ not found!!!", [NSString stringWithUTF8String:kKeychainUDIDItemIdentifier]);
     }
     else if (queryErr != errSecSuccess) {
-        NSLog(@"KeyChain Item query Error!!! Error code:%ld", queryErr);
+        NSLog(@"KeyChain Item query Error!!! Error code:%ld", (long)queryErr);
     }
     if (queryErr == errSecSuccess) {
         NSLog(@"KeyChain Item: %@", udidValue);
@@ -211,7 +211,7 @@ static const char kKeyChainUDIDAccessGroup[] = "YOURAPPID.com.cnblogs.smileEvday
     NSMutableDictionary *dictForAdd = [[NSMutableDictionary alloc] init];
     
     [dictForAdd setValue:(id)kSecClassGenericPassword forKey:(id)kSecClass];
-    [dictForAdd setValue:[NSString stringWithUTF8String:kKeychainUDIDItemIdentifier] forKey:kSecAttrDescription];
+    [dictForAdd setValue:[NSString stringWithUTF8String:kKeychainUDIDItemIdentifier] forKey:(NSString *)kSecAttrDescription];
     
     [dictForAdd setValue:@"UUID" forKey:(id)kSecAttrGeneric];
     
@@ -252,7 +252,7 @@ static const char kKeyChainUDIDAccessGroup[] = "YOURAPPID.com.cnblogs.smileEvday
     else {          // add item to keychain
         writeErr = SecItemAdd((CFDictionaryRef)dictForAdd, NULL);
         if (writeErr != errSecSuccess) {
-            NSLog(@"Add KeyChain Item Error!!! Error Code:%ld", writeErr);
+            NSLog(@"Add KeyChain Item Error!!! Error Code:%d", (int)writeErr);
             
             [dictForAdd release];
             return NO;
@@ -264,7 +264,7 @@ static const char kKeyChainUDIDAccessGroup[] = "YOURAPPID.com.cnblogs.smileEvday
         }
     }
     
-    [dictForAdd release];
+//    [dictForAdd release];
     return NO;
 }
 
@@ -311,7 +311,7 @@ static const char kKeyChainUDIDAccessGroup[] = "YOURAPPID.com.cnblogs.smileEvday
     if (queryResult) {
         
         NSMutableDictionary *dictForUpdate = [[NSMutableDictionary alloc] init];
-        [dictForUpdate setValue:[NSString stringWithUTF8String:kKeychainUDIDItemIdentifier] forKey:kSecAttrDescription];
+        [dictForUpdate setValue:[NSString stringWithUTF8String:kKeychainUDIDItemIdentifier] forKey:(NSString *)kSecAttrDescription];
         [dictForUpdate setValue:keychainItemID forKey:(id)kSecAttrGeneric];
         
         const char *udidStr = [newUDID UTF8String];

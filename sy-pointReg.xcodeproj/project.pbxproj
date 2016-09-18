@@ -80,10 +80,10 @@
 		98A10DED1D6E857100DFD935 /* ZEEPM_TEAM_RATIONTYPEDETAIL.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A10DEC1D6E857100DFD935 /* ZEEPM_TEAM_RATIONTYPEDETAIL.m */; };
 		98AEA33A1CD061D0001C4AED /* ZEMainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 98AEA3371CD061D0001C4AED /* ZEMainView.m */; };
 		98AEA33B1CD061D0001C4AED /* ZEMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98AEA3391CD061D0001C4AED /* ZEMainViewController.m */; };
-		98AEA3471CD063A4001C4AED /* banner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 98AEA33C1CD063A4001C4AED /* banner.jpg */; };
 		98AEA3551CD1AFCC001C4AED /* ZEUserCenterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 98AEA3541CD1AFCC001C4AED /* ZEUserCenterVC.m */; };
 		98AEA3581CD1AFED001C4AED /* ZEUserCenterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 98AEA3571CD1AFED001C4AED /* ZEUserCenterView.m */; };
 		98C0BADE1D7EAE9D007FDDC3 /* ZEEPM_TEAM_RATION_REGModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C0BADD1D7EAE9D007FDDC3 /* ZEEPM_TEAM_RATION_REGModel.m */; };
+		98CE757E1D894A4200CF2133 /* bananer.png in Resources */ = {isa = PBXBuildFile; fileRef = 98CE757D1D894A4200CF2133 /* bananer.png */; };
 		98D965DC1D8684CB00BC1216 /* home_personalskills@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98D965D71D8684CB00BC1216 /* home_personalskills@3x.png */; };
 		98D965DD1D8684CB00BC1216 /* home_foreman@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98D965D81D8684CB00BC1216 /* home_foreman@3x.png */; };
 		98D965DE1D8684CB00BC1216 /* home_expertsassess@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98D965D91D8684CB00BC1216 /* home_expertsassess@3x.png */; };
@@ -250,13 +250,13 @@
 		98AEA3371CD061D0001C4AED /* ZEMainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEMainView.m; path = Login/ZEMainView.m; sourceTree = "<group>"; };
 		98AEA3381CD061D0001C4AED /* ZEMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEMainViewController.h; path = Login/ZEMainViewController.h; sourceTree = "<group>"; };
 		98AEA3391CD061D0001C4AED /* ZEMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEMainViewController.m; path = Login/ZEMainViewController.m; sourceTree = "<group>"; };
-		98AEA33C1CD063A4001C4AED /* banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = banner.jpg; path = SourceImage/banner.jpg; sourceTree = "<group>"; };
 		98AEA3531CD1AFCC001C4AED /* ZEUserCenterVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEUserCenterVC.h; path = UserCenter/ZEUserCenterVC.h; sourceTree = "<group>"; };
 		98AEA3541CD1AFCC001C4AED /* ZEUserCenterVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEUserCenterVC.m; path = UserCenter/ZEUserCenterVC.m; sourceTree = "<group>"; };
 		98AEA3561CD1AFED001C4AED /* ZEUserCenterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEUserCenterView.h; path = UserCenter/ZEUserCenterView.h; sourceTree = "<group>"; };
 		98AEA3571CD1AFED001C4AED /* ZEUserCenterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEUserCenterView.m; path = UserCenter/ZEUserCenterView.m; sourceTree = "<group>"; };
 		98C0BADC1D7EAE9D007FDDC3 /* ZEEPM_TEAM_RATION_REGModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEEPM_TEAM_RATION_REGModel.h; path = Model/ZEEPM_TEAM_RATION_REGModel.h; sourceTree = "<group>"; };
 		98C0BADD1D7EAE9D007FDDC3 /* ZEEPM_TEAM_RATION_REGModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEEPM_TEAM_RATION_REGModel.m; path = Model/ZEEPM_TEAM_RATION_REGModel.m; sourceTree = "<group>"; };
+		98CE757D1D894A4200CF2133 /* bananer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bananer.png; path = SourceImage/bananer.png; sourceTree = "<group>"; };
 		98D965D71D8684CB00BC1216 /* home_personalskills@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home_personalskills@3x.png"; path = "SourceImage/home_personalskills@3x.png"; sourceTree = "<group>"; };
 		98D965D81D8684CB00BC1216 /* home_foreman@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home_foreman@3x.png"; path = "SourceImage/home_foreman@3x.png"; sourceTree = "<group>"; };
 		98D965D91D8684CB00BC1216 /* home_expertsassess@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home_expertsassess@3x.png"; path = "SourceImage/home_expertsassess@3x.png"; sourceTree = "<group>"; };
@@ -612,6 +612,7 @@
 		98DB7C751C4F80BE0046D405 /* SourceImage */ = {
 			isa = PBXGroup;
 			children = (
+				98CE757D1D894A4200CF2133 /* bananer.png */,
 				98D965D71D8684CB00BC1216 /* home_personalskills@3x.png */,
 				98D965D81D8684CB00BC1216 /* home_foreman@3x.png */,
 				98D965D91D8684CB00BC1216 /* home_expertsassess@3x.png */,
@@ -629,7 +630,6 @@
 				981F30261CE05DDB00F39537 /* tab_setting_normal@2x.png */,
 				981F30271CE05DDB00F39537 /* tab_setting_normal@3x.png */,
 				981F30201CE03DCF00F39537 /* timeline_image_loading@2x.png */,
-				98AEA33C1CD063A4001C4AED /* banner.jpg */,
 				98376DF71CC07D7200BA07DC /* sy_dengji@3x.png */,
 				98376DF81CC07D7200BA07DC /* sy_shouye@3x.png */,
 				98376DF91CC07D7200BA07DC /* sy_dengji@2x.png */,
@@ -736,13 +736,13 @@
 		989B2C3B1C4DE7A900F14EFA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Zenith Electronic";
 				TargetAttributes = {
 					989B2C421C4DE7AA00F14EFA = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = S2548HAYNX;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					989B2C5B1C4DE7AA00F14EFA = {
 						CreatedOnToolsVersion = 7.2;
@@ -784,6 +784,7 @@
 				98D965DE1D8684CB00BC1216 /* home_expertsassess@3x.png in Resources */,
 				9858D3171C59B9F000937D54 /* epm_work_icon@2x.png in Resources */,
 				98DB7CAF1C5085850046D405 /* icon_tick@3x.png in Resources */,
+				98CE757E1D894A4200CF2133 /* bananer.png in Resources */,
 				984F0DEC1C7558AA008106A5 /* audit_no_icon@2x.png in Resources */,
 				98255AA61CE5CE420023BEA9 /* icon_audit@2x.png in Resources */,
 				98255AA81CE5CE420023BEA9 /* icon_history_big@2x.png in Resources */,
@@ -814,7 +815,6 @@
 				9858D3181C59B9F000937D54 /* epm_work_icon@3x.png in Resources */,
 				98D965E01D8684CB00BC1216 /* home_good@3x.png in Resources */,
 				981F30281CE05DDB00F39537 /* tab_setting_normal@2x.png in Resources */,
-				98AEA3471CD063A4001C4AED /* banner.jpg in Resources */,
 				98255AAC1CE5CE420023BEA9 /* icon_scan@2x.png in Resources */,
 				98255AA71CE5CE420023BEA9 /* icon_audit@3x.png in Resources */,
 				98255AAD1CE5CE420023BEA9 /* icon_scan@3x.png in Resources */,
@@ -1009,8 +1009,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1032,7 +1034,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1053,8 +1055,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1070,7 +1074,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1084,8 +1088,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Ripeng Zhao (8BJ5KF4673)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ripeng Zhao (8BJ5KF4673)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Wu Xin Technology Co. Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Wu Xin Technology Co. Ltd.";
+				DEVELOPMENT_TEAM = S2548HAYNX;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/sy-pointReg/PrefixHeader.pch";
@@ -1093,13 +1098,14 @@
 				INFOPLIST_FILE = "$(SRCROOT)/sy-pointReg/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.zenithElec.gfdj-guangdong";
+				PRODUCT_BUNDLE_IDENTIFIER = com.zenith.QRScan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5f92bb69-ab07-435d-97f9-0ea99425d95b";
+				PROVISIONING_PROFILE = "526c675d-4e7b-4838-baac-0e3685b07480";
+				PROVISIONING_PROFILE_SPECIFIER = shaoGuan_Development;
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WARNING_CFLAGS = "";
-				ZENITH_APPNAME = "邵阳工分登记Debug";
+				ZENITH_APPNAME = "工时登记";
 				ZENITH_BUNDLEID = "com.zenithElec.sy-pointReg-Debug";
 				ZENITH_SERVER = "http://120.27.152.63:7001/emarkspg_sy";
 			};
@@ -1111,17 +1117,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Ripeng Zhao (8BJ5KF4673)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ripeng Zhao (8BJ5KF4673)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Wu Xin Technology Co. Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Wu Xin Technology Co. Ltd.";
+				DEVELOPMENT_TEAM = S2548HAYNX;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/sy-pointReg/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/sy-pointReg/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.zenithElec.gfdj-guangdong";
+				PRODUCT_BUNDLE_IDENTIFIER = com.zenith.QRScan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5f92bb69-ab07-435d-97f9-0ea99425d95b";
+				PROVISIONING_PROFILE = "526c675d-4e7b-4838-baac-0e3685b07480";
+				PROVISIONING_PROFILE_SPECIFIER = shaoGuan_Development;
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WARNING_CFLAGS = "";

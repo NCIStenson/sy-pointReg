@@ -82,7 +82,7 @@
     navTitleLabel.textAlignment = NSTextAlignmentCenter;
     navTitleLabel.textColor = [UIColor whiteColor];
     navTitleLabel.font = [UIFont systemFontOfSize:24.0f];
-    navTitleLabel.text = @"工分审核";
+    navTitleLabel.text = @"工时审核";
     [navBar addSubview:navTitleLabel];
     [navTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.rightMargin.offset(kNavTitleLabelMarginLeft);

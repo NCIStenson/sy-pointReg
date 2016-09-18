@@ -404,6 +404,23 @@
         }
     }
     
+//    NSArray * leaderDeleteStatusArr = @[@"0",@"1",@"2",@"3",@"8",@"9",@"10"];
+//    NSArray * commonDeleteStatusArr = @[@"0",@"9",@"10"];
+//    
+//    NSArray * deleteArr = nil;
+//    if ([ZESettingLocalData getISLEADER]) {
+//        deleteArr = leaderDeleteStatusArr;
+//    }else{
+//        deleteArr = commonDeleteStatusArr;
+//    }
+//    
+//    for (NSString * str in deleteArr) {
+//        if ([str isEqualToString:hisMod.STATUS]) {
+//            return;
+//        }
+//    }
+
+    
     if ([self.delegate respondsToSelector:@selector(deleteHistory:)]) {
         [self.delegate deleteHistory:hisMod.SEQKEY];
     }

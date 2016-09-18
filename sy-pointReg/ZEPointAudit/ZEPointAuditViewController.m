@@ -87,7 +87,6 @@
     [MBProgressHUD showHUDAddedTo:_pointAuditView animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
-                                 NSLog(@"  ===   %@",data);
                                  [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
                                  NSArray * dataArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG];
                                  

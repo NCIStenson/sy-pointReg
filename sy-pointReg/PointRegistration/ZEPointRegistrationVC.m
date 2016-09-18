@@ -36,10 +36,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationController.navigationBarHidden = YES;
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
-    NSLog(@" _defaultDic ==  %@ ",_defaultDic);
-    NSLog(@" _defaultDetailDic ==  %@ ",_defaultDetailArr);
-    
+        
     _pointView = [[ZEPointRegistrationView alloc]initWithFrame:self.view.frame withDafaulDic:_defaultDic withDefaultDetailArr:_defaultDetailArr withEnterType:_regType];
     _pointView.delegate = self;
     [self.view addSubview:_pointView];
@@ -181,6 +178,7 @@
             if (isGoBack) {
                 [self goBack];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotiRefreshHistoryView object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotiRefreshAuditView object:nil];
             }
         }];
         [alertController addAction:okAction];
@@ -262,11 +260,52 @@
     }else if (_regType == ENTER_PERSON_POINTREG_TYPE_AUDIT){
         [self updateAuditMessageToServer];
     }else{
-        [self submitMessageToServer];
+        [self searchIsSummary];
     }
 }
 
 #pragma mark - 新增数据
+
+-(void)searchIsSummary
+{
+    NSDictionary * choosedDic = [[ZEPointRegCache instance] getUserChoosedOptionDic];
+    NSString * dateStr = [choosedDic objectForKey:[ZEUtil getPointRegField:POINT_REG_DATE]];
+    NSString * searchSQLDate = [[dateStr stringByReplacingOccurrencesOfString:@"-" withString:@""] substringToIndex:6];
+    NSDictionary * parametersDic = @{@"limit":@"20",
+                                     @"MASTERTABLE":EPM_TEAM_RESULT,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"",
+                                     @"WHERESQL":[NSString stringWithFormat:@"periodcode='%@' and status not in ('2','3') and orgcode in (#TEAMORGCODES#) and suitunit='#SUITUNIT#' and rownum<=1",searchSQLDate],
+                                     @"start":@"0",
+                                     @"METHOD":@"search",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     @"DETAILTABLE":@"",};
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RESULT]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                 NSDictionary * dic  = [ZEUtil getServerDic:data withTabelName:EPM_TEAM_RESULT];
+                                 if ([[dic objectForKey:@"totalCount"] integerValue] > 0) {
+                                     [self showAlertView:@"数据已汇总，不能保存" goBack:NO];
+                                 }else{
+                                     [self submitMessageToServer];
+                                 }
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+}
+
+
 -(void)submitMessageToServer
 {
     
@@ -334,7 +373,7 @@
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                 [ZEUtil showAlertView:@"提交成功" viewController:self];
+                                 [self showAlertView:@"提交成功" goBack:NO];
                                  [_pointView submitSuccessReloadContentView];
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -373,7 +412,7 @@
                                                                                         @"RATIONCODE":taskDetailM.RATIONCODE,
                                                                                         @"RATIONID":taskDetailM.SEQKEY,
                                                                                         @"ADDMODE":kCOMMONPOINTREG,
-                                                                                        @"STATUS": @"10",
+                                                                                        @"STATUS": [choosedTaskDic objectForKey:@"STATUS"],
                                                                                         @"SEQKEY":[_pointView.CHOOSEDRATIONTYPEVALUEDic objectForKey:@"SEQKEY"]}];
     
     for (NSInteger i = 0 ; i < _pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {
@@ -417,7 +456,7 @@
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                 [self showAlertView:@"提交成功"];
+                                 [self showAlertView:@"提交成功" goBack:YES];
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
@@ -495,22 +534,11 @@
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                 [self showAlertView:@"提交成功"];
+                                 [self showAlertView:@"提交成功" goBack:YES];
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
 }
-
--(void)showAlertView:(NSString *)str
-{
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:str message:nil preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self.navigationController popViewControllerAnimated:YES];
-    }];
-    [alertController addAction:okAction];
-    [self presentViewController:alertController animated:YES completion:nil];
-}
-
 
 -(void)resubmitPointReg:(NSDictionary *)dic
 {

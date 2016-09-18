@@ -114,7 +114,7 @@
     
     float scroolContentH = 0.0f;
     
-    UIImage * bannerImg           = [UIImage imageNamed:@"banner.jpg"];
+    UIImage * bannerImg           = [UIImage imageNamed:@"bananer.png"];
     UIImageView * bannerImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * (bannerImg.size.height / bannerImg.size.width))];
     bannerImageView.image         = bannerImg;
     [scrollView addSubview:bannerImageView];

@@ -99,7 +99,6 @@
 
 - (void)initNavBar
 {
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldChanged:) name:UITextFieldTextDidChangeNotification object:textField];
 
     navBar = [[UIView alloc] initWithFrame:CGRectMake(kNavBarMarginLeft, kNavBarMarginTop, kNavBarWidth, kNavBarHeight)];
     [self addSubview:navBar];
@@ -113,11 +112,6 @@
     navBar.clipsToBounds = YES;
     
     UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    if(_enterType == ENTER_PERSON_POINTREG_TYPE_AUDIT){
-        [rightBtn setTitle:@"审核" forState:UIControlStateNormal];
-    }else{
-        [rightBtn setTitle:@"提交" forState:UIControlStateNormal];
-    }
     rightBtn.backgroundColor = [UIColor clearColor];
     [rightBtn setImage:[UIImage imageNamed:@"icon_tick.png" color:[UIColor whiteColor]] forState:UIControlStateNormal];
     rightBtn.contentMode = UIViewContentModeScaleAspectFit;
@@ -130,6 +124,30 @@
         make.top.offset(kRightButtonMarginTop);
         make.size.mas_equalTo(CGSizeMake(kRightButtonWidth, kRightButtonHeight));
     }];
+    
+    if (_enterType == ENTER_PERSON_POINTREG_TYPE_HISTORY) {
+        ZEEPM_TEAM_RATION_REGModel * taskDetailM = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:self.CHOOSEDRATIONTYPEVALUEDic];
+        
+        NSArray * leaderDeleteStatusArr = @[@"0",@"1",@"2",@"3",@"8",@"9",@"10"];
+        NSArray * commonDeleteStatusArr = @[@"0",@"9",@"10"];
+        
+        NSArray * deleteArr = nil;
+        if ([ZESettingLocalData getISLEADER]) {
+            deleteArr = leaderDeleteStatusArr;
+        }else{
+            deleteArr = commonDeleteStatusArr;
+        }
+        
+        BOOL isShow = YES;
+        for (NSString * str in deleteArr) {
+            if ([str isEqualToString:taskDetailM.STATUS]) {
+                isShow = NO;
+            }
+        }
+        rightBtn.hidden = isShow;
+
+    }
+
     
     UILabel *navTitleLabel = [UILabel new];
     navTitleLabel.backgroundColor = [UIColor clearColor];
@@ -144,9 +162,14 @@
         make.size.mas_equalTo(CGSizeMake(kNavTitleLabelWidth, kNavTitleLabelHeight));
     }];
     
-//    if (_enterType != ENTER_POINTREG_TYPE_DEFAULT) {
-        [self showLeftBackButton];
-//    }
+    [self showLeftBackButton];
+
+    if(_enterType == ENTER_PERSON_POINTREG_TYPE_AUDIT){
+        [rightBtn setTitle:@"审核" forState:UIControlStateNormal];
+        navTitleLabel.text = @"工时审核";
+    }else{
+        [rightBtn setTitle:@"提交" forState:UIControlStateNormal];
+    }
     
 }
 
@@ -564,7 +587,7 @@
             cell.detailTextLabel.text = @"0分";
             if(self.USERCHOOSEDWORKERVALUEARR.count > 0){
                 NSDictionary * dic = _USERCHOOSEDWORKERVALUEARR[0];
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@分",[dic objectForKey:@"WORKPOINTS"]];
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f分",[[dic objectForKey:@"WORKPOINTS"] floatValue]];
             }
         }
     }
@@ -656,6 +679,11 @@
     _currentSelectRow = indexPath.row;
 
     if (indexPath.row < kDefaultRows) {
+        
+        if (_enterType == ENTER_PERSON_POINTREG_TYPE_HISTORY || _enterType == ENTER_PERSON_POINTREG_TYPE_AUDIT) {
+            return;
+        }
+        
         if (indexPath.row == 3) {
             return;
         }
@@ -933,27 +961,27 @@
             [self.CHOOSEDRATIONTYPEVALUEDic setObject:object forKey:[self.CHOOSEDRATIONTYPEVALUEDic.allKeys[i] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
         }
     }
-    
-    NSMutableDictionary * defaultDic = [NSMutableDictionary dictionaryWithDictionary:self.USERCHOOSEDWORKERVALUEARR[0]];
-    for (int j = 0 ; j < defaultDic.allKeys.count; j ++) {
-        id object = [defaultDic objectForKey:defaultDic.allKeys[j]];
-        if ([object isKindOfClass:[NSDictionary class]]) {
-            [defaultDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
-        }else{
-            [defaultDic setObject:object forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+    if(self.USERCHOOSEDWORKERVALUEARR.count != 0){
+        NSMutableDictionary * defaultDic = [NSMutableDictionary dictionaryWithDictionary:self.USERCHOOSEDWORKERVALUEARR[0]];
+        for (int j = 0 ; j < defaultDic.allKeys.count; j ++) {
+            id object = [defaultDic objectForKey:defaultDic.allKeys[j]];
+            if ([object isKindOfClass:[NSDictionary class]]) {
+                [defaultDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+            }else{
+                [defaultDic setObject:object forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+            }
         }
+        
+        [self.USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:0 withObject:defaultDic];
+        [[ZECalculateTotalPoint instance] getTotalPointTaskDic:_CHOOSEDRATIONTYPEVALUEDic withPersonalDetailArr:_USERCHOOSEDWORKERVALUEARR];
+        
+        NSDictionary * resultDic = [[ZECalculateTotalPoint instance] getResultDic];
+        
+        self.CHOOSEDRATIONTYPEVALUEDic = [resultDic objectForKey:kFieldDic];
+        self.USERCHOOSEDWORKERVALUEARR = [NSMutableArray arrayWithArray:[resultDic objectForKey:kDefaultFieldDic]];
+        
+        [_contentTableView reloadData];
     }
-    
-    [self.USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:0 withObject:defaultDic];
-    [[ZECalculateTotalPoint instance] getTotalPointTaskDic:_CHOOSEDRATIONTYPEVALUEDic withPersonalDetailArr:_USERCHOOSEDWORKERVALUEARR];
-    
-    NSDictionary * resultDic = [[ZECalculateTotalPoint instance] getResultDic];
-    
-    self.CHOOSEDRATIONTYPEVALUEDic = [resultDic objectForKey:kFieldDic];
-    NSLog(@"kDefaultFieldDic>>>>>   %@",[resultDic objectForKey:kDefaultFieldDic]);
-    self.USERCHOOSEDWORKERVALUEARR = [NSMutableArray arrayWithArray:[resultDic objectForKey:kDefaultFieldDic]];
-    
-    [_contentTableView reloadData];
 }
 
 #pragma mark - 小数点四舍五入

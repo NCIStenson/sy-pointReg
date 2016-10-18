@@ -141,11 +141,18 @@
     [infoDic setObject:systemVersion forKey:@"SYSVERSION"];
     [infoDic setObject:userPhoneName forKey:@"SYSVERSIONCODE"];
     [infoDic setObject:@"" forKey:@"TELNUMBER"];
+    
+    
     if(![ZEUtil strIsEmpty:[ZESettingLocalData getUSERNAME]]){
         [infoDic setObject:[ZESettingLocalData getUSERNAME] forKey:@"USERACCOUNT"];
+    }
+    if(![ZEUtil strIsEmpty:[ZESettingLocalData getNICKNAME]]){
         [infoDic setObject:[ZESettingLocalData getNICKNAME] forKey:@"PSNNAME"];
+    }
+    if(![ZEUtil strIsEmpty:[ZESettingLocalData getUSERCODE]]){
         [infoDic setObject:[ZESettingLocalData getUSERCODE] forKey:@"PSNNUM"];
     }
+
     return infoDic;
 }
 
@@ -302,15 +309,19 @@
         case POINT_REG_DATE:
             return @"发生日期";
             break;
-        case POINT_REG_WORKING_HOURS:
-            return @"标准工时";
+        case POINT_REG_CONDITION:
+            return @"工作对象";
             break;
-        case POINT_REG_WORKING_POINTS:
-            return @"标准工分";
-            break;
-        case POINT_REG_TYPE:
-            return @"分摊类型";
-            break;
+
+//        case POINT_REG_WORKING_HOURS:
+//            return @"标准工时";
+//            break;
+//        case POINT_REG_WORKING_POINTS:
+//            return @"标准工分";
+//            break;
+//        case POINT_REG_TYPE:
+//            return @"分摊类型";
+//            break;
         case POINT_REG_JOB_COUNT:
             return @"工作数量";
             break;
@@ -347,7 +358,10 @@
         case POINT_REG_DATE:
             return @"date";
             break;
- 
+        case POINT_REG_CONDITION:
+            return @"condition";
+            break;
+
         default:
             return @"task";
             break;

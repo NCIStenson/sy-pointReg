@@ -88,6 +88,9 @@ static NSString * kISLEADER            = @"kISLEADER";
 
 +(NSString *)getUSERCODE
 {
+    if(![ZEUtil isStrNotEmpty:[[self getUSERINFO] objectForKey:@"USERCODE"]]){
+        return @"";
+    }
     return [[self getUSERINFO] objectForKey:@"USERCODE"];
 }
 
@@ -147,6 +150,9 @@ static NSString * kISLEADER            = @"kISLEADER";
 
 +(NSString *)getNICKNAME
 {
+    if(![ZEUtil isStrNotEmpty:[[self getUSERINFO] objectForKey:@"USERNAME"]]){
+        return @"";
+    }
     return  [[self getUSERINFO] objectForKey:@"USERNAME"];
 }
 

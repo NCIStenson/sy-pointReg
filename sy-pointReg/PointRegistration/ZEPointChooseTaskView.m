@@ -21,12 +21,15 @@
     NSMutableArray * _detailTaskArr;
     UITableView * _optionTableView;
     NSMutableArray * _maskArr;
+
+    POINT_REG _show_view_type;
+
 }
 @property (nonatomic,retain) NSArray * optionsArray;
 @end
 
 @implementation ZEPointChooseTaskView
--(id)initWithOptionArr:(NSArray *)options
+-(id)initWithOptionArr:(NSArray *)options withConditionType:(POINT_REG)type
 {
     self = [super initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 40, kMaxHeight)];
     if (self) {
@@ -35,7 +38,13 @@
         self.backgroundColor = [UIColor whiteColor];
         self.clipsToBounds = YES;
         self.layer.cornerRadius = 5;
-        [self initData];
+        _show_view_type = type;
+        if (type == POINT_REG_TASK) {
+            [self initData];
+        }else if(type == POINT_REG_CONDITION){
+            [self initWorkConditionData];
+        }
+        
         [self initView];
     }
     return self;
@@ -88,6 +97,53 @@
         [_maskArr addObject:@"0"];
     }
 }
+-(void)initWorkConditionData
+{
+    _kindTaskArr = [NSMutableArray array];
+    _detailTaskArr = [NSMutableArray array];
+    NSMutableArray * contArray = [NSMutableArray array];
+    
+    for (int i = 0; i < _optionsArray.count; i ++) {
+        ZEV_EPM_TEAM_RATION_APP * regModel = [ZEV_EPM_TEAM_RATION_APP getDetailWithDic:_optionsArray[i]];
+        
+        if (_kindTaskArr.count > 0) {
+            if([regModel.CATEGORYNAME isEqualToString:[_kindTaskArr lastObject]]){
+                [contArray addObject:_optionsArray[i]];
+            }else{
+                [_kindTaskArr addObject:regModel.CATEGORYNAME];
+                [_detailTaskArr addObject:contArray];
+                contArray = [NSMutableArray array];
+                [contArray addObject:_optionsArray[i]];
+            }
+            if (i == _optionsArray.count - 1) {
+                [_detailTaskArr addObject:contArray];
+            }
+        }else{
+            [_kindTaskArr addObject:regModel.CATEGORYNAME];
+            [contArray addObject:_optionsArray[i]];
+            if (i == _optionsArray.count - 1) {
+                [_detailTaskArr addObject:contArray];
+            }
+        }
+    }
+    
+    for (int i = 0 ; i < _kindTaskArr.count; i ++) {
+        for (int j = i + 1; j < _kindTaskArr.count ; j ++) {
+            if ([_kindTaskArr[i] isEqualToString:_kindTaskArr[j]]) {
+                NSMutableArray * arr =  [NSMutableArray arrayWithArray: _detailTaskArr[i]];
+                [arr addObjectsFromArray:_detailTaskArr[j]];
+                [_kindTaskArr removeObjectAtIndex:j];
+                [_detailTaskArr removeObjectAtIndex:j];
+                [_detailTaskArr replaceObjectAtIndex:i withObject:arr];
+            }
+        }
+    }
+    
+    _maskArr = [NSMutableArray array];
+    for (int i = 0; i < _kindTaskArr.count; i ++) {
+        [_maskArr addObject:@"0"];
+    }
+}
 
 -(void)initView
 {
@@ -109,12 +165,6 @@
         make.left.offset(kOptionViewMarginLeft);
         make.top.offset(kOptionViewMarginTop);
         make.size.mas_equalTo(CGSizeMake(kOptionViewWidth,kMaxHeight - 44.0f));
-
-//        if (_viewFrame.size.height == kMaxHeight) {
-//            make.size.mas_equalTo(CGSizeMake(kOptionViewWidth,_viewFrame.size.height - 44.0f));
-//        }else{
-//            make.size.mas_equalTo(CGSizeMake(kOptionViewWidth, _optionsArray.count * 44.0f));
-//        }
     }];
 }
 #pragma mark - UITableViewDataSource
@@ -149,8 +199,7 @@
     lineLayer.frame  = CGRectMake(10.0f, 39.5f, SCREEN_WIDTH - 50.0f, 0.5f);
     [headerBut.layer addSublayer:lineLayer];
     lineLayer.backgroundColor = [MAIN_LINE_COLOR CGColor];
-    
-    
+
     return headerBut;
 }
 
@@ -180,8 +229,13 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     ZEV_EPM_TEAM_RATION_APP * model = [ZEV_EPM_TEAM_RATION_APP getDetailWithDic:_detailTaskArr[indexPath.section][indexPath.row]];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@",model.RATIONNAME];
+    if(_show_view_type == POINT_REG_TASK){
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",model.RATIONNAME];
+    }else if (_show_view_type == POINT_REG_CONDITION){
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",model.WORKPLACE];
+    }
     cell.textLabel.font = [UIFont systemFontOfSize:13];
     cell.textLabel.textColor = MAIN_COLOR;
     
@@ -197,8 +251,8 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.delegate respondsToSelector:@selector(didSeclectTask:withData:)]) {
-        [self.delegate didSeclectTask:self withData:_detailTaskArr[indexPath.section][indexPath.row]];
+    if ([self.delegate respondsToSelector:@selector(didSeclectTask:withData:withShowViewType:)]) {
+        [self.delegate didSeclectTask:self withData:_detailTaskArr[indexPath.section][indexPath.row] withShowViewType:_show_view_type];
     }
 }
 

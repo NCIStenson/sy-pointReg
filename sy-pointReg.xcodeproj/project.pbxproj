@@ -741,8 +741,8 @@
 				TargetAttributes = {
 					989B2C421C4DE7AA00F14EFA = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = S2548HAYNX;
-						ProvisioningStyle = Manual;
+						DevelopmentTeam = CJ8CND7Y24;
+						ProvisioningStyle = Automatic;
 					};
 					989B2C5B1C4DE7AA00F14EFA = {
 						CreatedOnToolsVersion = 7.2;
@@ -1089,8 +1089,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Wu Xin Technology Co. Ltd.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Wu Xin Technology Co. Ltd.";
-				DEVELOPMENT_TEAM = S2548HAYNX;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = CJ8CND7Y24;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/sy-pointReg/PrefixHeader.pch";
@@ -1098,10 +1098,10 @@
 				INFOPLIST_FILE = "$(SRCROOT)/sy-pointReg/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.zenith.QRScan;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zenithElec.sy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "526c675d-4e7b-4838-baac-0e3685b07480";
-				PROVISIONING_PROFILE_SPECIFIER = shaoGuan_Development;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WARNING_CFLAGS = "";
@@ -1118,24 +1118,24 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Wu Xin Technology Co. Ltd.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Wu Xin Technology Co. Ltd.";
-				DEVELOPMENT_TEAM = S2548HAYNX;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = CJ8CND7Y24;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/sy-pointReg/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/sy-pointReg/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.zenith.QRScan;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zenithElec.sy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "526c675d-4e7b-4838-baac-0e3685b07480";
-				PROVISIONING_PROFILE_SPECIFIER = shaoGuan_Development;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WARNING_CFLAGS = "";
 				ZENITH_APPNAME = "工时登记";
 				ZENITH_BUNDLEID = "com.zenithElec.sy-pointReg-Release";
-				ZENITH_SERVER = "http://120.27.152.63:7001/emarkspg_sy";
+				ZENITH_SERVER = "http://120.27.152.63:8056/hunan_sy/";
 			};
 			name = Release;
 		};

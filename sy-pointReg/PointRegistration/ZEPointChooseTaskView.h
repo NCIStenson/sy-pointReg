@@ -14,12 +14,12 @@
  *  完成选择任务列表
  */
 
--(void)didSeclectTask:(ZEPointChooseTaskView *)taskView withData:(NSDictionary *)dic;
+-(void)didSeclectTask:(ZEPointChooseTaskView *)taskView withData:(NSDictionary *)dic withShowViewType:(POINT_REG)type;
 @end
 
 @interface ZEPointChooseTaskView : UIView
 
--(id)initWithOptionArr:(NSArray *)options;
+-(id)initWithOptionArr:(NSArray *)options withConditionType:(POINT_REG)type;
 
 @property (nonatomic,weak) id <ZEPointChooseTaskViewDelegate> delegate;
 @end

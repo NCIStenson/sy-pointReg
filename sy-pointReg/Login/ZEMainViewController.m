@@ -31,16 +31,16 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationController.navigationBarHidden = YES;
     [self initView];
-    
+    /***** 检测更新  *****/
+    [self checkUpdate];
+    [self storeSystemInfo];
+
     [self sendRequest];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    /***** 检测更新  *****/
-    [self checkUpdate];
-    [self storeSystemInfo];
     
     self.tabBarController.tabBar.tintColor = MAIN_NAV_COLOR;
     self.tabBarController.tabBar.hidden = NO;
@@ -202,7 +202,7 @@
                                          UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"经检测当前版本不是最新版本，点击确定跳转更新。" preferredStyle:UIAlertControllerStyleAlert];
                                          UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                                              [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                                             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/cn/app/id1103160566?mt=8"]];
+                                             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[dic objectForKey:@"FILEURL"]]];
                                          }];
                                          [alertController addAction:okAction];
                                          [self presentViewController:alertController animated:YES completion:nil];

@@ -19,6 +19,7 @@
 @property (nonatomic,copy) NSString * FORMULA;
 @property (nonatomic,copy) NSString * FWIDTH;
 @property (nonatomic,copy) NSString * ISRATION;
+@property (nonatomic,copy) NSString * DISRANGE;
 @property (nonatomic,copy) NSString * ISSELECT;
 @property (nonatomic,copy) NSString * MINVALUE;
 @property (nonatomic,copy) NSString * RATIONTYPECODE;

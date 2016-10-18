@@ -67,7 +67,7 @@
 /**
  *  显示任务列表
  */
--(void)showTaskView:(NSArray *)array;
+-(void)showTaskView:(NSArray *)array withConditionType:(POINT_REG)type;
 /**
  *  显示次数选择器
  */
@@ -77,6 +77,7 @@
  *  刷新表
  */
 -(void)reloadContentView;
+-(void)reloadContentView:(NSArray *)recordLen withRationTypeValue:(NSArray *)peronalRationTypeValue;
 
 /**
  *  提交成功

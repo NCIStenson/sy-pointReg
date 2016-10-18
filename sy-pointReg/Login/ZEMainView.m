@@ -101,7 +101,6 @@
     [_rightBtn addTarget:self action:@selector(logout) forControlEvents:UIControlEventTouchUpInside];
     [navBar addSubview:_rightBtn];
 
-
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(kScrollViewMarginLeft, kScrollViewMarginTop, kScrollViewWidth, kScrollViewlHeight)];
     scrollView.showsVerticalScrollIndicator = NO;
     [self addSubview:scrollView];
@@ -120,6 +119,10 @@
     [scrollView addSubview:bannerImageView];
     scroolContentH = bannerImageView.frame.size.height;
 
+    if (data.count == 0) {
+        return;
+    }
+    
     NSMutableArray * deleteVaildData = [NSMutableArray arrayWithArray:data];
     
     for(int i = 0 ; i < data.count - 1 ; i ++){

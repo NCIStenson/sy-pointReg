@@ -146,7 +146,6 @@
     [MBProgressHUD showHUDAddedTo:_historyView animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
-                                 NSLog(@">>>  %@",data);
                                  NSArray * dataArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG];
                                  
                                  if ([ZEUtil isNotNull:dataArr] && dataArr.count > 0) {
@@ -259,7 +258,6 @@
     ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:[ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0]];
 
     if ([model.SELF isEqualToString:@"self"]) {
-        NSLog(@"自己录入的");
         ZEPointRegistrationVC * pointRegVC = [[ZEPointRegistrationVC alloc]init];
         pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
@@ -273,7 +271,6 @@
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
         [self.navigationController pushViewController:pointRegVC animated:YES];
     }else{
-        NSLog(@" 班组长录入 ");
         ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
         pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
         pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_LEADER;

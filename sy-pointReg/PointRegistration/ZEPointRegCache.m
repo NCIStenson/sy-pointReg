@@ -33,7 +33,7 @@
 @property (nonatomic,retain) NSArray * taskCachesArr;
 @property (nonatomic,retain) NSArray * allTaskCachesArr;
 @property (nonatomic,retain) NSArray * distributionTypeArr;
-
+@property (nonatomic,retain) NSArray * workConditionArr;  //   工作条件
 @end
 
 static ZEPointRegCache * pointRegCahe = nil;
@@ -190,6 +190,16 @@ static ZEPointRegCache * pointRegCahe = nil;
 {
     return self.resubmitDataDic;
 }
+
+- (void)setWorkCondition:(NSArray *)disArr
+{
+    self.workConditionArr = disArr;
+}
+- (NSArray *)getWorkCondition
+{
+    return self.workConditionArr;
+}
+
 /**
  *  清空审核修改数据
  */
@@ -316,7 +326,7 @@ static ZEPointRegCache * pointRegCahe = nil;
         return;
     }
     NSString * valueStr = [NSString stringWithFormat:@"QUOTIETY%ldCODE",(long)number];
-    NSString * WHERESQL = [NSString stringWithFormat:@"suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode in (select case (select count(1) from EPM_TEAM_RATIONTYPEVALUE t where t.suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode = '#SECORGCODE#') when 0 then '-1' else '#SECORGCODE#' end from dual)",(long)number,(long)number];
+    NSString * WHERESQL = [NSString stringWithFormat:@"suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and RATIONCODE = '-1' and secorgcode in (select case (select count(1) from EPM_TEAM_RATIONTYPEVALUE t where t.suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode = '#SECORGCODE#') when 0 then '-1' else '#SECORGCODE#' end from dual)",(long)number,(long)number];
     NSDictionary * parametersDic = @{@"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATIONTYPEVALUE,
                                      @"MENUAPP":@"EMARK_APP",

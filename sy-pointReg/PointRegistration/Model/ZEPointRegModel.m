@@ -28,7 +28,7 @@ static ZEPointRegModel * pointReg = nil;
     pointReg.TR_VALID       = [dic objectForKey:@"trValid"];
     pointReg.USER_ORGID     = [dic objectForKey:@"userOrgid"];
     pointReg.seqkey         = [dic objectForKey:@"seqkey"];
-    pointReg.workrole         = [dic objectForKey:@"workrole"];
+    pointReg.workrole       = [dic objectForKey:@"workrole"];
     
     pointReg.NDXS_LEVEL     = [dic objectForKey:@"NDXS_LEVEL"];
     pointReg.NDXS_SCORE     = [dic objectForKey:@"NDXS_SCORE"];

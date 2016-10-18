@@ -73,6 +73,24 @@
 //  汇总表数据
 @property (nonatomic,copy) NSString * FINALSCORE;
 
+// 实录工序时长
+//CATEGORYCODE = auto614;
+//DISPLAYORDER = "";
+//RATIONCODE = "auto614_2800";
+//SEQKEY = 85;
+//STANDARDOPERATIONTIME = "0.05";
+//SUITUNIT = SYBDYWS;
+//SYSCOMPANYID = "";
+//SYSCREATEDATE = "2016-10-13 00:00:00.0";
+//SYSCREATORID = 10573047;
+//SYSDEPTID = 10183668;
+//SYSUPDATEDATE = "";
+//SYSUPDATORID = "";
+//WORKINGPROCEDURE = "\U52a8\U4ee4";
+
+//@property (nonatomic,copy) NSString * STANDARDOPERATIONTIME;
+//@property (nonatomic,copy) NSString * WORKINGPROCEDURE;
+
 
 +(ZEEPM_TEAM_RATION_REGModel *)getDetailWithDic:(NSDictionary *)dic;
 

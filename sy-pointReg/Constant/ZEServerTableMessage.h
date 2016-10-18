@@ -16,7 +16,9 @@
 #define EPM_TEAM_RATIONTYPE          @"EPM_TEAM_RATIONTYPE"         /***   分配类型   ***/
 #define EPM_TEAM_RATION_COMMON       @"EPM_TEAM_RATION_COMMON"      /***   常用任务列表  ***/
 #define V_EPM_TEAM_RATION_APP        @"V_EPM_TEAM_RATION_APP"       /***   全部任务列表  ***/
+#define V_EPM_TEAM_RATION_WORKPLACE        @"V_EPM_TEAM_RATION_WORKPLACE"       /***  工作对象列表  ***/
 #define EPM_TEAM_RATION              @"EPM_TEAM_RATION"             /***   全部任务列表  ***/
+#define EPM_TEAM_RATION_DETAIL              @"EPM_TEAM_RATION_DETAIL"             /***   全部任务列表详情  ***/
 #define EPM_TEAM_RATIONTYPEDETAIL    @"EPM_TEAM_RATIONTYPEDETAIL"   /***   分摊类型详情列表  ***/
 #define EPM_TEAM_RATIONTYPEVALUE     @"EPM_TEAM_RATIONTYPEVALUE"    /***   分摊类型详情值列表  ***/
 #define EPM_TEAM_RATION_REG          @"EPM_TEAM_RATION_REG"         /***   工分登记表  ***/

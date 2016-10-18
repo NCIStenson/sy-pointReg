@@ -14,6 +14,7 @@
 
 #import "ZEPointRegOptionView.h"
 #import "ZEV_EPM_TEAM_RATION_APP.h"
+#import "ZEEPM_TEAM_RATIONTYPEDETAIL.h"
 
 @interface ZEPointRegOptionView ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -43,7 +44,6 @@
     self = [super initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 40, viewHeight)];
     if (self) {
         _optionsArray = options;
-
         _listLevel = level;
         _pointReg = pointReg;
         _viewFrame = CGRectMake(0, 0, SCREEN_WIDTH - 40, viewHeight);
@@ -119,10 +119,11 @@
             }
             ZEV_EPM_TEAM_RATION_APP * model = [ZEV_EPM_TEAM_RATION_APP getDetailWithDic:_optionsArray[indexPath.row]];
             cell.textLabel.text = [NSString stringWithFormat:@"%@",model.RATIONNAME];
-        }else if (_pointReg == POINT_REG_TYPE){
-            NSDictionary * dic = _optionsArray[indexPath.row];
-            cell.textLabel.text = [NSString stringWithFormat:@"%@",[dic objectForKey:@"QUOTIETYNAME"]];
+        }else{
+            ZEEPM_TEAM_RATIONTYPEDETAIL * model = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:_optionsArray[indexPath.row]];
+            cell.textLabel.text = [NSString stringWithFormat:@"%@",model.QUOTIETYNAME];
         }
+
     }else{
         cell.textLabel.text = _optionsArray[indexPath.row];
     }

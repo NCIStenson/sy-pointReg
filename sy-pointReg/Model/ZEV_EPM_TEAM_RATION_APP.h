@@ -26,6 +26,11 @@
 @property (nonatomic,copy) NSString * SEQKEY;
 @property (nonatomic,copy) NSString * SUITUNIT;
 
+@property (nonatomic,copy) NSString * WORKPLACE;   ///  工作对象 展示列表
+@property (nonatomic,copy) NSString * WORKPLACECODE;   ///  工作对象 展示列表
+@property (nonatomic,copy) NSString * COMPREHENSIVECOEFFICIENT;  //  工作对象系数
+
+
 +(ZEV_EPM_TEAM_RATION_APP *)getDetailWithDic:(NSDictionary *)dic;
 
 @end

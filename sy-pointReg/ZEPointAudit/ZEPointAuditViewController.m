@@ -199,7 +199,6 @@
     ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:[ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0]];
 
     if ([model.SELF isEqualToString:@"self"]) {
-        NSLog(@"自己录入的");
         ZEPointRegistrationVC * pointRegVC = [[ZEPointRegistrationVC alloc]init];
         pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_AUDIT;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
@@ -214,7 +213,6 @@
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
         [self.navigationController pushViewController:pointRegVC animated:YES];
     }else{
-        NSLog(@" 班组长录入 ");
         ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
         pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_AUDIT;
         pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_LEADER;

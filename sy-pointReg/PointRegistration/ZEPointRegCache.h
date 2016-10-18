@@ -73,9 +73,20 @@
  *
  *  @param dic 历史数据信息
  */
--(void)setResubmitCaches:(NSDictionary *)dic;   
+-(void)setResubmitCache:(NSDictionary *)dic;
 -(void)changeResubmitCache:(NSDictionary *)dic;
 - (NSDictionary * )getResubmitCachesDic;
+
+/**
+ *  @author Zenith Electronic, 16-02-23 14:02:17
+ *
+ *  存储用户工作对象
+ *
+ *  @param dic
+ */
+- (void)setWorkCondition:(NSArray *)disArr;
+- (NSArray *)getWorkCondition;
+
 /**
  *  清空审核修改数据
  */

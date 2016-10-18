@@ -27,6 +27,7 @@
 {
     ZELeaderRegView * _leaderRegView;
 }
+@property (nonatomic,strong) NSArray * rationTypeValueArr; // 个性化下拉框数值
 @end
 
 @implementation ZELeaderRegVC
@@ -38,7 +39,7 @@
     if(_isLeaderOrCharge == ENTER_MANYPERSON_POINTREG_TYPE_CHARGE){
         self.title = @"负责人工时登记";
     }
-    [self cacheShareType];
+//    [self cacheShareType];
     [self initView];
     [self setDate];
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -72,6 +73,11 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAllTaskView) name:kShowAllTaskList object:nil];
 }
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    [[ZEPointRegCache instance] cacheShareType:self.view];
+}
 
 -(void)viewWillDisappear:(BOOL)animated
 {
@@ -90,11 +96,11 @@
     [self.rightBtn setImage:[UIImage imageNamed:@"icon_tick.png" color:[UIColor whiteColor]] forState:UIControlStateNormal];
     self.rightBtn.contentMode = UIViewContentModeScaleAspectFit;
     
-    _leaderRegView = [[ZELeaderRegView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT) withDafaulDic:_defaultDic withDefaultDetailArr:_defaultDetailArr withEnterType:_regType];
+    _leaderRegView = [[ZELeaderRegView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) withDafaulDic:_defaultDic withDefaultDetailArr:_defaultDetailArr withEnterType:_regType];
     _leaderRegView.delegate = self;
     [self.view addSubview:_leaderRegView];
     [self.view sendSubviewToBack:_leaderRegView];
-    
+ 
 }
 
 -(void)setDate
@@ -111,126 +117,6 @@
         [[ZEPointRegCache instance]setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_DATE]:dateStr}];
     }
 }
-#pragma mark - 缓存分摊类型
-
--(void)cacheShareType
-{
-    dispatch_queue_t queue = dispatch_queue_create("queue", DISPATCH_QUEUE_CONCURRENT);
-    dispatch_async(queue, ^{
-        for (int i = 1; i < 7; i ++) {
-            [self cacheCoefficientDetail:i];
-        }
-    });
-    
-    if ([[[ZEPointRegCache instance] getDistributionTypeCaches] count] > 0) {
-        return;
-    }
-    
-    NSDictionary * parametersDic = @{@"limit":@"20",
-                                     @"MASTERTABLE":EPM_TEAM_RATIONTYPE,
-                                     @"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"DISPLAYORDER",
-                                     @"WHERESQL":@"pagetype = '1' and isselect = 'true' and suitunit = (case (select count(*) from epm_team_rationtype c where c.suitunit = '#SUITUNIT#') when 0 then '-1' else '#SUITUNIT#' end)",
-                                     @"start":@"0",
-                                     @"METHOD":@"search",
-                                     @"MASTERFIELD":@"SEQKEY",
-                                     @"DETAILFIELD":@"",
-                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
-                                     @"DETAILTABLE":@"",};
-    
-    NSDictionary * fieldsDic =@{};
-    
-    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATIONTYPE]
-                                                                           withFields:@[fieldsDic]
-                                                                       withPARAMETERS:parametersDic
-                                                                       withActionFlag:nil];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [ZEUserServer getDataWithJsonDic:packageDic
-                             success:^(id data) {
-                                 
-                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                 NSArray * arr =[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPE];
-                                 [[ZEPointRegCache instance] setDistributionTypeCaches:arr];
-                                 for (NSDictionary * dic in arr) {
-                                     ZEEPM_TEAM_RATIONTYPE * model = [ZEEPM_TEAM_RATIONTYPE getDetailWithDic:dic];
-                                     [self cacheDistributionTypeCoefficientWithCode:model.RATIONTYPECODE];
-                                 }
-                                 
-                                 
-                             } fail:^(NSError *errorCode) {
-                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                             }];
-    
-}
-
--(void)cacheDistributionTypeCoefficientWithCode:(NSString *)rationCode
-{
-    NSString * WHERESQL = [NSString stringWithFormat:@"rationtypecode = '%@' and isselect = 'true' and suitunit = (case (select count(*) from epm_team_rationtype c where c.suitunit = 'XYSDLJ') when 0 then '-1' else 'XYSDLJ' end)",rationCode];
-    NSDictionary * parametersDic = @{@"limit":@"20",
-                                     @"MASTERTABLE":EPM_TEAM_RATIONTYPEDETAIL,
-                                     @"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"DISPLAYORDER",
-                                     @"WHERESQL":WHERESQL,
-                                     @"start":@"0",
-                                     @"METHOD":@"search",
-                                     @"MASTERFIELD":@"SEQKEY",
-                                     @"DETAILFIELD":@"",
-                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
-                                     @"DETAILTABLE":@"",};
-    
-    NSDictionary * fieldsDic =@{};
-    
-    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATIONTYPEDETAIL]
-                                                                           withFields:@[fieldsDic]
-                                                                       withPARAMETERS:parametersDic
-                                                                       withActionFlag:nil];
-    [ZEUserServer getDataWithJsonDic:packageDic
-                             success:^(id data) {
-                                 NSArray * arr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEDETAIL];
-                                 if (arr.count > 0) {
-                                     [[ZEPointRegCache instance] setDistributionTypeCoefficient:@{rationCode:arr}];
-                                 }
-                             } fail:^(NSError *errorCode) {
-                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                             }];
-}
--(void)cacheCoefficientDetail:(NSInteger)number
-{
-    if ([[[[ZEPointRegCache instance]getRATIONTYPEVALUE] allKeys] count] > 0) {
-        return;
-    }
-    NSString * valueStr = [NSString stringWithFormat:@"QUOTIETY%ldCODE",(long)number];
-    NSString * WHERESQL = [NSString stringWithFormat:@"suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode in (select case (select count(1) from EPM_TEAM_RATIONTYPEVALUE t where t.suitunit = '#SUITUNIT#' and FIELDNAME = 'QUOTIETY%ldCODE' and secorgcode = '#SECORGCODE#') when 0 then '-1' else '#SECORGCODE#' end from dual)",(long)number,(long)number];
-    NSDictionary * parametersDic = @{@"limit":@"20",
-                                     @"MASTERTABLE":EPM_TEAM_RATIONTYPEVALUE,
-                                     @"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"DISPLAYORDER",
-                                     @"WHERESQL":WHERESQL,
-                                     @"start":@"0",
-                                     @"METHOD":@"search",
-                                     @"MASTERFIELD":@"SEQKEY",
-                                     @"DETAILFIELD":@"",
-                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
-                                     @"DETAILTABLE":@"",};
-    
-    NSDictionary * fieldsDic =@{@"QUOTIETYCODE":@"",
-                                @"QUOTIETYNAME":@"",
-                                @"QUOTIETY":@"",
-                                @"DEFAULTCODE":@""};
-    
-    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATIONTYPEVALUE]
-                                                                           withFields:@[fieldsDic]
-                                                                       withPARAMETERS:parametersDic
-                                                                       withActionFlag:nil];
-    [ZEUserServer getDataWithJsonDic:packageDic
-                             success:^(id data) {
-                                 [[ZEPointRegCache instance] setRATIONTYPEVALUE:@{valueStr:[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEVALUE]}];
-                             } fail:^(NSError *errorCode) {
-                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                             }];
-    
-}
-
 
 #pragma mark - 缓存常用任务列表
 
@@ -284,7 +170,7 @@
     NSDictionary * parametersDic = @{@"limit":@"2000",
                                      @"MASTERTABLE":V_EPM_TEAM_RATION_APP,
                                      @"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"DISPLAYORDER",
+                                     @"ORDERSQL":@"CATEGORYDISPLAYORDER,CATEGORYNAME,CATEGORYDISPLAYORDER2,RATIONNAME",
                                      @"WHERESQL":@"orgcode in (#TEAMORGCODES#) and suitunit='#SUITUNIT#'",
                                      @"start":@"0",
                                      @"METHOD":@"search",
@@ -306,7 +192,7 @@
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  NSArray * arr = [ZEUtil getServerData:data withTabelName:V_EPM_TEAM_RATION_APP];
                                  [[ZEPointRegCache instance] setAllTaskCaches:arr];
-                                 [_leaderRegView showTaskView:arr];
+                                 [_leaderRegView showTaskView:arr withConditionType:POINT_REG_TASK];
                                  
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -321,15 +207,17 @@
                                      @"WHERESQL":WHERESQL,
                                      @"start":@"0",
                                      @"METHOD":@"search",
-                                     @"DETAILTABLE":@"",
-                                     @"MASTERFIELD":@"SEQKEY",
-                                     @"DETAILFIELD":@"",
+                                     @"DETAILTABLE":[NSString stringWithFormat:@"%@,%@",EPM_TEAM_RATION_DETAIL,EPM_TEAM_RATIONTYPEVALUE],
+                                     @"MASTERFIELD":@"RATIONCODE",
+                                     @"DETAILFIELD":@"RATIONCODE",
                                      @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
                                      };
     NSDictionary * fieldsDic =@{};
+    NSDictionary * fieldsDic1 =@{};
+    NSDictionary * fieldsDic2 =@{};
     
-    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION]
-                                                                           withFields:@[fieldsDic]
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION,EPM_TEAM_RATION_DETAIL,EPM_TEAM_RATIONTYPEVALUE]
+                                                                           withFields:@[fieldsDic,fieldsDic1,fieldsDic2]
                                                                        withPARAMETERS:parametersDic
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -340,11 +228,58 @@
                                  if ([ZEUtil isNotNull:taskDatas]) {
                                      [[ZEPointRegCache instance] setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_TASK]:taskDatas[0]}];
                                  }
-                                 [_leaderRegView reloadContentView];
+                                 self.rationTypeValueArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEVALUE];
+                                 [_leaderRegView reloadContentView:[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_DETAIL]
+                                               withRationTypeValue:[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEVALUE]];
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+
+}
+
+#pragma mark - 缓存工作条件系数
+
+-(void)cacheWorkCondition
+{
+    if ([[[ZEPointRegCache instance] getWorkCondition] count] > 0) {
+        return;
+    }
+    //第一条记录结束
+    // 参数区域赋值
+    
+    NSDictionary * parametersDic = @{@"limit":@"2000",
+                                     @"MASTERTABLE":V_EPM_TEAM_RATION_WORKPLACE,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"CATEGORYDISPLAYORDER,CATEGORYNAME,CATEGORYDISPLAYORDER2，WORKPLACE",
+                                     @"WHERESQL":@"orgcode in (#TEAMORGCODES#) and suitunit='#SUITUNIT#'",
+                                     @"start":@"0",
+                                     @"METHOD":@"search",
+                                     @"DETAILTABLE":@"",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[V_EPM_TEAM_RATION_WORKPLACE]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                 NSArray * arr = [ZEUtil getServerData:data withTabelName:V_EPM_TEAM_RATION_WORKPLACE];
+                                 [[ZEPointRegCache instance] setWorkCondition:arr];
+                                 
+                                 [_leaderRegView showTaskView:arr withConditionType:POINT_REG_CONDITION];
+                                 
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
 }
+
 
 #pragma mark - ZELeaderRegViewDelegate
 -(void)didSelectRowAtIndexpath:(NSIndexPath *)indexpath
@@ -356,11 +291,10 @@
         case 1:
             [self showChooseDateView];
             break;
-            
-        case 3:
-            [self showTypeView];
+        case 2:
+            [self showWorkConditionView];
             break;
-        default:
+         default:
             break;
     }
 }
@@ -368,9 +302,18 @@
 -(void)showRATIONTYPEVALUE:(NSString *)QUOTIETYCODE
 {
     NSDictionary * valueDic = [[ZEPointRegCache instance] getRATIONTYPEVALUE];
-    NSArray * valueArr = [valueDic objectForKey:QUOTIETYCODE];
+    NSMutableArray * valueArr = [NSMutableArray arrayWithArray:[valueDic objectForKey:QUOTIETYCODE]];
     
-    [_leaderRegView showListView:valueArr withLevel:TASK_LIST_LEVEL_JSON withPointReg:POINT_REG_TYPE];
+    if (self.rationTypeValueArr.count > 0) {
+        valueArr = [NSMutableArray array];
+        for (NSDictionary * dic in self.rationTypeValueArr) {
+            ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:dic];
+            if ([detailM.FIELDNAME isEqualToString:QUOTIETYCODE]) {
+                [valueArr addObject:dic];
+            }
+        }
+    }    
+    [_leaderRegView showListView:valueArr withLevel:TASK_LIST_LEVEL_JSON withPointReg:POINT_REG_CONDITION];
 }
 -(void)showWorkerListView
 {
@@ -433,7 +376,7 @@
     allTaskCacheArr = [[ZEPointRegCache instance] getAllTaskCaches];
     
     if (allTaskCacheArr.count > 0) {
-        [_leaderRegView showTaskView:allTaskCacheArr];
+        [_leaderRegView showTaskView:allTaskCacheArr withConditionType:POINT_REG_TASK];
     }else{
         [self cacheAllTaskData];
     }
@@ -444,14 +387,19 @@
 {
     [_leaderRegView showDateView];
 }
-
-#pragma mark - 分摊类型
-
--(void)showTypeView
+#pragma mark - 工作对象
+-(void)showWorkConditionView
 {
-//    [pointRegView showListView:@[@"按系数分配",@"按人头均摊",@"按次分配",@"按工分*系数分配"] withLevel:TASK_LIST_LEVEL_NOJSON withPointReg:POINT_REG_TYPE];
+    NSArray * workConditionArr = nil;
+    workConditionArr = [[ZEPointRegCache instance] getWorkCondition];
+    
+    if (workConditionArr.count > 0) {
+        [_leaderRegView showTaskView:workConditionArr withConditionType:POINT_REG_CONDITION];
+    }else{
+        [self cacheWorkCondition];
+    }
+    
 }
-
 #pragma mark - 提交数据
 -(void)rightBtnClick
 {
@@ -559,7 +507,7 @@
     ZEEPM_TEAM_RATION_COMMON * taskDetailM = [ZEEPM_TEAM_RATION_COMMON getDetailWithDic:choosedTaskDic];
     
     NSString * dateStr = [[[ZEPointRegCache instance] getUserChoosedOptionDic] objectForKey:[ZEUtil getPointRegField:POINT_REG_DATE]];
-    
+
     NSMutableDictionary * defaultDic = [NSMutableDictionary dictionaryWithDictionary: @{@"ENDDATE":dateStr,
                                                                                         @"RATIONNAME":taskDetailM.RATIONNAME,
                                                                                         @"STDSCORE":taskDetailM.STDSCORE,
@@ -567,6 +515,7 @@
                                                                                         @"RATIONCODE":taskDetailM.RATIONCODE,
                                                                                         @"RATIONID":taskDetailM.SEQKEY,
                                                                                         @"ADDMODE":kLEADERPOINTREG,
+                                                                                        @"DESCR":[_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:@"DESCR"],
                                                                                         @"STATUS":status}];
     
     for (NSInteger i = 0 ; i < _leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {

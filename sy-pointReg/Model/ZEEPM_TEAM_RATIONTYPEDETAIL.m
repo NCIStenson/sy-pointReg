@@ -30,6 +30,7 @@ static ZEEPM_TEAM_RATIONTYPEDETAIL * model = nil;
     model.RATIONTYPECODE = [dic objectForKey:@"RATIONTYPECODE"];
     model.SUITUNIT       = [dic objectForKey:@"SUITUNIT"];
     model.SEQKEY         = [dic objectForKey:@"SEQKEY"];
+    model.DISRANGE       = [dic objectForKey:@"DISRANGE"];
     model.TYPE           = [dic objectForKey:@"TYPE"];
 
     model.QUOTIETYCODE = [dic objectForKey:@"QUOTIETYCODE"];

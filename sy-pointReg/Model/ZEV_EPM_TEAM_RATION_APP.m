@@ -23,6 +23,11 @@ static ZEV_EPM_TEAM_RATION_APP * model = nil;
     model.RATIONNAME   = [dic objectForKey:@"RATIONNAME"];
     model.SEQKEY       = [dic objectForKey:@"SEQKEY"];
     model.SUITUNIT     = [dic objectForKey:@"SUITUNIT"];
+
+    model.COMPREHENSIVECOEFFICIENT     = [dic objectForKey:@"COMPREHENSIVECOEFFICIENT"];
+    model.WORKPLACE     = [dic objectForKey:@"WORKPLACE"];
+    model.WORKPLACECODE     = [dic objectForKey:@"WORKPLACECODE"];
+
     
     return model;
 }

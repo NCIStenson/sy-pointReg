@@ -17,8 +17,6 @@
 #import "ZEPointRegCache.h"
 #import "ZEEPM_TEAM_RATION_REGModel.h"
 
-#import "ZECacheParameters.h"
-
 @interface ZEHistoryViewController ()<ZEHistoryViewDelegate>
 {
     ZEHistoryView * _historyView;
@@ -62,6 +60,8 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    [[ZEPointRegCache instance] cacheShareType:self.view];
+
 }
 
 -(void)sendRequest
@@ -114,9 +114,6 @@
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:_historyView animated:YES];
                              }];
-    
-    [ZECacheParameters startCache];
-    
 }
 
 -(void)searchHistoryStartDate:(NSString *)startDate withEndDate:(NSString *)endDate
@@ -225,16 +222,16 @@
 
 -(void)enterDetailView:(NSString *)seqkey
 {
+
     NSDictionary * parametersDic = @{@"MENUAPP":@"EMARK_APP",
                                      @"ORDERSQL":@"SYSCREATEDATE",
                                      @"WHERESQL":[NSString stringWithFormat:@"SEQKEY=%@",seqkey],
                                      @"METHOD":@"search",
                                      @"MASTERTABLE":EPM_TEAM_RATION_REG,
-                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
+                                     @"DETAILTABLE":[NSString stringWithFormat:@"%@,%@",EPM_TEAM_RATION_REG_DETAIL,EPM_TEAM_RATION_REG_SX],
                                      @"MASTERFIELD":@"SEQKEY",
                                      @"DETAILFIELD":@"TASKID",
-                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
-                                     };
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation"};
     
     NSDictionary * fieldsDic =@{};
     
@@ -246,14 +243,42 @@
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:_historyView animated:YES];
-                                 [self goChageVC:data];
+                                 [self getRationValue:seqkey withHistoryData:data];
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:_historyView animated:YES];
                              }];
 
 }
 
--(void)goChageVC:(NSDictionary *)dic
+-(void)getRationValue:(NSString *)seqkey withHistoryData:(NSDictionary *)hisData
+{
+    NSDictionary * parametersDic = @{@"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"DISPLAYORDER",
+                                     @"WHERESQL":[NSString stringWithFormat:@"SEQKEY=%@",seqkey],
+                                     @"METHOD":@"search",
+                                     @"MASTERTABLE":EPM_TEAM_RATION_REG,
+                                     @"DETAILTABLE":EPM_TEAM_RATIONTYPEVALUE,
+                                     @"MASTERFIELD":@"RATIONCODE,SUITUNIT",
+                                     @"DETAILFIELD":@"RATIONCODE,SUITUNIT",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation"};
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:_historyView animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:_historyView animated:YES];
+                                 [self goChageVC:hisData rationValueArr:[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEVALUE]];
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:_historyView animated:YES];
+                             }];
+}
+
+-(void)goChageVC:(NSDictionary *)dic rationValueArr:(NSArray *)valueArr
 {
     ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:[ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0]];
 
@@ -262,6 +287,8 @@
         pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        pointRegVC.recordLengthArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_SX];
+        pointRegVC.rationTypeValueArr = valueArr;
         [self.navigationController pushViewController:pointRegVC animated:YES];
     }else if([model.SELF isEqualToString:@"leader"]){
         ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
@@ -269,6 +296,8 @@
         pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_CHARGE;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        pointRegVC.recordLengthArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_SX];
+        pointRegVC.rationTypeValueArr = valueArr;
         [self.navigationController pushViewController:pointRegVC animated:YES];
     }else{
         ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
@@ -276,8 +305,9 @@
         pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_LEADER;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        pointRegVC.recordLengthArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_SX];
+        pointRegVC.rationTypeValueArr = valueArr;
         [self.navigationController pushViewController:pointRegVC animated:YES];
-        
     }
 }
 

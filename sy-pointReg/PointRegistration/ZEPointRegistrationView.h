@@ -53,11 +53,19 @@
 @property (nonatomic,strong) NSMutableDictionary * CHOOSEDRATIONTYPEVALUEDic;
 @property (nonatomic,strong) NSMutableArray * USERCHOOSEDWORKERVALUEARR;  // 用户选择的人员任务系数
 
+@property (nonatomic,strong) NSMutableArray * recordLengthArr; // 实录工序时长
+@property (nonatomic,strong) NSArray * rationTypeValueArr; // 个性化下拉框值
+
 @property (nonatomic,retain) ZEHistoryModel * historyModel;     // 从历史界面进入工分登记修改数据
 
 @property (nonatomic,assign) id <ZEPointRegistrationViewDelegate> delegate;
 
--(id)initWithFrame:(CGRect)rect withDafaulDic:(NSDictionary *)dic withDefaultDetailArr:(NSArray *)arr withEnterType:(ENTER_PERSON_POINTREG_TYPE)type;
+-(id)initWithFrame:(CGRect)rect
+     withDafaulDic:(NSDictionary *)dic
+withDefaultDetailArr:(NSArray *)arr
+withRecordLengthArr:(NSArray *)lengthArr
+withRationTypeValue:(NSArray *)rationTypeArr
+     withEnterType:(ENTER_PERSON_POINTREG_TYPE)type;
 
 -(void)showListView:(NSArray *)listArr withLevel:(TASK_LIST_LEVEL)level withPointReg:(POINT_REG)pointReg;
 /**

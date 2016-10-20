@@ -18,4 +18,7 @@
 @property (nonnull,nonatomic,strong) NSDictionary * defaultDic;
 @property (nonnull,nonatomic,strong) NSArray * defaultDetailArr;
 
+@property (nonnull,nonatomic,strong) NSArray * recordLengthArr;
+@property (nonnull,nonatomic,strong) NSArray * rationTypeValueArr; // 个性化下拉框值
+
 @end

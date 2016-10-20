@@ -29,4 +29,5 @@
 #define SNOW_APP_VERSION             @"SNOW_APP_VERSION"            /***   版本更新信息表  ***/
 #define SNOW_MOBILE_DEVICE           @"SNOW_MOBILE_DEVICE"            /***   设备列表  ***/
 
+#define EPM_TEAM_RATION_REG_SX       @"EPM_TEAM_RATION_REG_SX"      /******** 工时序数 ********/
 #endif /* ZEServerTableMessage_h */

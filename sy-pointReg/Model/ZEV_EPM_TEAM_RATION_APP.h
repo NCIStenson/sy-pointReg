@@ -28,6 +28,7 @@
 
 @property (nonatomic,copy) NSString * WORKPLACE;   ///  工作对象 展示列表
 @property (nonatomic,copy) NSString * WORKPLACECODE;   ///  工作对象 展示列表
+@property (nonatomic,copy) NSString * WORKPLACEQUOTIETY;   ///  工作对象 展示列表
 @property (nonatomic,copy) NSString * COMPREHENSIVECOEFFICIENT;  //  工作对象系数
 
 

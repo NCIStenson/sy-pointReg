@@ -14,8 +14,10 @@
 #import "ZEEPM_TEAM_RATION_REGModel.h"
 
 #import "ZEPointRegistrationVC.h"
-#import "ZECacheParameters.h"
+
 #import "ZELeaderRegVC.h"
+#import "ZEPointRegCache.h"
+
 @interface ZEPointAuditViewController ()
 {
     ZEPointAuditView * _pointAuditView;
@@ -45,6 +47,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    [[ZEPointRegCache instance] cacheShareType:self.view];
 }
 #pragma mark - initView
 -(void)initView
@@ -112,7 +115,6 @@
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
                              }];
-    [ZECacheParameters startCache];
 }
 
 
@@ -171,11 +173,10 @@
                                      @"WHERESQL":[NSString stringWithFormat:@"SEQKEY=%@",seqkey],
                                      @"METHOD":@"search",
                                      @"MASTERTABLE":EPM_TEAM_RATION_REG,
-                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
+                                     @"DETAILTABLE":[NSString stringWithFormat:@"%@,%@",EPM_TEAM_RATION_REG_DETAIL,EPM_TEAM_RATION_REG_SX],
                                      @"MASTERFIELD":@"SEQKEY",
                                      @"DETAILFIELD":@"TASKID",
-                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
-                                     };
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation"};
     
     NSDictionary * fieldsDic =@{};
     
@@ -187,37 +188,70 @@
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
-                                 [self goChageVC:data];
+                                 [self getRationValue:seqkey withHistoryData:data];
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
                              }];
     
 }
 
--(void)goChageVC:(NSDictionary *)dic
+-(void)getRationValue:(NSString *)seqkey withHistoryData:(NSDictionary *)hisData
+{
+    NSDictionary * parametersDic = @{@"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"DISPLAYORDER",
+                                     @"WHERESQL":[NSString stringWithFormat:@"SEQKEY=%@",seqkey],
+                                     @"METHOD":@"search",
+                                     @"MASTERTABLE":EPM_TEAM_RATION_REG,
+                                     @"DETAILTABLE":EPM_TEAM_RATIONTYPEVALUE,
+                                     @"MASTERFIELD":@"RATIONCODE,SUITUNIT",
+                                     @"DETAILFIELD":@"RATIONCODE,SUITUNIT",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation"};
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:_pointAuditView animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
+                                 [self goChageVC:hisData rationValueArr:[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEVALUE]];
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
+                             }];
+}
+
+-(void)goChageVC:(NSDictionary *)dic rationValueArr:(NSArray *)valueArr
 {
     ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:[ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0]];
-
+    
     if ([model.SELF isEqualToString:@"self"]) {
         ZEPointRegistrationVC * pointRegVC = [[ZEPointRegistrationVC alloc]init];
-        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_AUDIT;
+        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        pointRegVC.recordLengthArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_SX];
+        pointRegVC.rationTypeValueArr = valueArr;
         [self.navigationController pushViewController:pointRegVC animated:YES];
-        
     }else if([model.SELF isEqualToString:@"leader"]){
         ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
-        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_AUDIT;
+        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
         pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_CHARGE;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        pointRegVC.recordLengthArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_SX];
+        pointRegVC.rationTypeValueArr = valueArr;
         [self.navigationController pushViewController:pointRegVC animated:YES];
     }else{
         ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
-        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_AUDIT;
+        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
         pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_LEADER;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+        pointRegVC.recordLengthArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_SX];
+        pointRegVC.rationTypeValueArr = valueArr;
         [self.navigationController pushViewController:pointRegVC animated:YES];
     }
 }

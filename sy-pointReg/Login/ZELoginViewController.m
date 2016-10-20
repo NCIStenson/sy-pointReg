@@ -174,7 +174,6 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
                              success:^(id data) {
-                                 NSLog(@">>>  %@",data);
                                  if ([[ZEUtil getServerData:data withTabelName:EPM_TEAM_K_VALUE] count] > 0) {
                                      NSDictionary * dic = [ZEUtil getServerData:data withTabelName:EPM_TEAM_K_VALUE][0];
                                      [ZESettingLocalData setKValue:[dic objectForKey:@"KVALUE"]];

@@ -24,8 +24,6 @@
 @property(nonatomic,retain) NSMutableDictionary * optionDic;
 @property(nonatomic,retain) NSMutableDictionary * leaderOptionDic;
 
-@property(nonatomic,retain) NSMutableDictionary * resubmitDataDic;
-
 @property (nonatomic,strong) NSMutableDictionary * disTypeCoefficientDic;
 @property (nonatomic,strong) NSMutableDictionary * RATIONTYPEVALUEDic;
 @property (nonatomic,strong) NSArray * workerListArr;
@@ -177,19 +175,19 @@ static ZEPointRegCache * pointRegCahe = nil;
  *
  *  @param dic 历史数据信息
  */
--(void)setResubmitCaches:(NSDictionary *)dic
-{
-    self.resubmitDataDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-}
--(void)changeResubmitCache:(NSDictionary *)dic
-{
-    self.resubmitDataDic = [NSMutableDictionary dictionaryWithDictionary:[self getResubmitCachesDic]];
-    [self.resubmitDataDic setValue:dic.allValues[0] forKey:dic.allKeys[0]];
-}
-- (NSDictionary * )getResubmitCachesDic
-{
-    return self.resubmitDataDic;
-}
+//-(void)setResubmitCaches:(NSDictionary *)dic
+//{
+//    self.resubmitDataDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+//}
+//-(void)changeResubmitCache:(NSDictionary *)dic
+//{
+//    self.resubmitDataDic = [NSMutableDictionary dictionaryWithDictionary:[self getResubmitCachesDic]];
+//    [self.resubmitDataDic setValue:dic.allValues[0] forKey:dic.allKeys[0]];
+//}
+//- (NSDictionary * )getResubmitCachesDic
+//{
+//    return self.resubmitDataDic;
+//}
 
 - (void)setWorkCondition:(NSArray *)disArr
 {
@@ -201,22 +199,11 @@ static ZEPointRegCache * pointRegCahe = nil;
 }
 
 /**
- *  清空审核修改数据
- */
--(void)clearResubmitCaches
-{
-    [self.resubmitDataDic removeAllObjects];
-    self.resubmitDataDic = nil;
-    self.leaderOptionDic = nil;
-}
-
-/**
  *  清除用户选择过的信息
  */
 -(void)clearUserOptions
 {
     _optionDic          = nil;    // 用户选择信息缓存
-    _resubmitDataDic    = nil;
 }
 
 /**
@@ -227,7 +214,6 @@ static ZEPointRegCache * pointRegCahe = nil;
 {
     _taskCachesArr         = nil;//  任务列表缓存
     _optionDic             = nil;// 用户选择信息缓存
-    _resubmitDataDic       = nil;
     _RATIONTYPEVALUEDic    = nil;
     _allTaskCachesArr      = nil;
     _distributionTypeArr   = nil;

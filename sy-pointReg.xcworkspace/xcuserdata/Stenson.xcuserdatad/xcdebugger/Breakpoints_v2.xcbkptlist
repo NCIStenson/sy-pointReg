@@ -52,7 +52,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sy-pointReg/PointRegistration/ZECalculateTotalPoint.m"
-            timestampString = "495164856.93587"
+            timestampString = "498626199.630684"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "348"
@@ -82,11 +82,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sy-pointReg/LeaderReg/ZELeaderRegVC.m"
-            timestampString = "498465874.448534"
+            timestampString = "498623389.471282"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "762"
-            endingLineNumber = "762"
+            startingLineNumber = "802"
+            endingLineNumber = "802"
             landmarkName = "-updateAuditMessageToServer"
             landmarkType = "7">
          </BreakpointContent>
@@ -110,48 +110,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sy-pointReg/PointRegistration/ZEPointRegistrationView.m"
-            timestampString = "498472310.896653"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "925"
-            endingLineNumber = "925"
-            landmarkName = "-didSelectOption:withRow:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sy-pointReg/PointRegistration/ZEPointRegistrationVC.m"
-            timestampString = "498472093.022672"
+            timestampString = "498631674.262857"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "414"
-            endingLineNumber = "414"
-            landmarkName = "-submitMessageToServer"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sy-pointReg/PointRegistration/ZEPointRegistrationVC.m"
-            timestampString = "498472104.230783"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "399"
-            endingLineNumber = "399"
-            landmarkName = "-submitMessageToServer"
+            startingLineNumber = "561"
+            endingLineNumber = "561"
+            landmarkName = "-updateMessageToServer"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

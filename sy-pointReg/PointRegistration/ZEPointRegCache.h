@@ -73,9 +73,9 @@
  *
  *  @param dic 历史数据信息
  */
--(void)setResubmitCache:(NSDictionary *)dic;
--(void)changeResubmitCache:(NSDictionary *)dic;
-- (NSDictionary * )getResubmitCachesDic;
+//-(void)setResubmitCache:(NSDictionary *)dic;
+//-(void)changeResubmitCache:(NSDictionary *)dic;
+//- (NSDictionary * )getResubmitCachesDic;
 
 /**
  *  @author Zenith Electronic, 16-02-23 14:02:17
@@ -86,11 +86,6 @@
  */
 - (void)setWorkCondition:(NSArray *)disArr;
 - (NSArray *)getWorkCondition;
-
-/**
- *  清空审核修改数据
- */
--(void)clearResubmitCaches;
 
 /**
  *  清除用户选择过的信息

@@ -61,7 +61,6 @@
 		987013D41D70252400CBD1B2 /* ZEFormulaStringCalcUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 987013D31D70252400CBD1B2 /* ZEFormulaStringCalcUtility.m */; };
 		987013D71D703C4C00CBD1B2 /* ZELeaderRegVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 987013D61D703C4C00CBD1B2 /* ZELeaderRegVC.m */; };
 		987013DA1D703CC400CBD1B2 /* ZELeaderRegView.m in Sources */ = {isa = PBXBuildFile; fileRef = 987013D91D703CC400CBD1B2 /* ZELeaderRegView.m */; };
-		987013DD1D73CA0300CBD1B2 /* ZECacheParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 987013DC1D73CA0300CBD1B2 /* ZECacheParameters.m */; };
 		987013E01D7423F500CBD1B2 /* ZEChooseWorkerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 987013DF1D7423F500CBD1B2 /* ZEChooseWorkerView.m */; };
 		987B34A01C50CE540035FB6B /* ZEPointRegCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 987B349F1C50CE540035FB6B /* ZEPointRegCache.m */; };
 		987B34A31C50D54B0035FB6B /* ZEPointRegChooseDateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 987B34A21C50D54B0035FB6B /* ZEPointRegChooseDateView.m */; };
@@ -210,8 +209,6 @@
 		987013D61D703C4C00CBD1B2 /* ZELeaderRegVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZELeaderRegVC.m; path = LeaderReg/ZELeaderRegVC.m; sourceTree = "<group>"; };
 		987013D81D703CC400CBD1B2 /* ZELeaderRegView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZELeaderRegView.h; path = LeaderReg/ZELeaderRegView.h; sourceTree = "<group>"; };
 		987013D91D703CC400CBD1B2 /* ZELeaderRegView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZELeaderRegView.m; path = LeaderReg/ZELeaderRegView.m; sourceTree = "<group>"; };
-		987013DB1D73CA0300CBD1B2 /* ZECacheParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZECacheParameters.h; path = CommonUtil/ZECacheParameters.h; sourceTree = "<group>"; };
-		987013DC1D73CA0300CBD1B2 /* ZECacheParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZECacheParameters.m; path = CommonUtil/ZECacheParameters.m; sourceTree = "<group>"; };
 		987013DE1D7423F500CBD1B2 /* ZEChooseWorkerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEChooseWorkerView.h; path = LeaderReg/ZEChooseWorkerView.h; sourceTree = "<group>"; };
 		987013DF1D7423F500CBD1B2 /* ZEChooseWorkerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEChooseWorkerView.m; path = LeaderReg/ZEChooseWorkerView.m; sourceTree = "<group>"; };
 		987B349E1C50CE540035FB6B /* ZEPointRegCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEPointRegCache.h; path = PointRegistration/ZEPointRegCache.h; sourceTree = "<group>"; };
@@ -603,8 +600,6 @@
 				987013D01D7015B900CBD1B2 /* ZECalculateTotalPoint.m */,
 				987013DE1D7423F500CBD1B2 /* ZEChooseWorkerView.h */,
 				987013DF1D7423F500CBD1B2 /* ZEChooseWorkerView.m */,
-				987013DB1D73CA0300CBD1B2 /* ZECacheParameters.h */,
-				987013DC1D73CA0300CBD1B2 /* ZECacheParameters.m */,
 			);
 			name = LeaderReg;
 			sourceTree = "<group>";
@@ -901,7 +896,6 @@
 			files = (
 				98D965E31D87D01300BC1216 /* SvUDIDTools.m in Sources */,
 				981F30251CE05C0800F39537 /* ZESettingVC.m in Sources */,
-				987013DD1D73CA0300CBD1B2 /* ZECacheParameters.m in Sources */,
 				98DB7C501C4F4FA70046D405 /* ZEUtil.m in Sources */,
 				98AEA3551CD1AFCC001C4AED /* ZEUserCenterVC.m in Sources */,
 				98947EA81D6C44A100D1EE24 /* ZEV_EPM_TEAM_RATION_APP.m in Sources */,

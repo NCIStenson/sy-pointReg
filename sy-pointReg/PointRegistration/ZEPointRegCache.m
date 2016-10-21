@@ -280,7 +280,7 @@ static ZEPointRegCache * pointRegCahe = nil;
     NSDictionary * parametersDic = @{@"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATIONTYPEDETAIL,
                                      @"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"DISPLAYORDER",
+                                     @"ORDERSQL":@"FIELDNAME",
                                      @"WHERESQL":WHERESQL,
                                      @"start":@"0",
                                      @"METHOD":@"search",

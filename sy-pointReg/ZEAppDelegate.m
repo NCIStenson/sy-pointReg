@@ -55,6 +55,14 @@
     return YES;
 }
 
+//   强制使用系统输入法
+//- (BOOL)application:(UIApplication *)application shouldAllowExtensionPointIdentifier:(NSString *)extensionPointIdentifier
+//{
+//    if ([extensionPointIdentifier isEqualToString:@"com.apple.keyboard-service"]) {
+//        return NO;
+//    }
+//    return YES;
+//}
 
 
 - (void)applicationWillResignActive:(UIApplication *)application {

@@ -65,7 +65,8 @@
 withDefaultDetailArr:(NSArray *)arr
 withRecordLengthArr:(NSArray *)lengthArr
 withRationTypeValue:(NSArray *)rationTypeArr
-     withEnterType:(ENTER_PERSON_POINTREG_TYPE)type;
+     withEnterType:(ENTER_PERSON_POINTREG_TYPE)type
+  withPointRegType:(ENTER_POINTREG_TYPE)pointRegType;
 
 -(void)showListView:(NSArray *)listArr withLevel:(TASK_LIST_LEVEL)level withPointReg:(POINT_REG)pointReg;
 /**

@@ -72,7 +72,7 @@
                                      @"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATION_REG,
                                      @"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"ENDDATE",
+                                     @"ORDERSQL":@"SYSCREATEDATE desc",
                                      @"WHERESQL":@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#' and status in ('10')",
                                      @"METHOD":@"search",
                                      @"DETAILTABLE":@"",
@@ -142,7 +142,7 @@
                                      @"MENUAPP":@"EMARK_APP",
                                      @"WHERESQL":@"",
                                      @"METHOD":@"delete",
-                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
+                                     @"DETAILTABLE":[NSString stringWithFormat:@"%@,%@",EPM_TEAM_RATION_REG_DETAIL,EPM_TEAM_RATION_REG_SX],
                                      @"MASTERFIELD":@"SEQKEY",
                                      @"DETAILFIELD":@"TASKID",
                                      @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
@@ -229,7 +229,8 @@
     
     if ([model.SELF isEqualToString:@"self"]) {
         ZEPointRegistrationVC * pointRegVC = [[ZEPointRegistrationVC alloc]init];
-        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
+        pointRegVC.pointRegType = ENTER_POINTREG_TYPE_PERSON_AUDIT;
+        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_AUDIT;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
         pointRegVC.recordLengthArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_SX];
@@ -237,7 +238,8 @@
         [self.navigationController pushViewController:pointRegVC animated:YES];
     }else if([model.SELF isEqualToString:@"leader"]){
         ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
-        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
+        pointRegVC.pointRegType = ENTER_POINTREG_TYPE_CHARGE_AUDIT;
+        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_AUDIT;
         pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_CHARGE;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
@@ -246,7 +248,8 @@
         [self.navigationController pushViewController:pointRegVC animated:YES];
     }else{
         ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
-        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
+        pointRegVC.pointRegType = ENTER_POINTREG_TYPE_LEADER_AUDIT;
+        pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_AUDIT;
         pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_LEADER;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];

@@ -15,6 +15,8 @@
 
 @property (nonatomic,assign) ENTER_PERSON_POINTREG_TYPE regType;
 
+@property (nonatomic,assign) ENTER_POINTREG_TYPE pointRegType; // 是否显示各项系数
+
 @property (nonnull,nonatomic,strong) NSDictionary * defaultDic;
 @property (nonnull,nonatomic,strong) NSArray * defaultDetailArr;
 

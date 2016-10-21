@@ -56,7 +56,7 @@
                                      @"limit":@"2000",
                                      @"MASTERTABLE":V_EPM_TEAM_RATION_REG_PERSUM,
                                      @"MENUAPP":@"EMARK_APP",
-                                     @"WHERESQL":[NSString stringWithFormat:@"psnnum='%@' and suitunit='%@' AND PERIODCODE='201609'",[ZESettingLocalData getUSERCODE],@"SYBDYWS"],
+                                     @"WHERESQL":[NSString stringWithFormat:@"psnnum='%@' and suitunit='SYBDYWS' AND PERIODCODE='%@'",[ZESettingLocalData getUSERCODE],[ZEUtil getCurrentMonth]],
                                      @"METHOD":@"search",
                                      @"DETAILTABLE":@"",
                                      @"MASTERFIELD":@"SEQKEY",

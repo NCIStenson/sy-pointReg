@@ -42,7 +42,8 @@
                                           withDefaultDetailArr:_defaultDetailArr
                                            withRecordLengthArr:_recordLengthArr
                                            withRationTypeValue:_rationTypeValueArr
-                                                 withEnterType:_regType];
+                                                 withEnterType:_regType
+                                              withPointRegType:_pointRegType];
     _pointView.delegate = self;
     [self.view addSubview:_pointView];
     

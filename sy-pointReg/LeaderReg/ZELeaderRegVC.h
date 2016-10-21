@@ -12,6 +12,8 @@
 
 @property (nonatomic,assign) ENTER_PERSON_POINTREG_TYPE regType; // 审核修改或者 历史修改
 
+@property (nonatomic,assign) ENTER_POINTREG_TYPE pointRegType; // 是否显示各项系数
+
 @property (nonatomic,assign) ENTER_MANYPERSON_POINTREG_TYPE isLeaderOrCharge; // 负责人录入或者班组长录入
 
 @property (nonnull,nonatomic,strong) NSDictionary * defaultDic;

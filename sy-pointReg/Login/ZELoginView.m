@@ -209,11 +209,11 @@
 {
     if (IPHONE5) {
         [UIView animateWithDuration:0.29 animations:^{
-            self.frame = CGRectMake(0, -100, SCREEN_WIDTH, SCREEN_HEIGHT);
+            self.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         } completion:nil];
     }else if (IPHONE4S_LESS) {
         [UIView animateWithDuration:0.29 animations:^{
-            self.frame = CGRectMake(0, -150, SCREEN_WIDTH, SCREEN_HEIGHT);
+            self.frame = CGRectMake(0, 50, SCREEN_WIDTH, SCREEN_HEIGHT);
         } completion:nil];
     }
 }

@@ -70,7 +70,7 @@
                                      @"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATION_REG,
                                      @"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"ENDDATE DESC",
+                                     @"ORDERSQL":@"SYSCREATEDATE DESC",
                                      @"WHERESQL":@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#'",
                                      @"METHOD":@"search",
                                      @"DETAILTABLE":@"",
@@ -125,7 +125,7 @@
                                      @"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATION_REG,
                                      @"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"ENDDATE DESC",
+                                     @"ORDERSQL":@"SYSCREATEDATE DESC",
                                      @"WHERESQL":whereSQL,
                                      @"METHOD":@"search",
                                      @"DETAILTABLE":@"",
@@ -224,7 +224,7 @@
 {
 
     NSDictionary * parametersDic = @{@"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"SYSCREATEDATE",
+                                     @"ORDERSQL":@"",
                                      @"WHERESQL":[NSString stringWithFormat:@"SEQKEY=%@",seqkey],
                                      @"METHOD":@"search",
                                      @"MASTERTABLE":EPM_TEAM_RATION_REG,
@@ -284,6 +284,7 @@
 
     if ([model.SELF isEqualToString:@"self"]) {
         ZEPointRegistrationVC * pointRegVC = [[ZEPointRegistrationVC alloc]init];
+        pointRegVC.pointRegType = ENTER_POINTREG_TYPE_PERSON;
         pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
@@ -292,6 +293,7 @@
         [self.navigationController pushViewController:pointRegVC animated:YES];
     }else if([model.SELF isEqualToString:@"leader"]){
         ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
+        pointRegVC.pointRegType = ENTER_POINTREG_TYPE_CHARGE;
         pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
         pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_CHARGE;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
@@ -302,6 +304,7 @@
     }else{
         ZELeaderRegVC * pointRegVC = [[ZELeaderRegVC alloc]init];
         pointRegVC.regType = ENTER_PERSON_POINTREG_TYPE_HISTORY;
+        pointRegVC.pointRegType = ENTER_POINTREG_TYPE_LEADER;
         pointRegVC.isLeaderOrCharge = ENTER_MANYPERSON_POINTREG_TYPE_LEADER;
         pointRegVC.defaultDic = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG][0] ;
         pointRegVC.defaultDetailArr = [ZEUtil getServerData:dic withTabelName:EPM_TEAM_RATION_REG_DETAIL];
@@ -317,7 +320,7 @@
                                      @"MENUAPP":@"EMARK_APP",
                                      @"WHERESQL":@"",
                                      @"METHOD":@"delete",
-                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
+                                     @"DETAILTABLE":[NSString stringWithFormat:@"%@,%@",EPM_TEAM_RATION_REG_DETAIL,EPM_TEAM_RATION_REG_SX],
                                      @"MASTERFIELD":@"SEQKEY",
                                      @"DETAILFIELD":@"TASKID",
                                      @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",

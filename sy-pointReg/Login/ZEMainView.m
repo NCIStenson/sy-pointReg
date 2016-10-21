@@ -74,6 +74,10 @@
     _titleLabel.font              = [UIFont systemFontOfSize:22.0f];
     _titleLabel.text              = @"工时登记";
     [navBar addSubview:_titleLabel];
+    
+    if ([Zenith_Server isEqualToString:@"http://120.27.152.63:7001/emarkspg_sy"]) {
+        _titleLabel.text              = @"测试版本";
+    }
 
     [self addSubview:navBar];
     

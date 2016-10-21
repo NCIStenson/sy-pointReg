@@ -98,7 +98,8 @@
                                       withDefaultDetailArr:_defaultDetailArr
                                        withRecordLengthArr:_recordLengthArr
                                        withRationTypeValue:_rationTypeValueArr
-                                             withEnterType:_regType];
+                                             withEnterType:_regType
+                                          withPointRegType:_pointRegType];
     _leaderRegView.delegate = self;
     [self.view addSubview:_leaderRegView];
     [self.view sendSubviewToBack:_leaderRegView];
@@ -484,6 +485,7 @@
 
 -(void)submitMessageToServer
 {
+    NSLog(@" ===================   \n   %@  \n ====================",_leaderRegView.USERCHOOSEDWORKERVALUEARR);
     NSString * status = @"";
     NSString * isSelf = @"";
     if (_isLeaderOrCharge == ENTER_MANYPERSON_POINTREG_TYPE_LEADER) {
@@ -733,76 +735,6 @@
     ZEEPM_TEAM_RATION_COMMON * taskDetailM = [ZEEPM_TEAM_RATION_COMMON getDetailWithDic:choosedTaskDic];
     
     NSString * dateStr = [[[ZEPointRegCache instance] getUserChoosedOptionDic] objectForKey:[ZEUtil getPointRegField:POINT_REG_DATE]];
-    
-//    NSMutableDictionary * defaultDic = [NSMutableDictionary dictionaryWithDictionary: @{@"ENDDATE":dateStr,
-//                                                                                        @"RATIONNAME":taskDetailM.RATIONNAME,
-//                                                                                        @"STDSCORE":taskDetailM.STDSCORE,
-//                                                                                        @"RATIONTYPE":taskDetailM.RATIONTYPE,
-//                                                                                        @"RATIONCODE":taskDetailM.RATIONCODE,
-//                                                                                        @"RATIONID":taskDetailM.SEQKEY,
-//                                                                                        @"ADDMODE":kLEADERPOINTREG,
-//                                                                                        @"STATUS":@"8",
-//                                                                                        @"SEQKEY":[_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:@"SEQKEY"]}];
-//    
-//    //  添加工作对象名称
-//    NSDictionary * conditionDic = [[[ZEPointRegCache instance] getUserChoosedOptionDic] objectForKey:[ZEUtil getPointRegField:POINT_REG_CONDITION]];
-//    if ([ZEUtil isNotNull:conditionDic]) {
-//        [defaultDic setObject:[conditionDic objectForKey:@"WORKPLACE"] forKey:@"WORKPLACE"];
-//    }else{
-//        [defaultDic setObject:@""forKey:@"WORKPLACE"];
-//    }
-//
-//    for (NSInteger i = 0 ; i < _leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {
-//        NSString * keyStr = _leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i];
-//        
-//        if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
-//            [defaultDic setObject:[_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:_leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]] forKey:_leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]];
-//        }
-//    }
-//    NSMutableArray * personalArr = [NSMutableArray array];
-//    NSMutableArray * tableNameArr = [NSMutableArray arrayWithObject:EPM_TEAM_RATION_REG];
-//    
-//    for (NSInteger i = 0; i < _leaderRegView.USERCHOOSEDWORKERVALUEARR.count; i ++) {
-//        NSDictionary * dic = _leaderRegView.USERCHOOSEDWORKERVALUEARR[i];
-//        NSMutableDictionary * personalDic =  [NSMutableDictionary dictionaryWithDictionary: @{@"STATUS":[ZESettingLocalData getISLEADER] ?@"1" : @"8",
-//                                                                                              @"SEQKEY":[dic objectForKey:@"SEQKEY"],
-//                                                                                              @"WORKPOINTS":[dic objectForKey:@"WORKPOINTS"],
-//                                                                                              @"TASKID":@"",
-//                                                                                              @"SUMPOINTS":[dic objectForKey:@"SUMPOINTS"],
-//                                                                                              @"DESCR":[dic objectForKey:@"DESCR"],
-//                                                                                              @"PSNNUM":[dic objectForKey:@"PSNNUM"],
-//                                                                                              @"PSNNAME":[dic objectForKey:@"PSNNAME"],
-//                                                                                              @"SUMPOINTS":[dic objectForKey:@"SUMPOINTS"],
-//                                                                                              }];
-//        if (![ZEUtil strIsEmpty:[NSString stringWithFormat:@"%@",[ZESettingLocalData getKValue]]]) {
-//            [personalDic setObject:[ZESettingLocalData getKValue] forKey:@"K"];
-//        }
-//        
-//        for (NSInteger j = 0 ; j < dic.allKeys.count ; j++) {
-//            NSString * keyStr = dic.allKeys[j];
-//            if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
-//                [personalDic setObject:[dic objectForKey:dic.allKeys[j]] forKey:keyStr];
-//            }
-//        }
-//        [personalArr addObject:personalDic];
-//        [tableNameArr addObject:EPM_TEAM_RATION_REG_DETAIL];
-//    }
-//    for (int i = 0; i < _leaderRegView.recordLengthArr.count; i ++) {
-//        [tableNameArr addObject:EPM_TEAM_RATION_REG_SX];
-//        
-//        ZEEPM_TEAM_RATION_REGModel * recordLengthM = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:_leaderRegView.recordLengthArr[i]];
-//        
-//        NSMutableDictionary * personalDic =  [NSMutableDictionary dictionary];
-//        [personalDic setObject:recordLengthM.WORKINGPROCEDURE forKey:@"WORKINGPROCEDURE"];
-//        [personalDic setObject:recordLengthM.STANDARDOPERATIONTIME forKey:@"STANDARDOPERATIONTIME"];
-//        [personalArr addObject:personalDic];
-//    }
-//    [personalArr insertObject:defaultDic atIndex:0];
-//    
-//    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:tableNameArr
-//                                                                           withFields:personalArr
-//                                                                       withPARAMETERS:parametersDic
-//                                                                       withActionFlag:nil];
     
     NSMutableDictionary * defaultDic = [NSMutableDictionary dictionaryWithDictionary: @{@"ENDDATE":dateStr,
                                                                                         @"RATIONNAME":taskDetailM.RATIONNAME,

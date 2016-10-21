@@ -45,6 +45,7 @@
     JCAlertView * _alertView;
     
     ENTER_PERSON_POINTREG_TYPE _enterType;
+    ENTER_POINTREG_TYPE _pointType;
     
     BOOL _showRecordLen;  // 是否展示实录工序时长
     UIButton * _showRecordLengthBtn;
@@ -68,7 +69,8 @@
 withDefaultDetailArr:(NSArray *)arr
 withRecordLengthArr:(NSArray *)lengthArr
 withRationTypeValue:(NSArray *)rationTypeArr
-     withEnterType:(ENTER_PERSON_POINTREG_TYPE)type;
+     withEnterType:(ENTER_PERSON_POINTREG_TYPE)type
+  withPointRegType:(ENTER_POINTREG_TYPE)pointRegType;
 {
     self = [super initWithFrame:rect];
     if (self) {
@@ -79,6 +81,8 @@ withRationTypeValue:(NSArray *)rationTypeArr
         self.rationTypeValueArr = rationTypeArr;
         
         _enterType = type;
+        _pointType = pointRegType;
+        
         if (_enterType != ENTER_PERSON_POINTREG_TYPE_DEFAULT) {
             [self initDefaultData];
         }
@@ -93,14 +97,10 @@ withRationTypeValue:(NSArray *)rationTypeArr
     _contentTableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
     _contentTableView.delegate = self;
     _contentTableView.dataSource = self;
+    _contentTableView.frame = CGRectMake(kContentViewMarginLeft, kContentViewMarginTop, kContentViewWidth, kContentViewHeight);
     _contentTableView.backgroundColor = [UIColor clearColor];
     _contentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self addSubview:_contentTableView];
-    [_contentTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.offset(kContentViewMarginLeft);
-        make.top.offset(kContentViewMarginTop);
-        make.size.mas_equalTo(CGSizeMake(kContentViewWidth, kContentViewHeight));
-    }];
     
     _showRecordLengthBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     _showRecordLengthBtn.frame = CGRectMake(-1, SCREEN_HEIGHT - 44, SCREEN_WIDTH +2, 45);
@@ -109,7 +109,57 @@ withRationTypeValue:(NSArray *)rationTypeArr
     [_showRecordLengthBtn addTarget:self action:@selector(showRecordContent) forControlEvents:UIControlEventTouchUpInside];
     _showRecordLengthBtn.layer.borderWidth = 1;
     _showRecordLengthBtn.layer.borderColor = [MAIN_LINE_COLOR CGColor];
+    //增加监听，当键盘出现或改变时收出消息
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    
+    //增加监听，当键退出时收出消息
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
 }
+
+//当键盘出现或改变时调用
+- (void)keyboardWillShow:(NSNotification *)aNotification
+{
+    //获取键盘的高度
+    CGRect begin = [[[aNotification userInfo] objectForKey:@"UIKeyboardFrameBeginUserInfoKey"] CGRectValue];
+    
+    CGRect end = [[[aNotification userInfo] objectForKey:@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
+    
+    if(begin.size.height > 0 && (end.size.height - begin.size.height > 0)){
+        [UIView animateWithDuration:0.29 animations:^{
+            _contentTableView.frame = CGRectMake(kContentViewMarginLeft, kContentViewMarginTop, kContentViewWidth, kContentViewHeight - 282 + 45);
+        }];
+    }else{
+        [UIView animateWithDuration:0.29 animations:^{
+            _contentTableView.frame = CGRectMake(kContentViewMarginLeft, kContentViewMarginTop, kContentViewWidth, kContentViewHeight - 216 + 45);
+        }];
+
+    }
+}
+
+//当键退出时调用
+- (void)keyboardWillHide:(NSNotification *)aNotification
+{
+    [UIView animateWithDuration:0.29 animations:^{
+        if (_showRecordLen) {
+            _contentTableView.frame = CGRectMake(kContentViewMarginLeft, kContentViewMarginTop, kContentViewWidth, kContentViewHeight + 45);
+        }else{
+            _contentTableView.frame = CGRectMake(kContentViewMarginLeft, kContentViewMarginTop, kContentViewWidth, kContentViewHeight);
+        }
+    
+    }];
+}
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+}
+
 #pragma mark - PublicMethod
 
 -(void)reloadContentView
@@ -179,11 +229,7 @@ withRationTypeValue:(NSArray *)rationTypeArr
         if ([ZEUtil isStrNotEmpty:model.DISRANGE]) {
             BOOL _canAdd = NO;
             for (NSString * str in [model.DISRANGE componentsSeparatedByString:@","]) {
-                if ([str integerValue] == 4 && _enterType == ENTER_PERSON_POINTREG_TYPE_AUDIT) {
-                    _canAdd =YES;
-                }else if ([str integerValue] == 1 && _enterType == ENTER_PERSON_POINTREG_TYPE_DEFAULT){
-                    _canAdd = YES;
-                }else if ([str integerValue] == 1 && _enterType == ENTER_PERSON_POINTREG_TYPE_HISTORY){
+                if ([str integerValue] == _pointType){
                     _canAdd = YES;
                 }
             }
@@ -210,7 +256,12 @@ withRationTypeValue:(NSArray *)rationTypeArr
     [self.CHOOSEDRATIONTYPEVALUEDic setObject:taskDetailM.SEQKEY forKey:@"SEQKEY"];
     for (NSDictionary * dic in self.commmonRationTypeValueArr) {
         ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:dic];
-        if (![detailM.FIELDEDITOR boolValue]) {
+        if ([detailM.FIELDEDITOR boolValue]) {
+            NSString * quotiety = [choosedTaskDic objectForKey:[detailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+            
+            NSDictionary * dic = @{detailM.FIELDNAME:quotiety};
+            [self.CHOOSEDRATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
+        }else{
             NSDictionary * valueDic = [[ZEPointRegCache instance] getRATIONTYPEVALUE];
 //            //          展示默认的选项值
             NSArray * getDefaulArr = [valueDic objectForKey:detailM.FIELDNAME];
@@ -229,21 +280,35 @@ withRationTypeValue:(NSArray *)rationTypeArr
                 }
             }
             
+            BOOL hasGetServerValue = NO;
             for (NSDictionary * valueDetailDic in getDefaulArr) {
                 ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:valueDetailDic];
                 NSString * quotiety = [self.CHOOSEDRATIONTYPEVALUEDic objectForKey:[detailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
                 if ([valueModel.QUOTIETY floatValue] == [quotiety floatValue]) {
+                    hasGetServerValue = YES;
                     NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
                     [self.CHOOSEDRATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
                     break;
                 }
             }
-
-        }else{
-            NSString * quotiety = [choosedTaskDic objectForKey:[detailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
-            
-            NSDictionary * dic = @{detailM.FIELDNAME:quotiety};
-            [self.CHOOSEDRATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
+            if (!hasGetServerValue) {
+                for (NSDictionary * valueDetailDic in getDefaulArr) {
+                    ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:valueDetailDic];
+                    
+                    BOOL hasDefault = NO;
+                    if ([valueModel.DEFAULTCODE isEqualToString:@"true"]) {
+                        hasDefault = YES;
+                        NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
+                        [self.CHOOSEDRATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
+                        break;
+                    }
+                    // 如果没有设置默认选项 就把返回数据第一组设置成默认对象
+                    if ([valueDetailDic isEqualToDictionary:[getDefaulArr lastObject]] && !hasDefault) {
+                        NSDictionary * dic = @{detailM.FIELDNAME:[getDefaulArr firstObject]};
+                        [self.CHOOSEDRATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
+                    }
+                }
+            }
         }
     }
     if (_USERCHOOSEDWORKERVALUEARR.count > 0) {
@@ -252,7 +317,13 @@ withRationTypeValue:(NSArray *)rationTypeArr
             
             for (NSDictionary * dic in self.personalRationTypeValueArr) {
                 ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:dic];
-                if (![detailM.FIELDEDITOR boolValue]) {
+                if ([detailM.FIELDEDITOR boolValue]) {
+                    NSString * quotiety = [defaultDetailDic objectForKey:[detailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+                    
+                    NSDictionary * dic = @{detailM.FIELDNAME:quotiety};
+                    
+                    [defaultDetailDic setValuesForKeysWithDictionary:dic];
+                }else{
                     NSDictionary * valueDic = [[ZEPointRegCache instance] getRATIONTYPEVALUE];
                     //          展示默认的选项值
                     if ([[valueDic objectForKey:detailM.FIELDNAME] isKindOfClass:[NSArray class]]) {
@@ -272,22 +343,36 @@ withRationTypeValue:(NSArray *)rationTypeArr
                             }
                         }
                         //  与服务器返回系数对比 获取到当前页面应该展示的 下拉框数据
+                        BOOL hasGetServerValue = NO;
                         for (NSDictionary * valueDetailDic in getDefaulArr) {
                             ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:valueDetailDic];
                             NSString * quotiety = [defaultDetailDic objectForKey:[detailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
                             if ([valueModel.QUOTIETY floatValue] == [quotiety floatValue]) {
+                                hasGetServerValue = YES;
                                 NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
                                 [defaultDetailDic setValuesForKeysWithDictionary:dic];
                                 break;
                             }
                         }
+                        if (!hasGetServerValue) {
+                            for (NSDictionary * valueDetailDic in getDefaulArr) {
+                                ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:valueDetailDic];
+                                
+                                BOOL hasDefault = NO;
+                                if ([valueModel.DEFAULTCODE isEqualToString:@"true"]) {
+                                    hasDefault = YES;
+                                    NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
+                                    [defaultDetailDic setValuesForKeysWithDictionary:dic];
+                                    break;
+                                }
+                                // 如果没有设置默认选项 就把返回数据第一组设置成默认对象
+                                if ([valueDetailDic isEqualToDictionary:[getDefaulArr lastObject]] && !hasDefault) {
+                                    NSDictionary * dic = @{detailM.FIELDNAME:[getDefaulArr firstObject]};
+                                    [defaultDetailDic setValuesForKeysWithDictionary:dic];
+                                }
+                            }
+                        }
                     }
-                }else{
-                    NSString * quotiety = [defaultDetailDic objectForKey:[detailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
-                    
-                    NSDictionary * dic = @{detailM.FIELDNAME:quotiety};
-                    
-                    [defaultDetailDic setValuesForKeysWithDictionary:dic];
                 }
             }
             
@@ -352,11 +437,7 @@ withRationTypeValue:(NSArray *)rationTypeArr
         if ([ZEUtil isStrNotEmpty:model.DISRANGE]) {
             BOOL _canAdd = NO;
             for (NSString * str in [model.DISRANGE componentsSeparatedByString:@","]) {
-                if ([str integerValue] == 4 && _enterType == ENTER_PERSON_POINTREG_TYPE_AUDIT) {
-                    _canAdd =YES;
-                }else if ([str integerValue] == 1 && _enterType == ENTER_PERSON_POINTREG_TYPE_DEFAULT){
-                    _canAdd = YES;
-                }else if ([str integerValue] == 1 && _enterType == ENTER_PERSON_POINTREG_TYPE_HISTORY){
+                if ([str integerValue] == _pointType){
                     _canAdd = YES;
                 }
             }
@@ -380,7 +461,10 @@ withRationTypeValue:(NSArray *)rationTypeArr
 {
     for (NSDictionary * dic in self.commmonRationTypeValueArr) {
         ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:dic];
-        if (![detailM.FIELDEDITOR boolValue]) {
+        if ([detailM.FIELDEDITOR boolValue]) {
+            NSDictionary * dic = @{detailM.FIELDNAME:@"1"};
+            [self.CHOOSEDRATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
+        }else{
             NSDictionary * valueDic = [[ZEPointRegCache instance] getRATIONTYPEVALUE];
             //          展示默认的选项值
             if ([[valueDic objectForKey:detailM.FIELDNAME] isKindOfClass:[NSArray class]]) {
@@ -402,7 +486,7 @@ withRationTypeValue:(NSArray *)rationTypeArr
                 
                 for (NSDictionary * valueDetailDic in getDefaulArr) {
                     ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:valueDetailDic];
-                    BOOL hasDefault;
+                    BOOL hasDefault = NO;
                     if ([valueModel.DEFAULTCODE isEqualToString:@"true"]) {
                         hasDefault = YES;
                         NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
@@ -416,9 +500,6 @@ withRationTypeValue:(NSArray *)rationTypeArr
                     }
                 }
             }
-        }else{
-            NSDictionary * dic = @{detailM.FIELDNAME:@"1"};
-            [self.CHOOSEDRATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
         }
     }
     
@@ -430,7 +511,10 @@ withRationTypeValue:(NSArray *)rationTypeArr
         
         for (NSDictionary * dic in self.personalRationTypeValueArr) {
             ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:dic];
-            if (![detailM.FIELDEDITOR boolValue]) {
+            if ([detailM.FIELDEDITOR boolValue]) {
+                NSDictionary * dic = @{detailM.FIELDNAME:@"1"};
+                [defaultDic setValuesForKeysWithDictionary:dic];
+            }else{
                 NSDictionary * valueDic = [[ZEPointRegCache instance] getRATIONTYPEVALUE];
                 //          展示默认的选项值
                 if ([[valueDic objectForKey:detailM.FIELDNAME] isKindOfClass:[NSArray class]]) {
@@ -449,7 +533,7 @@ withRationTypeValue:(NSArray *)rationTypeArr
                     
                     for (NSDictionary * valueDetailDic in getDefaulArr) {
                         ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:valueDetailDic];
-                        BOOL hasDefault;
+                        BOOL hasDefault = NO;
                         if ([valueModel.DEFAULTCODE isEqualToString:@"true"]) {
                             hasDefault = YES;
                             NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
@@ -463,9 +547,6 @@ withRationTypeValue:(NSArray *)rationTypeArr
                         }
                     }
                 }
-            }else{
-                NSDictionary * dic = @{detailM.FIELDNAME:@"1"};
-                [defaultDic setValuesForKeysWithDictionary:dic];
             }
         }
         [defaultDic setValue:@"0" forKey:@"WORKPOINTS"];
@@ -514,20 +595,16 @@ withRationTypeValue:(NSArray *)rationTypeArr
     _showRecordLen = !_showRecordLen;
     if (_showRecordLen) {
         _showRecordLengthBtn.hidden = YES;
-        [_contentTableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.offset(kContentViewMarginLeft);
-            make.top.offset(kContentViewMarginTop);
-            make.size.mas_equalTo(CGSizeMake(kContentViewWidth, kContentViewHeight + 45));
-        }];
+        _contentTableView.frame = CGRectMake(kContentViewMarginLeft, kContentViewMarginTop, kContentViewWidth, kContentViewHeight + 45);
     }else{
         _showRecordLengthBtn.hidden = NO;
-        [_contentTableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.offset(kContentViewMarginLeft);
-            make.top.offset(kContentViewMarginTop);
-            make.size.mas_equalTo(CGSizeMake(kContentViewWidth, kContentViewHeight));
-        }];
+        _contentTableView.frame = CGRectMake(kContentViewMarginLeft, kContentViewMarginTop, kContentViewWidth, kContentViewHeight);
     }
     [_contentTableView reloadData];
+    if (_showRecordLengthBtn.hidden && self.recordLengthArr.count > 0) {
+        NSIndexPath* indexPath = [NSIndexPath indexPathForRow:self.recordLengthArr.count - 1 inSection:self.USERCHOOSEDWORKERVALUEARR.count + 1];
+        [_contentTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom  animated:NO];
+    }
 }
 
 
@@ -697,7 +774,7 @@ withRationTypeValue:(NSArray *)rationTypeArr
         cell.detailTextLabel.text = @"请选择";
         
         if (row ==  3) {
-            cell.textLabel.text = @"个人说明";
+            cell.textLabel.text = @"工作说明";
             cell.detailTextLabel.text = @"";
             UITextField * field = [[UITextField alloc]initWithFrame:CGRectMake(90.0f, 0, SCREEN_WIDTH - 105.0f, 44.0f)];
             field.delegate = self;
@@ -806,8 +883,11 @@ withRationTypeValue:(NSArray *)rationTypeArr
     [self endEditing:YES];
     _currentSelectIndexPath = indexPath;
     
+    if (indexPath.section == self.USERCHOOSEDWORKERVALUEARR.count + 1) {
+        return;
+    }
+    
     if(indexPath.section == 0){
-        
         if (indexPath.row < kDefaultRows) {
             if (indexPath.row == 2) {
                 if ([self.delegate respondsToSelector:@selector(didSelectRowAtIndexpath:)]) {
@@ -1022,7 +1102,7 @@ withRationTypeValue:(NSArray *)rationTypeArr
                         
                         for (NSDictionary * valueDetailDic in getDefaulArr) {
                             ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:valueDetailDic];
-                            BOOL hasDefault;
+                            BOOL hasDefault = NO;
                             if ([valueModel.DEFAULTCODE isEqualToString:@"true"]) {
                                 hasDefault = YES;
                                 NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
@@ -1077,6 +1157,13 @@ withRationTypeValue:(NSArray *)rationTypeArr
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    [UIView animateWithDuration:0.29 animations:^{
+        [_contentTableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.offset(kContentViewMarginLeft);
+            make.top.offset(kContentViewMarginTop);
+            make.size.mas_equalTo(CGSizeMake(kContentViewWidth, kContentViewHeight));
+        }];
+    }];
     return YES;
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -1120,20 +1207,25 @@ withRationTypeValue:(NSArray *)rationTypeArr
     
     for (int i = 0; i < self.USERCHOOSEDWORKERVALUEARR.count; i ++) {
         NSMutableDictionary * defaultDic = [NSMutableDictionary dictionaryWithDictionary:self.USERCHOOSEDWORKERVALUEARR[i]];
+        NSMutableDictionary * middleDic = [NSMutableDictionary dictionaryWithDictionary:defaultDic];
         for (int j = 0 ; j < defaultDic.allKeys.count; j ++) {
             id object = [defaultDic objectForKey:defaultDic.allKeys[j]];
             if ([object isKindOfClass:[NSDictionary class]]) {
-                [defaultDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+                if([defaultDic.allKeys[j] rangeOfString:@"QUOTIETY"].location != NSNotFound && [defaultDic.allKeys[j] rangeOfString:@"CODE"].location != NSNotFound){
+                    [middleDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+                }
             }else{
-                [defaultDic setObject:object forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+                if([defaultDic.allKeys[j] rangeOfString:@"QUOTIETY"].location != NSNotFound && [defaultDic.allKeys[j] rangeOfString:@"CODE"].location != NSNotFound){
+                    [middleDic setObject:object forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+                }
             }
         }
-        [self.USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:i withObject:defaultDic];
+        [self.USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:i withObject:middleDic];
     }
 
     if([_CHOOSEDRATIONTYPEVALUEDic.allKeys count] > 0){
         
-        [[ZECalculateTotalPoint instance] getTotalPointTaskDic:_CHOOSEDRATIONTYPEVALUEDic withPersonalDetailArr:_USERCHOOSEDWORKERVALUEARR];
+        [[ZECalculateTotalPoint instance] getTotalPointTaskDic:self.CHOOSEDRATIONTYPEVALUEDic withPersonalDetailArr:self.USERCHOOSEDWORKERVALUEARR];
         
         NSDictionary * resultDic = [[ZECalculateTotalPoint instance] getResultDic];
         
@@ -1189,16 +1281,21 @@ withRationTypeValue:(NSArray *)rationTypeArr
     
     for (int i = 0; i < self.USERCHOOSEDWORKERVALUEARR.count; i ++) {
         NSMutableDictionary * defaultDic = [NSMutableDictionary dictionaryWithDictionary:self.USERCHOOSEDWORKERVALUEARR[i]];
+        NSMutableDictionary * middleDic = [NSMutableDictionary dictionaryWithDictionary:defaultDic];
         for (int j = 0 ; j < defaultDic.allKeys.count; j ++) {
             id object = [defaultDic objectForKey:defaultDic.allKeys[j]];
             if ([object isKindOfClass:[NSDictionary class]]) {
-                [defaultDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+                if([defaultDic.allKeys[j] rangeOfString:@"QUOTIETY"].location != NSNotFound && [defaultDic.allKeys[j] rangeOfString:@"CODE"].location != NSNotFound){
+                    [middleDic setObject:[object objectForKey:@"QUOTIETY"] forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+                }
             }else{
-                [defaultDic setObject:object forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+                if([defaultDic.allKeys[j] rangeOfString:@"QUOTIETY"].location != NSNotFound && [defaultDic.allKeys[j] rangeOfString:@"CODE"].location != NSNotFound){
+                    [middleDic setObject:object forKey:[defaultDic.allKeys[j] stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+                }
             }
         }
         
-        [self.USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:i withObject:defaultDic];
+        [self.USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:i withObject:middleDic];
     }
     
     [[ZECalculateTotalPoint instance] getTotalPointTaskDic:_CHOOSEDRATIONTYPEVALUEDic withPersonalDetailArr:_USERCHOOSEDWORKERVALUEARR];

@@ -93,6 +93,7 @@
         headerBtn.titleLabel.font = [UIFont systemFontOfSize:14];
         [backgroundView addSubview:headerBtn];
         [headerBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        headerBtn.titleLabel.numberOfLines = 0;
 
         if (i == 0) {
             headerBtn.titleLabel.font = [UIFont boldSystemFontOfSize:14];
@@ -110,13 +111,13 @@
     contentTitleView.backgroundColor = [UIColor colorWithRed:0/255.0 green:84/255.0 blue:74/255.0 alpha:0.5];
     [backgroundView addSubview:contentTitleView];
     
-    UILabel * dateLable = [[UILabel alloc]initWithFrame:CGRectMake(10, 0.0f, 90.0f, 40.0f)];
+    UILabel * dateLable = [[UILabel alloc]initWithFrame:CGRectMake(10, 0.0f, 50.0f, 40.0f)];
     dateLable.text = @"日期";
     dateLable.font = [UIFont systemFontOfSize:14];
     dateLable.textColor = kFontColor;
     [contentTitleView addSubview:dateLable];
     
-    UILabel * taskNameLable = [[UILabel alloc]initWithFrame:CGRectMake(100, 0.0f, SCREEN_WIDTH - 220, 40.0f)];
+    UILabel * taskNameLable = [[UILabel alloc]initWithFrame:CGRectMake(60, 0.0f, SCREEN_WIDTH - 180, 40.0f)];
     taskNameLable.text = @"工作项";
     taskNameLable.textAlignment = NSTextAlignmentCenter;
     taskNameLable.font = [UIFont systemFontOfSize:14];
@@ -210,14 +211,14 @@
 
     ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:self.listArr[indexPath.row]];
     
-    UILabel * dateLable = [[UILabel alloc]initWithFrame:CGRectMake(10, 0.0f, 90.0f, 40.0f)];
-    dateLable.text = model.ENDDATE;
+    UILabel * dateLable = [[UILabel alloc]initWithFrame:CGRectMake(10, 0.0f, 50.0f, 40.0f)];
+    dateLable.text = [model.ENDDATE substringFromIndex:5];
     dateLable.font = [UIFont systemFontOfSize:14];
     dateLable.textColor = kFontColor;
     [cell.contentView addSubview:dateLable];
     
     
-    UILabel * taskNameLable = [[UILabel alloc]initWithFrame:CGRectMake(100, 0.0f, SCREEN_WIDTH - 220, 40.0f)];
+    UILabel * taskNameLable = [[UILabel alloc]initWithFrame:CGRectMake(60, 0.0f, SCREEN_WIDTH - 180, 40.0f)];
     taskNameLable.text = model.RATIONNAME;
     taskNameLable.textAlignment = NSTextAlignmentCenter;
     taskNameLable.font = [UIFont systemFontOfSize:14];
@@ -240,7 +241,7 @@
     
     for (int i = 0 ;i < 3; i ++) {
         CALayer * lineLayer = [CALayer layer];
-        lineLayer.frame = CGRectMake(100, 0, 0.5f, 40.0f);
+        lineLayer.frame = CGRectMake(60, 0, 0.5f, 40.0f);
         [cell.contentView.layer addSublayer:lineLayer];
         lineLayer.backgroundColor = [MAIN_LINE_COLOR CGColor];
         

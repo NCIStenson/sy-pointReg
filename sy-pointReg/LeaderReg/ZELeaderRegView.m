@@ -104,7 +104,7 @@ withRationTypeValue:(NSArray *)rationTypeArr
     
     _showRecordLengthBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     _showRecordLengthBtn.frame = CGRectMake(-1, SCREEN_HEIGHT - 44, SCREEN_WIDTH +2, 45);
-    [_showRecordLengthBtn setTitle:@"实录工序时长" forState:UIControlStateNormal];
+    [_showRecordLengthBtn setTitle:@"实录工序时长（分钟）" forState:UIControlStateNormal];
     [self addSubview:_showRecordLengthBtn];
     [_showRecordLengthBtn addTarget:self action:@selector(showRecordContent) forControlEvents:UIControlEventTouchUpInside];
     _showRecordLengthBtn.layer.borderWidth = 1;
@@ -284,6 +284,15 @@ withRationTypeValue:(NSArray *)rationTypeArr
             for (NSDictionary * valueDetailDic in getDefaulArr) {
                 ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:valueDetailDic];
                 NSString * quotiety = [self.CHOOSEDRATIONTYPEVALUEDic objectForKey:[detailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+                NSString * codeName = [self.CHOOSEDRATIONTYPEVALUEDic objectForKey:detailM.FIELDNAME];
+                
+                if ([valueModel.QUOTIETYCODE isEqualToString:codeName]) {
+                    hasGetServerValue = YES;
+                    NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
+                    [self.CHOOSEDRATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
+                    break;
+                }
+
                 if ([valueModel.QUOTIETY floatValue] == [quotiety floatValue]) {
                     hasGetServerValue = YES;
                     NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
@@ -347,6 +356,15 @@ withRationTypeValue:(NSArray *)rationTypeArr
                         for (NSDictionary * valueDetailDic in getDefaulArr) {
                             ZEEPM_TEAM_RATIONTYPEDETAIL * valueModel = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:valueDetailDic];
                             NSString * quotiety = [defaultDetailDic objectForKey:[detailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""]];
+                            NSString * codeName = [self.CHOOSEDRATIONTYPEVALUEDic objectForKey:detailM.FIELDNAME];
+                            
+                            if ([valueModel.QUOTIETYCODE isEqualToString:codeName]) {
+                                hasGetServerValue = YES;
+                                NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
+                                [self.CHOOSEDRATIONTYPEVALUEDic setValuesForKeysWithDictionary:dic];
+                                break;
+                            }
+
                             if ([valueModel.QUOTIETY floatValue] == [quotiety floatValue]) {
                                 hasGetServerValue = YES;
                                 NSDictionary * dic = @{detailM.FIELDNAME:valueDetailDic};
@@ -504,10 +522,8 @@ withRationTypeValue:(NSArray *)rationTypeArr
     }
     
     
-    
-    NSMutableDictionary * defaultDic = [NSMutableDictionary dictionary];
     for (NSDictionary * dic in _choosedWorkerArr) {
-        defaultDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        NSMutableDictionary * defaultDic = [NSMutableDictionary dictionaryWithDictionary:self.CHOOSEDRATIONTYPEVALUEDic];
         
         for (NSDictionary * dic in self.personalRationTypeValueArr) {
             ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:dic];
@@ -635,7 +651,7 @@ withRationTypeValue:(NSArray *)rationTypeArr
         showRecordLengthBtn = [UIButton buttonWithType:UIButtonTypeSystem];
         showRecordLengthBtn.backgroundColor = RGBA(0, 84, 74, 0.5);
         showRecordLengthBtn.frame = CGRectMake(0, SCREEN_HEIGHT - 44, SCREEN_WIDTH, 44);
-        [showRecordLengthBtn setTitle:@"实录工序时长" forState:UIControlStateNormal];
+        [showRecordLengthBtn setTitle:@"实录工序时长（分钟）" forState:UIControlStateNormal];
         [self addSubview:showRecordLengthBtn];
         [showRecordLengthBtn addTarget:self action:@selector(showRecordContent) forControlEvents:UIControlEventTouchUpInside];
         
@@ -778,7 +794,7 @@ withRationTypeValue:(NSArray *)rationTypeArr
             cell.detailTextLabel.text = @"";
             UITextField * field = [[UITextField alloc]initWithFrame:CGRectMake(90.0f, 0, SCREEN_WIDTH - 105.0f, 44.0f)];
             field.delegate = self;
-            field.placeholder = @"工时登记情况";
+            field.placeholder = @"填写工作说明";
             field.font = [UIFont systemFontOfSize:14.0f];
             field.textAlignment = NSTextAlignmentRight;
             field.textColor = MAIN_COLOR;
@@ -1080,6 +1096,7 @@ withRationTypeValue:(NSArray *)rationTypeArr
         if (!isMask) {
             NSMutableDictionary * defaultDic = [NSMutableDictionary dictionary];
             defaultDic = [NSMutableDictionary dictionaryWithDictionary:listDic];
+            [defaultDic setValuesForKeysWithDictionary:self.CHOOSEDRATIONTYPEVALUEDic];
             
             for (NSDictionary * dic in self.personalRationTypeValueArr) {
                 ZEEPM_TEAM_RATIONTYPEDETAIL * detailM = [ZEEPM_TEAM_RATIONTYPEDETAIL getDetailWithDic:dic];

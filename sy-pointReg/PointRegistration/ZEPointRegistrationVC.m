@@ -36,7 +36,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationController.navigationBarHidden = YES;
     self.automaticallyAdjustsScrollViewInsets = NO;
-        
+    
     _pointView = [[ZEPointRegistrationView alloc]initWithFrame:self.view.frame
                                                  withDafaulDic:_defaultDic
                                           withDefaultDetailArr:_defaultDetailArr
@@ -86,7 +86,7 @@
     if ([[[ZEPointRegCache instance] getTaskCaches] count] > 0) {
         return;
     }
-
+    
     NSDictionary * parametersDic = @{@"limit":@"100",
                                      @"MASTERTABLE":EPM_TEAM_RATION_COMMON,
                                      @"MENUAPP":@"EMARK_APP",
@@ -112,7 +112,7 @@
                                  NSArray * arr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_COMMON];
                                  [[ZEPointRegCache instance] setTaskCaches:arr];
                                  [pointRegView showListView:arr withLevel:TASK_LIST_LEVEL_JSON withPointReg:POINT_REG_TASK];
-
+                                 
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
@@ -282,7 +282,7 @@
 -(void)goBack
 {
     [self.navigationController popViewControllerAnimated:YES];
-
+    
     [self dismissViewControllerAnimated:YES completion:^{
         [[ZEPointRegCache instance] clearUserOptions];
     }];
@@ -398,33 +398,51 @@
     }else{
         [defaultDic setObject:@""forKey:@"WORKPLACE"];
     }
-
+    
     
     for (NSInteger i = 0 ; i < _pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {
         NSString * keyStr = _pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i];
-    
+        
         if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
             [defaultDic setObject:[_pointView.CHOOSEDRATIONTYPEVALUEDic objectForKey:_pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]] forKey:_pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]];
+        }
+        if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
+            id obj = [_pointView.CHOOSEDRATIONTYPEVALUEDic objectForKey:keyStr];
+            if ([obj isKindOfClass:[NSDictionary class]]) {
+                [defaultDic setObject:[obj objectForKey:@"QUOTIETYCODE"] forKey:keyStr];
+            }else{
+                [defaultDic setObject:@"" forKey:keyStr];
+            }
         }
     }
     
     
     NSMutableArray * personalArr = [NSMutableArray array];
     NSMutableArray * tableNameArr = [NSMutableArray arrayWithObject:EPM_TEAM_RATION_REG];
-
+    
     for (NSInteger i = 0; i < _pointView.USERCHOOSEDWORKERVALUEARR.count; i ++) {
         [tableNameArr addObject:EPM_TEAM_RATION_REG_DETAIL];
         
         NSMutableDictionary * personalDic =  [NSMutableDictionary dictionaryWithDictionary: _pointView.USERCHOOSEDWORKERVALUEARR[i]];
         [personalDic removeObjectForKey:@"QSPOINTS"];
         [personalArr setValue:@"10" forKey:@"STATUS"];
+        NSDictionary * dic = _pointView.USERCHOOSEDWORKERVALUEARR[i];
         for (NSInteger j = 0 ; j < personalDic.allKeys.count ; j++) {
-            NSString * keyStr = personalDic.allKeys[j];
+            NSString * keyStr = dic.allKeys[j];
+            if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
+                [personalDic setObject:[dic objectForKey:dic.allKeys[j]] forKey:keyStr];
+            }
+            
             if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
-                [personalDic removeObjectForKey:personalDic.allKeys[j]];
+                id obj = [dic objectForKey:keyStr];
+                if ([obj isKindOfClass:[NSDictionary class]]) {
+                    [personalDic setObject:[obj objectForKey:@"QUOTIETYCODE"] forKey:keyStr];
+                }else{
+                    [personalDic setObject:@"" forKey:keyStr];
+                }
             }
         }
-
+        
         [personalArr addObject:personalDic];
     }
     
@@ -498,12 +516,20 @@
     }else{
         [defaultDic setObject:@""forKey:@"WORKPLACE"];
     }
-
+    
     for (NSInteger i = 0 ; i < _pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys.count ; i++) {
         NSString * keyStr = _pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i];
         
         if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
             [defaultDic setObject:[_pointView.CHOOSEDRATIONTYPEVALUEDic objectForKey:_pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]] forKey:_pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]];
+        }
+        if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
+            id obj = [_pointView.CHOOSEDRATIONTYPEVALUEDic objectForKey:keyStr];
+            if ([obj isKindOfClass:[NSDictionary class]]) {
+                [defaultDic setObject:[obj objectForKey:@"QUOTIETYCODE"] forKey:keyStr];
+            }else{
+                [defaultDic setObject:@"" forKey:keyStr];
+            }
         }
     }
     
@@ -528,6 +554,15 @@
             if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
                 [personalDic setObject:[dic objectForKey:dic.allKeys[j]] forKey:keyStr];
             }
+            
+            if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
+                id obj = [dic objectForKey:keyStr];
+                if ([obj isKindOfClass:[NSDictionary class]]) {
+                    [personalDic setObject:[obj objectForKey:@"QUOTIETYCODE"] forKey:keyStr];
+                }else{
+                    [personalDic setObject:@"" forKey:keyStr];
+                }
+            }
         }
         [personalArr addObject:personalDic];
     }
@@ -543,7 +578,7 @@
         [personalArr addObject:personalDic];
     }
     [personalArr insertObject:defaultDic atIndex:0];
-
+    
     NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:tableNameArr
                                                                            withFields:personalArr
                                                                        withPARAMETERS:parametersDic
@@ -608,6 +643,14 @@
         if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
             [defaultDic setObject:[_pointView.CHOOSEDRATIONTYPEVALUEDic objectForKey:_pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]] forKey:_pointView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]];
         }
+        if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
+            id obj = [_pointView.CHOOSEDRATIONTYPEVALUEDic objectForKey:keyStr];
+            if ([obj isKindOfClass:[NSDictionary class]]) {
+                [defaultDic setObject:[obj objectForKey:@"QUOTIETYCODE"] forKey:keyStr];
+            }else{
+                [defaultDic setObject:@"" forKey:keyStr];
+            }
+        }
     }
     
     NSMutableArray * personalArr = [NSMutableArray array];
@@ -630,6 +673,15 @@
             NSString * keyStr = dic.allKeys[j];
             if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
                 [personalDic setObject:[dic objectForKey:dic.allKeys[j]] forKey:keyStr];
+            }
+            
+            if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
+                id obj = [dic objectForKey:keyStr];
+                if ([obj isKindOfClass:[NSDictionary class]]) {
+                    [personalDic setObject:[obj objectForKey:@"QUOTIETYCODE"] forKey:keyStr];
+                }else{
+                    [personalDic setObject:@"" forKey:keyStr];
+                }
             }
         }
         [personalArr addObject:personalDic];
@@ -689,10 +741,10 @@
 }
 
 -(void)showRATIONTYPEVALUE:(NSString *)QUOTIETYCODE
-{    
+{
     NSDictionary * valueDic = [[ZEPointRegCache instance] getRATIONTYPEVALUE];
     NSMutableArray * valueArr = [NSMutableArray arrayWithArray:[valueDic objectForKey:QUOTIETYCODE]];
-
+    
     if (self.rationTypeValueArr.count > 0) {
         valueArr = [NSMutableArray array];
         for (NSDictionary * dic in self.rationTypeValueArr) {
@@ -744,7 +796,7 @@
     }else{
         [self cacheWorkCondition];
     }
-
+    
 }
 
 #pragma mark - 发生日期
@@ -766,13 +818,13 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

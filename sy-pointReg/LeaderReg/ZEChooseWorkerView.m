@@ -180,7 +180,6 @@
     if ([self.delegate respondsToSelector:@selector(didSeclectWorkerWithData:)]) {
         [self.delegate didSeclectWorkerWithData:choosedArr];
     }
-    
 }
 
 @end

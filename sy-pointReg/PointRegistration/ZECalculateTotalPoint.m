@@ -127,7 +127,7 @@ static ZECalculateTotalPoint * pointRegCahe = nil;
                 NSString * QUOTIETY = [detailM.FIELDNAME stringByReplacingOccurrencesOfString:@"CODE" withString:@""];
                 
                 if (![ZEUtil strIsEmpty:formulaquotiety]) {
-                    formulaquotiety = [self getRationTypeValue:formulaquotiety withTaskDic:_taskDic withPersonalData:_personalDataArr[i]];
+                    formulaquotiety = [self getRationTypeValue:formulaquotiety withTaskDic:_personalDataArr[i] withPersonalData:_personalDataArr[i]];
                     if([formulaquotiety doubleValue] < [minvalue doubleValue]){
                         formulaquotiety=minvalue;
                     }

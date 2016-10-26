@@ -538,6 +538,14 @@
         if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
             [defaultDic setObject:[_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:_leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]] forKey:_leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]];
         }
+        if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
+            id obj = [_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:keyStr];
+            if ([obj isKindOfClass:[NSDictionary class]]) {
+                [defaultDic setObject:[obj objectForKey:@"QUOTIETYCODE"] forKey:keyStr];
+            }else{
+                [defaultDic setObject:@"" forKey:keyStr];
+            }
+        }
     }
     
     NSMutableArray * personalArr = [NSMutableArray array];
@@ -551,13 +559,23 @@
             [personalDic setObject:[ZESettingLocalData getKValue] forKey:@"K"];
         }
         [personalDic setObject:@"" forKey:@"TASKID"];
+        
         for (NSInteger j = 0 ; j < personalDic.allKeys.count ; j++) {
             NSString * keyStr = personalDic.allKeys[j];
-            if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
-                [personalDic removeObjectForKey:personalDic.allKeys[j]];
+            
+            if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
+                [personalDic setObject:[personalDic objectForKey:personalDic.allKeys[j]] forKey:keyStr];
             }
-        }
-        
+            
+            if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
+                id obj = [personalDic objectForKey:keyStr];
+                if ([obj isKindOfClass:[NSDictionary class]]) {
+                    [personalDic setObject:[obj objectForKey:@"QUOTIETYCODE"] forKey:keyStr];
+                }else{
+                    [personalDic setObject:@"" forKey:keyStr];
+                }
+            }
+        }        
         [personalArr addObject:personalDic];
         [tableNameArr addObject:EPM_TEAM_RATION_REG_DETAIL];
     }
@@ -652,6 +670,14 @@
         if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
             [defaultDic setObject:[_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:_leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]] forKey:_leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]];
         }
+        if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
+            id obj = [_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:keyStr];
+            if ([obj isKindOfClass:[NSDictionary class]]) {
+                [defaultDic setObject:[obj objectForKey:@"QUOTIETYCODE"] forKey:keyStr];
+            }else{
+                [defaultDic setObject:@"" forKey:keyStr];
+            }
+        }
     }
     
     NSMutableArray * personalArr = [NSMutableArray array];
@@ -674,8 +700,18 @@
 
         for (NSInteger j = 0 ; j < dic.allKeys.count ; j++) {
             NSString * keyStr = dic.allKeys[j];
+            
             if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
                 [personalDic setObject:[dic objectForKey:dic.allKeys[j]] forKey:keyStr];
+            }
+            
+            if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
+                id obj = [dic objectForKey:keyStr];
+                if ([obj isKindOfClass:[NSDictionary class]]) {
+                    [personalDic setObject:[obj objectForKey:@"QUOTIETYCODE"] forKey:keyStr];
+                }else{
+                    [personalDic setObject:@"" forKey:keyStr];
+                }
             }
         }
         [personalArr addObject:personalDic];
@@ -763,6 +799,14 @@
         if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
             [defaultDic setObject:[_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:_leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]] forKey:_leaderRegView.CHOOSEDRATIONTYPEVALUEDic.allKeys[i]];
         }
+        if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
+            id obj = [_leaderRegView.CHOOSEDRATIONTYPEVALUEDic objectForKey:keyStr];
+            if ([obj isKindOfClass:[NSDictionary class]]) {
+                [defaultDic setObject:[obj objectForKey:@"QUOTIETYCODE"] forKey:keyStr];
+            }else{
+                [defaultDic setObject:@"" forKey:keyStr];
+            }
+        }
     }
     
     NSMutableArray * personalArr = [NSMutableArray array];
@@ -785,8 +829,18 @@
         
         for (NSInteger j = 0 ; j < dic.allKeys.count ; j++) {
             NSString * keyStr = dic.allKeys[j];
+            
             if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location == NSNotFound) {
                 [personalDic setObject:[dic objectForKey:dic.allKeys[j]] forKey:keyStr];
+            }
+            
+            if ([keyStr rangeOfString:@"QUOTIETY"].location != NSNotFound && [keyStr rangeOfString:@"CODE"].location != NSNotFound) {
+                id obj = [dic objectForKey:keyStr];
+                if ([obj isKindOfClass:[NSDictionary class]]) {
+                    [personalDic setObject:[obj objectForKey:@"QUOTIETYCODE"] forKey:keyStr];
+                }else{
+                    [personalDic setObject:@"" forKey:keyStr];
+                }
             }
         }
         [personalArr addObject:personalDic];

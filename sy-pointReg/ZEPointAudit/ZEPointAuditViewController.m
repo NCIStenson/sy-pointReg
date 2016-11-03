@@ -89,6 +89,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:_pointAuditView animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
                                  NSArray * dataArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG];
@@ -157,6 +158,7 @@
     __block ZEPointAuditViewController * safeSelf = self;
     
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  _currentPage = 0 ;
                                 [safeSelf sendRequest];
@@ -186,6 +188,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:_pointAuditView animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
                                  [self getRationValue:seqkey withHistoryData:data];
@@ -215,6 +218,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:_pointAuditView animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
                                  [self goChageVC:hisData rationValueArr:[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEVALUE]];

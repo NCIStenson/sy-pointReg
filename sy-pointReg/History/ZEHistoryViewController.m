@@ -87,6 +87,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:_historyView animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:_historyView animated:YES];
                                  NSArray * dataArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG];
@@ -142,6 +143,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:_historyView animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  NSArray * dataArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG];
                                  
@@ -241,6 +243,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:_historyView animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:_historyView animated:YES];
                                  [self getRationValue:seqkey withHistoryData:data];
@@ -270,6 +273,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:_historyView animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:_historyView animated:YES];
                                  [self goChageVC:hisData rationValueArr:[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEVALUE]];

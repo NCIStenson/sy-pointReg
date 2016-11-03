@@ -1,6 +1,6 @@
 D/Model////
 /ZECalculateTotalPoint.h/1.1/Wed Sep 21 04:04:00 2016/-kb/
-/ZECalculateTotalPoint.m/1.1/Wed Sep 21 04:04:00 2016/-kb/
+/ZECalculateTotalPoint.m/1.2/Mon Oct 24 03:49:53 2016/-kb/
 /ZEPointChooseTaskView.h/1.2/Fri Oct 14 07:59:51 2016/-kb/
 /ZEPointChooseTaskView.m/1.2/Fri Oct 14 08:33:43 2016/-kb/
 /ZEPointRegCache.h/1.3/Thu Oct 20 02:30:30 2016/-kb/
@@ -12,6 +12,6 @@ D/Model////
 /ZEPointRegOptionView.h/1.1/Wed Sep 21 04:04:00 2016/-kb/
 /ZEPointRegOptionView.m/1.2/Tue Oct 18 08:31:45 2016/-kb/
 /ZEPointRegistrationVC.h/1.3/Fri Oct 21 01:59:34 2016/-kb/
-/ZEPointRegistrationVC.m/1.4/Fri Oct 21 01:59:34 2016/-kb/
+/ZEPointRegistrationVC.m/1.5/Mon Oct 24 08:40:24 2016/-kb/
 /ZEPointRegistrationView.h/1.4/Fri Oct 21 01:59:34 2016/-kb/
-/ZEPointRegistrationView.m/1.4/Fri Oct 21 08:44:27 2016/-kb/
+/ZEPointRegistrationView.m/1.5/Tue Oct 25 03:48:03 2016/-kb/

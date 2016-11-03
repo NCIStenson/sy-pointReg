@@ -149,6 +149,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  NSArray * arr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_COMMON];
@@ -191,6 +192,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  NSArray * arr = [ZEUtil getServerData:data withTabelName:V_EPM_TEAM_RATION_APP];
@@ -225,6 +227,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  NSArray * taskDatas = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION];
@@ -271,6 +274,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  NSArray * arr = [ZEUtil getServerData:data withTabelName:V_EPM_TEAM_RATION_WORKPLACE];
@@ -351,6 +355,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  NSArray * arr = [ZEUtil getServerData:data withTabelName:EPM_BASE_REL];
@@ -603,6 +608,7 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  [self showAlertView:@"提交成功" goBack:NO];
@@ -737,6 +743,7 @@
                                                                        withActionFlag:nil];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  [self showAlertView:@"修改成功" goBack:YES];
@@ -868,6 +875,7 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  [self showAlertView:@"提交成功" goBack:YES];

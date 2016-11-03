@@ -9,6 +9,7 @@
 static NSString * kUserInformation  = @"keyUserInformation";
 static NSString * kSignCookie       = @"keySIGNCOOKIE";
 static NSString * kUSERNAME         = @"kUSERNAME";
+static NSString * kUSERPASSWORD         = @"kUSERPASSWORD";
 static NSString * kUSERCODE         = @"kUSERCODE";
 static NSString * kISEXPERT         = @"kISEXPERT";
 static NSString * kUSERINFODic      = @"kUSERINFODic";
@@ -82,6 +83,25 @@ static NSString * kISLEADER            = @"kISLEADER";
 +(void)deleteUSERNAME
 {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUSERNAME];
+}
+
+/**
+ *  @author Stenson, 16-08-12 15:08:26
+ *
+ *  用户密码
+ *
+ */
++(void)setUSERPASSWORD:(NSString *)str
+{
+    [self Set:kUSERPASSWORD value:str];
+}
++(NSString *)getUSERPASSWORD
+{
+    return [self Get:kUSERPASSWORD];
+}
++(void)deleteUSERPASSWORD
+{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUSERPASSWORD];
 }
 
 #pragma mark - USERCODE
@@ -187,6 +207,7 @@ static NSString * kISLEADER            = @"kISLEADER";
     [ZESettingLocalData deleteISLEADER];
     [ZESettingLocalData deleteCookie];
     [ZESettingLocalData deleteUSERNAME];
+    [ZESettingLocalData deleteUSERPASSWORD];
     [ZESettingLocalData deleteISEXPERT];
     [ZESettingLocalData deleteUSERINFODic];
     [ZESettingLocalData deleteKValue];

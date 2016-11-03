@@ -31,16 +31,38 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationController.navigationBarHidden = YES;
     [self initView];
-    /***** 检测更新  *****/
-    [self checkUpdate];
-    [self storeSystemInfo];
 
+    [self storeSystemInfo];
+    
+    [self sendRequest];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadLeftBtn) name:kNOTICACHEUSERINFO object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(verifyLogin:) name:kVerifyLogin object:nil];
+    
+}
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:kNOTICACHEUSERINFO object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:kVerifyLogin object:nil];
+}
+
+-(void)reloadLeftBtn
+{
+    [mainView reloadLeftBtn];
+}
+
+- (void)verifyLogin:(NSNotification *)noti
+{
+    // Refresh...
+    [self checkUpdate];
     [self sendRequest];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    
+    /***** 检测更新  *****/
+    [self checkUpdate];
     
     self.tabBarController.tabBar.tintColor = MAIN_NAV_COLOR;
     self.tabBarController.tabBar.hidden = NO;
@@ -70,6 +92,7 @@
                                                                        withPARAMETERS:parametersDic
                                                                        withActionFlag:nil];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  if([[ZEUtil getServerData:data withTabelName:SNOW_MOBILE_DEVICE] count] == 0){
                                      [self insertSystemInfo];
@@ -107,8 +130,8 @@
                                                                        withPARAMETERS:parametersDic
                                                                        withActionFlag:nil];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
-                                 
                                  if([[ZEUtil getServerData:data withTabelName:SNOW_MOBILE_DEVICE] count] == 0){
                                      
                                  }else{
@@ -154,6 +177,7 @@
                                                                        withPARAMETERS:parametersDic
                                                                        withActionFlag:nil];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  if([[ZEUtil getServerData:data withTabelName:SNOW_MOBILE_DEVICE] count] == 0){
                                      
@@ -193,6 +217,7 @@
                                                                        withPARAMETERS:parametersDic
                                                                        withActionFlag:nil];
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  if ([[ZEUtil getServerData:data withTabelName:SNOW_APP_VERSION] count] > 0) {
@@ -271,6 +296,11 @@
 {
     ZELeaderRegVC * leaderVC = [[ZELeaderRegVC alloc]init];
     leaderVC.isLeaderOrCharge = type;
+    if(type == ENTER_MANYPERSON_POINTREG_TYPE_CHARGE){
+        leaderVC.pointRegType = ENTER_POINTREG_TYPE_CHARGE;
+    }else if (type == ENTER_MANYPERSON_POINTREG_TYPE_LEADER){
+        leaderVC.pointRegType = ENTER_POINTREG_TYPE_LEADER;
+    }
     [self.navigationController pushViewController:leaderVC animated:YES];
 }
 
@@ -278,6 +308,7 @@
 {
     ZEPointRegistrationVC * pointVC = [[ZEPointRegistrationVC alloc]init];
     pointVC.regType = ENTER_PERSON_POINTREG_TYPE_DEFAULT;
+    pointVC.pointRegType = ENTER_POINTREG_TYPE_PERSON;
     [self.navigationController pushViewController:pointVC animated:YES];
 }
 
@@ -335,6 +366,101 @@
     
     ZELoginViewController * loginVC = [[ZELoginViewController alloc]init];
     keyWindow.rootViewController = loginVC;
+}
+
+-(void)changePassword
+{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"修改密码" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UITextField * field1 = alertController.textFields[0];
+        UITextField * field2 = alertController.textFields[1];
+        UITextField * field3 = alertController.textFields[2];
+        if (field2.text.length < 6 || field3.text.length < 6){
+            [self alertMessage:@"新密码不能少于6位"];
+        }else if (field1.text.length > 0 && field2.text.length > 0 && field3.text.length > 0 ) {
+            [self changePasswordRequestOldPassword:field1.text
+                                       newPassword:field2.text
+                                   confirmPassword:field3.text];
+        }else{
+            [self alertMessage:@"密码不能为空"];
+        }
+    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDestructive handler:nil];
+    
+    [alertController addAction:cancelAction];
+    [alertController addAction:okAction];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        // 可以在这里对textfield进行定制，例如改变背景色
+        textField.secureTextEntry = YES;
+        textField.placeholder = @"旧密码";
+    }];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        // 可以在这里对textfield进行定制，例如改变背景色
+        textField.secureTextEntry = YES;
+        textField.placeholder = @"新密码";
+    }];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        // 可以在这里对textfield进行定制，例如改变背景色
+        textField.secureTextEntry = YES;
+        textField.placeholder = @"确认新密码";
+    }];
+
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+-(void)alertMessage:(NSString * )str
+{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:str message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    
+    [alertController addAction:okAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+
+}
+
+-(void)changePasswordRequestOldPassword:(NSString *)OLDPASSWORD
+                            newPassword:(NSString *)NEWPASSWORD
+                        confirmPassword:(NSString *)NEWPASSWORD1
+
+{
+    NSDictionary * parametersDic = @{@"limit":@"2000",
+                                     @"MASTERTABLE":@"EPM_USER_PWD",
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"",
+                                     @"WHERESQL":@"",
+                                     @"start":@"0",
+                                     @"METHOD":@"saveSelfPwd",
+                                     @"DETAILTABLE":@"",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.epm.biz.hr.EpmHr",
+                                     };
+    
+    NSDictionary * fieldsDic =@{@"OLDPASSWORD":OLDPASSWORD,
+                                @"NEWPASSWORD":NEWPASSWORD,
+                                @"NEWPASSWORD1":NEWPASSWORD1};
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[@"EPM_USER_PWD"]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
+                             success:^(id data) {
+                                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                                 if ([[data objectForKey:@"RETMSG"] isEqualToString:@"操作成功！"]) {
+                                     [self alertMessage:@"操作成功"];
+                                 }else{
+                                     NSArray * dataArr = [data objectForKey:@"EXCEPTIONDATA"];
+                                     if ([dataArr count] > 0) {
+                                         [self alertMessage:[dataArr[0] objectForKey:@"reason"]];
+                                     }
+                                 }
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
 }
 
 - (void)didReceiveMemoryWarning {

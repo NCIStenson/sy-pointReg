@@ -48,6 +48,7 @@
 @interface ZEMainView ()
 {
     UIScrollView * scrollView;
+    UIButton * _leftBtn;
 }
 @end
 
@@ -81,16 +82,15 @@
 
     [self addSubview:navBar];
     
-    UIButton * _leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _leftBtn.frame = CGRectMake(kLeftButtonMarginLeft, kLeftButtonMarginTop, kLeftButtonWidth, kLeftButtonHeight);
     _leftBtn.backgroundColor = [UIColor clearColor];
     _leftBtn.contentMode = UIViewContentModeScaleAspectFit;
     _leftBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-//    [_leftBtn addTarget:self action:@selector(leftBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_leftBtn addTarget:self action:@selector(leftBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_leftBtn setTitle:[ZESettingLocalData getNICKNAME] forState:UIControlStateNormal];
 
     [navBar addSubview:_leftBtn];
-
     
     UIButton * _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _rightBtn.frame = CGRectMake(kRightButtonMarginLeft, kRightButtonMarginTop, kRightButtonWidth, kRightButtonHeight);
@@ -112,8 +112,16 @@
 
 #pragma mark - HomeView
 
+-(void)reloadLeftBtn
+{
+    [_leftBtn setTitle:[ZESettingLocalData getNICKNAME] forState:UIControlStateNormal];
+}
+
 -(void)reloadHomeView:(NSArray *)data
 {
+    while ([scrollView.subviews lastObject]) {
+        [[scrollView.subviews lastObject] removeFromSuperview];
+    }
     
     float scroolContentH = 0.0f;
     
@@ -142,7 +150,6 @@
         [enterBtn setImage:[UIImage imageNamed:@"home_toolkit"] forState:UIControlStateNormal];
         [scrollView addSubview:enterBtn];
         [enterBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-      //  enterBtn.imageView.contentMode = UIViewContentModeScaleAspectFit;
         
         UILabel * tipsLabel     = [[UILabel alloc]init];
         tipsLabel.font          = [UIFont systemFontOfSize:14];
@@ -221,6 +228,13 @@
 {
     if ([self.delegate respondsToSelector:@selector(goPointQuery)]) {
         [self.delegate goPointQuery];
+    }
+}
+
+-(void)leftBtnClick
+{
+    if ([self.delegate respondsToSelector:@selector(changePassword)]) {
+        [self.delegate changePassword];
     }
 }
 

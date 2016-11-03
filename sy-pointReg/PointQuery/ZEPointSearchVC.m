@@ -45,7 +45,7 @@
                                      @"limit":@"2000",
                                      @"MASTERTABLE":EPM_TEAM_RESULT,
                                      @"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"DISPLAYORDER",
+                                     @"ORDERSQL":@"PERIODCODE DESC",
                                      @"WHERESQL":[NSString stringWithFormat:@"psnnum='#PSNNUM#' and suitunit='#SUITUNIT#' AND substr(PERIODCODE,0,4)='%@'",[[ZEUtil getCurrentMonth] substringToIndex:4]],
                                      @"METHOD":@"search",
                                      @"DETAILTABLE":@"",
@@ -63,6 +63,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __block ZEPointSearchVC * safeSelf = self;
     [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  if ([[ZEUtil getServerData:data withTabelName:EPM_TEAM_RESULT] count] > 0) {

@@ -6,18 +6,28 @@
 //  Copyright © 2016年 Zenith Electronic. All rights reserved.
 //
 
+// 导航栏
+#define kNavBarWidth SCREEN_WIDTH
+#define kNavBarHeight 64.0f
+#define kNavBarMarginLeft 0.0f
+#define kNavBarMarginTop 0.0f
 
-#define kUsernameLabMarginLeft  40.0f
-#define kUsernameLabMarginTop   200.0f
+#define kInputMessageWidth          (SCREEN_WIDTH - kInputMessageMarginLeft * 2 )
+#define kInputMessageHeight         100.0f
+#define kInputMessageMarginLeft     30.0f
+#define kInputMessageMarginTop      kNavBarHeight + 50.0f
+
+#define kUsernameLabMarginLeft  10.0f
+#define kUsernameLabMarginTop   0.0f
 #define kUsernameLabWidth       40.0f
 #define kUsernameLabHeight      30.0f
 
 #define kPasswordLabMarginLeft  10.0f
-#define kPasswordLabMarginTop   15.0f
+#define kPasswordLabMarginTop   65.0f
 #define kPasswordLabWidth       kUsernameLabWidth
 #define kPasswordLabHeight      kUsernameLabHeight
 
-#define kUsernameFieldMarginLeft  95.0f
+#define kUsernameFieldMarginLeft  50.0f
 #define kUsernameFieldMarginTop   50.0f
 #define kUsernameFieldWidth       (SCREEN_WIDTH - 80.0f - kUsernameLabWidth - 15.0f)
 #define kUsernameFieldHeight      40.0f
@@ -31,11 +41,12 @@
 #define kLoginBtnWidth (_viewFrame.size.width - 60.0f)
 #define kLoginBtnHeight 40.0f
 #define kLoginBtnToLeft (SCREEN_WIDTH - kLoginBtnWidth) / 2
-#define kLoginBtnToTop 200.0f
+#define kLoginBtnToTop 200.0f + kNavBarHeight
 
-#define kNavTitleLabelWidth SCREEN_WIDTH
-#define kNavTitleLabelHeight 150.0f
-#define kNavTitleLabelMarginLeft 0.0f
+// 导航栏标题
+#define kNavTitleLabelWidth (SCREEN_WIDTH - 110.0f)
+#define kNavTitleLabelHeight 44.0f
+#define kNavTitleLabelMarginLeft (kNavBarWidth - kNavTitleLabelWidth) / 2.0f
 #define kNavTitleLabelMarginTop 20.0f
 
 #define LINECOLOR [MAIN_NAV_COLOR CGColor];
@@ -62,6 +73,7 @@
     if (self) {
         _viewFrame = frame;
         self.backgroundColor = MAIN_LINE_COLOR;
+        [self initNavView];
         [self initInputView];
         [self initLoginBtn];
     }
@@ -69,54 +81,71 @@
 }
 
 #pragma mark - custom view init
+
+-(void)initNavView
+{
+    UIView *navBar = [[UIView alloc] initWithFrame:CGRectMake(kNavBarMarginLeft, kNavBarMarginTop, kNavBarWidth, kNavBarHeight)];
+    navBar.backgroundColor = MAIN_NAV_COLOR;
+    navBar.clipsToBounds = YES;
+    
+    UILabel *  _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(kNavTitleLabelMarginLeft, kNavTitleLabelMarginTop, kNavTitleLabelWidth, kNavTitleLabelHeight)];
+    _titleLabel.backgroundColor = [UIColor clearColor];
+    _titleLabel.textAlignment = NSTextAlignmentCenter;
+    _titleLabel.textColor = [UIColor whiteColor];
+    _titleLabel.font = [UIFont systemFontOfSize:22.0f];
+    _titleLabel.text = @"用户登录";
+    
+    [navBar addSubview:_titleLabel];
+    
+    [self addSubview:navBar];
+
+}
+
 - (void)initInputView
 {    
-    
     UIView * inputMessageBackView = [[UIView alloc]init];
     [self addSubview:inputMessageBackView];
     inputMessageBackView.backgroundColor = [UIColor whiteColor];
     [inputMessageBackView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(kUsernameFieldMarginTop);
-        make.left.mas_equalTo(kLoginBtnToLeft);
-        make.size.mas_equalTo(CGSizeMake(kLoginBtnWidth,100));
+        make.top.mas_equalTo(kInputMessageMarginTop);
+        make.left.mas_equalTo(kInputMessageMarginLeft);
+        make.size.mas_equalTo(CGSizeMake(kInputMessageWidth,kInputMessageHeight));
     }];
 
     for (int i = 0 ; i < 2; i ++) {
-
         CALayer * vLineLayer = [CALayer layer];
-        vLineLayer.frame = CGRectMake(kLoginBtnToLeft + i * kLoginBtnWidth, kUsernameFieldMarginTop, 1, 100);
+        vLineLayer.frame = CGRectMake(i * kInputMessageWidth, 0.0f, 1, 100);
         vLineLayer.backgroundColor = LINECOLOR;
-        [self.layer addSublayer:vLineLayer];
+        [inputMessageBackView.layer addSublayer:vLineLayer];
         
-        UIImageView * usernameImage = [[UIImageView alloc]initWithFrame:self.frame];
+        UIImageView * usernameImage = [[UIImageView alloc]initWithFrame:CGRectZero];
         [inputMessageBackView addSubview:usernameImage];
         
         UITextField * field = [[UITextField alloc]init];
         field.delegate      = self;
         field.textColor     = [UIColor blackColor];
-        [self addSubview:field];
+        [inputMessageBackView addSubview:field];
         field.leftViewMode  = UITextFieldViewModeAlways;
         field.leftView      = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 8, 0)];
         [field setValue:MAIN_LINE_COLOR forKeyPath:@"_placeholderLabel.textColor"];
 
         if (i == 1) {
-            
             CALayer * firstLineLayer = [CALayer layer];
-            firstLineLayer.frame = CGRectMake(kLoginBtnToLeft, kUsernameFieldMarginTop, kLoginBtnWidth, 1);
+            firstLineLayer.frame = CGRectMake(0.0f, 0.0f, kInputMessageWidth, 1);
             firstLineLayer.backgroundColor = LINECOLOR;
-            [self.layer addSublayer:firstLineLayer];
+            [inputMessageBackView.layer addSublayer:firstLineLayer];
 
             CALayer * lineLayer = [CALayer layer];
-            lineLayer.frame = CGRectMake(kLoginBtnToLeft, kUsernameFieldMarginTop + kUsernameFieldHeight + 10.0f, kLoginBtnWidth, 1);
+            lineLayer.frame = CGRectMake(0.0f,50.0f, kLoginBtnWidth, 1);
             lineLayer.backgroundColor = LINECOLOR;
-            [self.layer addSublayer:lineLayer];
+            [inputMessageBackView.layer addSublayer:lineLayer];
             
             usernameImage.image = [UIImage imageNamed:@"login_password.png" color:MAIN_LINE_COLOR];
             field.placeholder = @"请输入密码";
             field.secureTextEntry = YES;
             [field mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.offset(kPasswordFieldMarginLeft);
-                make.top.offset(kPasswordFieldMarginTop );
+                make.top.offset(55.0f);
                 make.size.mas_equalTo(CGSizeMake(kPasswordFieldWidth, kPasswordFieldHeight));
             }];
             _passwordField = field;
@@ -128,15 +157,15 @@
         }else {
             
             CALayer * lineLayer = [CALayer layer];
-            lineLayer.frame = CGRectMake(kLoginBtnToLeft, 150.0f, kLoginBtnWidth, 1);
+            lineLayer.frame = CGRectMake(0.0f, 99.0f, kLoginBtnWidth, 1);
             lineLayer.backgroundColor = LINECOLOR;
-            [self.layer addSublayer:lineLayer];
+            [inputMessageBackView.layer addSublayer:lineLayer];
 
             field.placeholder = @"请输入用户名";
 
             [field mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.offset(kUsernameFieldMarginLeft);
-                make.top.offset(kUsernameFieldMarginTop + 5.0f);
+                make.top.offset(5.0f);
                 make.size.mas_equalTo(CGSizeMake(kUsernameFieldWidth, kUsernameFieldHeight));
             }];
             _usernameField = field;
@@ -144,7 +173,7 @@
 
             [usernameImage mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(kPasswordLabMarginLeft);
-                make.top.mas_equalTo(kPasswordLabMarginTop + 50.0f);
+                make.top.mas_equalTo(15.0f);
                 make.size.mas_equalTo(CGSizeMake(kUsernameLabWidth, kUsernameLabHeight));
             }];
         }
@@ -177,7 +206,7 @@
         [_passwordField resignFirstResponder];
     }
     [UIView animateWithDuration:0.29 animations:^{
-        self.frame = CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
+        self.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     } completion:nil];
     if ([self.delegate respondsToSelector:@selector(goLogin:password:)]) {
         [self.delegate goLogin:_usernameField.text password:_passwordField.text];
@@ -193,7 +222,7 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
         [UIView animateWithDuration:0.29 animations:^{
-            self.frame = CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
+            self.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         } completion:nil];
     
     if (![_usernameField isExclusiveTouch]) {

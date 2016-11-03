@@ -608,6 +608,7 @@ withRationTypeValue:(NSArray *)rationTypeArr
 #pragma mark - 显示实录工序时长
 -(void)showRecordContent
 {
+    NSLog(@">>>  %@",NSStringFromCGSize(_contentTableView.contentSize));
     _showRecordLen = !_showRecordLen;
     if (_showRecordLen) {
         _showRecordLengthBtn.hidden = YES;
@@ -619,7 +620,9 @@ withRationTypeValue:(NSArray *)rationTypeArr
     [_contentTableView reloadData];
     if (_showRecordLengthBtn.hidden && self.recordLengthArr.count > 0) {
         NSIndexPath* indexPath = [NSIndexPath indexPathForRow:self.recordLengthArr.count - 1 inSection:self.USERCHOOSEDWORKERVALUEARR.count + 1];
-        [_contentTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom  animated:NO];
+        [_contentTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom  animated:YES];
+    }else if (_showRecordLengthBtn.hidden && self.recordLengthArr.count == 0){
+        _contentTableView.contentOffset = CGPointMake(0, _contentTableView.contentSize.height - _contentTableView.frame.size.height);
     }
 }
 

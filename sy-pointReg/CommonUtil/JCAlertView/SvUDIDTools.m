@@ -15,7 +15,7 @@
 
 // replace the identity with your company's domain
 static const char kKeychainUDIDItemIdentifier[]  = "UUID";
-static const char kKeyChainUDIDAccessGroup[] = "YOURAPPID.com.cnblogs.smileEvday";
+static const char kKeyChainUDIDAccessGroup[] = "com.zenith.QRScan";
 
 @implementation SvUDIDTools
 
@@ -187,10 +187,10 @@ static const char kKeyChainUDIDAccessGroup[] = "YOURAPPID.com.cnblogs.smileEvday
     queryErr = SecItemCopyMatching((CFDictionaryRef)dictForQuery, (CFTypeRef*)&dict);
     
     if (queryErr == errSecItemNotFound) {
-        NSLog(@"KeyChain Item: %@ not found!!!", [NSString stringWithUTF8String:kKeychainUDIDItemIdentifier]);
+//        NSLog(@"KeyChain Item: %@ not found!!!", [NSString stringWithUTF8String:kKeychainUDIDItemIdentifier]);
     }
     else if (queryErr != errSecSuccess) {
-        NSLog(@"KeyChain Item query Error!!! Error code:%ld", (long)queryErr);
+//        NSLog(@"KeyChain Item query Error!!! Error code:%ld", (long)queryErr);
     }
     if (queryErr == errSecSuccess) {
         NSLog(@"KeyChain Item: %@", udidValue);

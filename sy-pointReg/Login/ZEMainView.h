@@ -38,6 +38,10 @@
  *  退出登录
  */
 -(void)logout;
+/**
+ *  退出登录
+ */
+-(void)changePassword;
 
 @end
 
@@ -51,5 +55,7 @@
 -(id)initWithFrame:(CGRect)rect;
 
 -(void)reloadHomeView:(NSArray *)data;
+
+-(void)reloadLeftBtn;
 
 @end

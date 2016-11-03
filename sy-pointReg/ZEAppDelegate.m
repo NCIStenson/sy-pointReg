@@ -30,20 +30,16 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     application.applicationSupportsShakeToEdit = YES;
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reLogin) name:kRelogin object:nil];
     NSLog(@"%@",Zenith_Server);
     NSLog(@"%@",NSHomeDirectory());
     NSLog(@"%@",[SvUDIDTools UDID]);
  
-    NSData *cookiesdata = [ZESettingLocalData getCookie];
-    if([cookiesdata length]) {
+    if([[ZESettingLocalData getUSERNAME] length] > 0 && [[ZESettingLocalData getUSERPASSWORD] length] > 0) {
         ZEMainViewController * mainVC = [[ZEMainViewController alloc]init];
-        mainVC.tabBarItem.title = @"首页";
-        mainVC.tabBarItem.image = [UIImage imageNamed:@"icon_home"];
         UINavigationController * navVC = [[UINavigationController alloc]initWithRootViewController:mainVC];
         
         self.window.rootViewController = navVC;
@@ -54,7 +50,6 @@
 
     return YES;
 }
-
 //   强制使用系统输入法
 //- (BOOL)application:(UIApplication *)application shouldAllowExtensionPointIdentifier:(NSString *)extensionPointIdentifier
 //{
@@ -63,7 +58,10 @@
 //    }
 //    return YES;
 //}
-
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:kRelogin object:nil];;
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -81,6 +79,37 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [self reLogin];
+}
+
+-(void)reLogin{
+    if([ZESettingLocalData getUSERNAME].length > 0 ){
+        [self goLogin:[ZESettingLocalData getUSERNAME] password:[ZESettingLocalData getUSERPASSWORD]];
+    }
+}
+-(void)goLogin:(NSString *)username password:(NSString *)pwd
+{
+    [ZEUserServer loginWithNum:username
+                  withPassword:pwd
+                       success:^(id data) {
+                            if ([[data objectForKey:@"RETMSG"] isEqualToString:@"null"]) {
+                               [ZESettingLocalData setUSERNAME:username];
+                               [ZESettingLocalData setUSERPASSWORD:pwd];
+                               [[NSNotificationCenter defaultCenter]postNotificationName:kVerifyLogin object:nil];
+                           }else{
+                               [ZESettingLocalData deleteCookie];
+                               [ZESettingLocalData deleteUSERNAME];
+                               [ZESettingLocalData deleteUSERPASSWORD];
+                               [self goLoginVC:[data objectForKey:@"RETMSG"]];
+                           }
+                       } fail:^(NSError *errorCode) {
+                       }];
+}
+-(void)goLoginVC:(NSString *)str
+{
+    ZELoginViewController * loginVC = [[ZELoginViewController alloc]init];
+    self.window.rootViewController = loginVC;
+    [ZEUtil showAlertView:str viewController:loginVC];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

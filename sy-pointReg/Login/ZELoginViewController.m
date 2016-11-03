@@ -25,13 +25,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title  = @"用户登录";
-    [self disableLeftBtn];
-    [self initView];
 }
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    [self initView];
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
@@ -40,19 +38,16 @@
 
 -(void)initView
 {
-    ZELoginView * loginView = [[ZELoginView alloc]initWithFrame:CGRectMake(0, NAV_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - NAV_HEIGHT)];
+    ZELoginView * loginView = [[ZELoginView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
     loginView.delegate = self;
     [self.view addSubview:loginView];
-}
--(void)dealloc
-{
-    
 }
 #pragma mark - ZELoginViewDelegate
 
 -(void)goLogin:(NSString *)username password:(NSString *)pwd
 {
     if ([username isEqualToString:@""]) {
+        [self initView];
         if (IS_IOS8) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"用户名不能为空" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:nil];
@@ -65,6 +60,7 @@
         }
         return;
     }else if (![ZEUtil isStrNotEmpty:pwd]){
+        [self initView];
         if (IS_IOS8) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"密码不能为空"
                                                                                      message:nil
@@ -86,26 +82,25 @@
     }
 
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [self progressBegin:nil];
     [ZEUserServer loginWithNum:username
                   withPassword:pwd
                        success:^(id data) {
-                           [self progressEnd:nil];
+                           [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                            if ([[data objectForKey:@"RETMSG"] isEqualToString:@"null"]) {
-                                NSLog(@"登陆成功  %@",[data objectForKey:@"RETMSG"]);
                                [ZESettingLocalData setUSERNAME:username];
+                               [ZESettingLocalData setUSERPASSWORD:pwd];
                                [self cacheUserInfo];
                                [self getKValue];
                                [self goHome];
                            }else{
                                [ZESettingLocalData deleteCookie];
+                               [ZESettingLocalData deleteUSERNAME];
+                               [ZESettingLocalData deleteUSERPASSWORD];
                                [ZEUtil showAlertView:[data objectForKey:@"RETMSG"] viewController:self];
                            }
-
                        } fail:^(NSError *errorCode) {
-                           [self progressEnd:nil];
+                           [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                        }];
-    
 }
 
 -(void)cacheUserInfo
@@ -142,7 +137,7 @@
                                      [ZESettingLocalData setISLEADER:YES];
                                  }
                                  [ZESettingLocalData setUSERINFODic:userinfoDic];
-                                 
+                                 [[NSNotificationCenter defaultCenter] postNotificationName:kNOTICACHEUSERINFO object:nil];
                                  
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -212,7 +207,6 @@
     mainVC.tabBarItem.image = [UIImage imageNamed:@"icon_home"];
     UINavigationController * navVC = [[UINavigationController alloc]initWithRootViewController:mainVC];
     
-
     UIWindow * keyWindow = [UIApplication sharedApplication].keyWindow;
     keyWindow.rootViewController = navVC;
 }

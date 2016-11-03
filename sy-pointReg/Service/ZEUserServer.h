@@ -71,19 +71,4 @@
                   success:(ServerResponseSuccessBlock)successBlock
                      fail:(ServerResponseFailBlock)failBlock;
 
-
-/**
- *  @author Stenson, 16-08-17 09:08:56
- *
- *  执行网络请求前进行查询操作
- *
- *  @param tableName   查询表名
- *  @param MASTERFIELD 主键名
- *  @param fieldsDic   字段
- *  @param complete    存在 1  不存在 0
- */
-+(void)searchDataISExistWithTableName:(NSString *)tableName
-                      withMASTERFIELD:(NSString *)MASTERFIELD
-                        withFieldsDic:(NSDictionary *)fieldsDic
-                             complete:(void(^)(BOOL isExist,NSString * SEQKEY))complete;
 @end

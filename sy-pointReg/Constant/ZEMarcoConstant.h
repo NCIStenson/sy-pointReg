@@ -34,6 +34,12 @@
 #define kLEADERPOINTREG @"20"  //  班组长录入
 
 #define kNOTISEARCHPOINT @"kSearchPoint"
+#define kNOTICACHEUSERINFO @"kCacheUserinfo"
+#define kRelogin @"kRelogin"
+#define kVerifyLogin @"kVerifyLogin"
+
+//  测试版   http://120.27.152.63:7001/emarkspg_sy
+//  正式版   http://120.27.152.63:8056/hunan_sy
 
 #define Zenith_Server [[[NSBundle mainBundle] infoDictionary] objectForKey:@"ZenithServerAddress"]
 

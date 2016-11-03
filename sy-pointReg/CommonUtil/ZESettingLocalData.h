@@ -35,6 +35,15 @@
 +(void)setUSERNAME:(NSString *)str;
 +(NSString *)getUSERNAME;
 +(void)deleteUSERNAME;
+/**
+ *  @author Stenson, 16-08-12 15:08:26
+ *
+ *  用户密码
+ *
+ */
++(void)setUSERPASSWORD:(NSString *)str;
++(NSString *)getUSERPASSWORD;
++(void)deleteUSERPASSWORD;
 
 /**
  *  @author Stenson, 16-08-12 15:08:00

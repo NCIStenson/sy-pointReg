@@ -8,7 +8,7 @@
 
 #import "ZEServerEngine.h"
 
-#import "ZELoginViewController.h"
+#import "ZEMainViewController.h"
 #define kServerErrorNotLogin                @"E020601" // 用户未登陆
 #define kServerErrorLoginTimeOut            @"E020602" // 登陆超时
 #define kServerErrorReqTimeOut              @"E020603" // 请求超时
@@ -104,27 +104,69 @@ static ZEServerEngine *serverEngine = nil;
           success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
               NSArray *cookiesArray = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
               NSData *data = [NSKeyedArchiver archivedDataWithRootObject:cookiesArray];
-              if(![cookiesdata length]) {
+//              if(![cookiesdata length]) {
                   [ZESettingLocalData setCookie:data];
-              }
+//              }
               NSError * err = nil;
               NSDictionary * responseDic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:&err];
               if ([ZEUtil isNotNull:responseObject]) {
                   successBlock(responseDic);
               }
           } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+              
+              if ([[error.userInfo objectForKey:@"NSLocalizedDescription"] rangeOfString:@"401"].location != NSNotFound) {
+                  [manager.operationQueue cancelAllOperations];
+                  [ZEServerEngine showMainVC];
+              }
               if (error != nil) {
                   failBlock(error);
               }
           }];
 }
 
--(void)showLoginVC
++(void)showMainVC
 {
-    ZELoginViewController * loginVC = [[ZELoginViewController alloc]init];
+    [ZESettingLocalData deleteCookie];
     UIWindow * keyWindow = [UIApplication sharedApplication].keyWindow;
-    [keyWindow setRootViewController:loginVC];
+    
+    ZEMainViewController  * mainVC = [[ZEMainViewController alloc]init];
+    UINavigationController * navVC = [[UINavigationController alloc]initWithRootViewController:mainVC];
+    
+    if ([[(UINavigationController *)[self getCurrentVC] viewControllers] count] > 1) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kRelogin object:nil];
+        keyWindow.rootViewController = navVC;
+    }
 }
+
++(UIViewController *)getCurrentVC
+{
+    UIViewController *result = nil;
+    
+    UIWindow * window = [[UIApplication sharedApplication] keyWindow];
+    if (window.windowLevel != UIWindowLevelNormal)
+    {
+        NSArray *windows = [[UIApplication sharedApplication] windows];
+        for(UIWindow * tmpWin in windows)
+        {
+            if (tmpWin.windowLevel == UIWindowLevelNormal)
+            {
+                window = tmpWin;
+                break;
+            }
+        }
+    }
+    
+    UIView *frontView = [[window subviews] objectAtIndex:0];
+    id nextResponder = [frontView nextResponder];
+    
+    if ([nextResponder isKindOfClass:[UIViewController class]])
+        result = nextResponder;
+    else
+        result = window.rootViewController;
+    
+    return result;
+}
+
 
 
 @end

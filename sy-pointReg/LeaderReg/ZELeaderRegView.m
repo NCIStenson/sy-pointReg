@@ -244,6 +244,7 @@ withRationTypeValue:(NSArray *)rationTypeArr
         }
     }
     [self setDefaultWorkerData];
+    
 }
 
 -(void)setDefaultWorkerData
@@ -608,7 +609,6 @@ withRationTypeValue:(NSArray *)rationTypeArr
 #pragma mark - 显示实录工序时长
 -(void)showRecordContent
 {
-    NSLog(@">>>  %@",NSStringFromCGSize(_contentTableView.contentSize));
     _showRecordLen = !_showRecordLen;
     if (_showRecordLen) {
         _showRecordLengthBtn.hidden = YES;

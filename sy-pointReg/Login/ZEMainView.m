@@ -173,7 +173,7 @@
             [enterBtn setImage:[UIImage imageNamed:@"home_expertsassess"] forState:UIControlStateNormal];
             [enterBtn addTarget:self action:@selector(goLeaderView) forControlEvents:UIControlEventTouchUpInside];
         }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_04"]){
-            [enterBtn setImage:[UIImage imageNamed:@"home_foreman"] forState:UIControlStateNormal];
+            [enterBtn setImage:[UIImage imageNamed:@"icon_history_big"] forState:UIControlStateNormal];
             [enterBtn addTarget:self action:@selector(goHistory) forControlEvents:UIControlEventTouchUpInside];
         }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_05"]){
             [enterBtn setImage:[UIImage imageNamed:@"home_good"] forState:UIControlStateNormal];
@@ -181,6 +181,9 @@
         }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_06"]){
             [enterBtn setImage:[UIImage imageNamed:@"home_toolkit"] forState:UIControlStateNormal];
             [enterBtn addTarget:self action:@selector(goPointQuery) forControlEvents:UIControlEventTouchUpInside];
+        }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_07"]){
+            [enterBtn setImage:[UIImage imageNamed:@"home_foreman"] forState:UIControlStateNormal];
+            [enterBtn addTarget:self action:@selector(goMemberHistoryList) forControlEvents:UIControlEventTouchUpInside];
         }
     }
 }
@@ -228,6 +231,13 @@
 {
     if ([self.delegate respondsToSelector:@selector(goPointQuery)]) {
         [self.delegate goPointQuery];
+    }
+}
+
+-(void)goMemberHistoryList
+{
+    if ([self.delegate respondsToSelector:@selector(goMemberHistoryList)]) {
+        [self.delegate goMemberHistoryList];
     }
 }
 

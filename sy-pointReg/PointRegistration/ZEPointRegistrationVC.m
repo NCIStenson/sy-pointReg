@@ -272,13 +272,16 @@
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                                  NSArray * taskDatas = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION];
-                                 if ([ZEUtil isNotNull:taskDatas]) {
+                                 if ([ZEUtil isNotNull:taskDatas] && [taskDatas count] > 0) {
                                      [[ZEPointRegCache instance] setUserChoosedOptionDic:@{[ZEUtil getPointRegField:POINT_REG_TASK]:taskDatas[0]}];
+                                 }else{
+                                     [ZEUtil showAlertView:@"该数据项错误，请联系管理员" viewController:self];
                                  }
                                  self.rationTypeValueArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEVALUE];
                                  [_pointView reloadContentView:[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_DETAIL]
                                            withRationTypeValue:[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATIONTYPEVALUE]];
                              } fail:^(NSError *errorCode) {
+                                 [ZEUtil showAlertView:@"该数据项错误，请联系管理员" viewController:self];
                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
                              }];
 }

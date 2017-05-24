@@ -15,7 +15,7 @@
 #import "ZEPointQueryVC.h"
 #import "ZELoginViewController.h"
 #import "ZEPointRegCache.h"
-
+#import "ZEMemberHistoryListVC.h"
 #import "SvUDIDTools.h"
 @interface ZEMainViewController ()
 {
@@ -52,18 +52,14 @@
 
 - (void)verifyLogin:(NSNotification *)noti
 {
-    // Refresh...
-    [self checkUpdate];
+    [self loginSuccess];
     [self sendRequest];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    
-    /***** 检测更新  *****/
-    [self checkUpdate];
-    
+        
     self.tabBarController.tabBar.tintColor = MAIN_NAV_COLOR;
     self.tabBarController.tabBar.hidden = NO;
 }
@@ -189,14 +185,12 @@
                              }];
 
 }
-
-
--(void)checkUpdate
+-(void)loginSuccess
 {
     NSDictionary * parametersDic = @{@"MASTERTABLE":SNOW_APP_VERSION,
                                      @"MENUAPP":@"EMARK_APP",
                                      @"ORDERSQL":@"",
-                                     @"WHERESQL":@"MOBILETYPE='2'",
+                                     @"WHERESQL":@"MOBILETYPE='3'",
                                      @"start":@"0",
                                      @"METHOD":@"search",
                                      @"DETAILTABLE":@"",
@@ -223,6 +217,7 @@
                                  if ([[ZEUtil getServerData:data withTabelName:SNOW_APP_VERSION] count] > 0) {
                                      NSDictionary * dic = [ZEUtil getServerData:data withTabelName:SNOW_APP_VERSION][0];
                                      NSString* localVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+                                     
                                      if ([localVersion floatValue] < [[dic objectForKey:@"VERSIONNAME"] floatValue]) {
                                          UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"经检测当前版本不是最新版本，点击确定跳转更新。" preferredStyle:UIAlertControllerStyleAlert];
                                          UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -231,7 +226,6 @@
                                          }];
                                          [alertController addAction:okAction];
                                          [self presentViewController:alertController animated:YES completion:nil];
-
                                      }
                                  }
                              } fail:^(NSError *errorCode) {
@@ -328,6 +322,12 @@
     [self.navigationController pushViewController:PointQueryVC animated:YES];
 }
 
+-(void)goMemberHistoryList
+{
+    ZEMemberHistoryListVC * memberListVC = [[ZEMemberHistoryListVC alloc]init];
+    [self.navigationController pushViewController:memberListVC animated:YES];
+}
+
 -(void)logout{
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"切换账号需重新登录？"
@@ -362,6 +362,7 @@
 -(void)logoutSuccess
 {
     [ZESettingLocalData clearLocalData];
+    [[ZEPointRegCache instance] clear];
     UIWindow * keyWindow = [UIApplication sharedApplication].keyWindow;
     
     ZELoginViewController * loginVC = [[ZELoginViewController alloc]init];

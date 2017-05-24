@@ -68,7 +68,8 @@
 /******  审核列表   ****/
 -(void)sendRequest
 {
-    NSDictionary * parametersDic = @{@"start":[NSString stringWithFormat:@"%ld",(long)_currentPage * 20],
+    NSDictionary * parametersDic = @{
+                                     @"start":[NSString stringWithFormat:@"%ld",(long)_currentPage * 20],
                                      @"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATION_REG,
                                      @"MENUAPP":@"EMARK_APP",

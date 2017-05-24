@@ -24,6 +24,7 @@
 
 + (BOOL)isNotNull:(id)object
 {
+    
     if ([object isEqual:[NSNull null]]) {
         return NO;
     } else if ([object isKindOfClass:[NSNull class]]) {
@@ -451,6 +452,24 @@
     return dateStr;
 }
 
++(NSString *) decimalwithFormat:(NSString *)format  floatV:(float)floatV
+{
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    
+    [numberFormatter setPositiveFormat:format];
+    
+    return  [numberFormatter stringFromNumber:[NSNumber numberWithFloat:floatV]];
+}
 
+
++(NSString *)roundUp:(float)number afterPoint:(int)position{
+    NSDecimalNumberHandler* roundingBehavior = [NSDecimalNumberHandler decimalNumberHandlerWithRoundingMode:NSRoundUp scale:position raiseOnExactness:NO raiseOnOverflow:NO raiseOnUnderflow:NO raiseOnDivideByZero:NO];
+    NSDecimalNumber *ouncesDecimal;
+    NSDecimalNumber *roundedOunces;
+    ouncesDecimal = [[NSDecimalNumber alloc] initWithFloat:number];
+    roundedOunces = [ouncesDecimal decimalNumberByRoundingAccordingToBehavior:roundingBehavior];
+
+    return [NSString stringWithFormat:@"%@",roundedOunces];
+}
 
 @end

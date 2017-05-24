@@ -85,6 +85,8 @@
                                                success:^(id data) {
                                                    if ([ZEUtil isSuccess:[data objectForKey:@"RETMSG"]]) {
                                                        successBlock(data);
+                                                   }else{
+                                                       failBlock(nil);
                                                    }
                                                } fail:^(NSError *errorCode) {
                                                    failBlock(errorCode);

@@ -43,6 +43,12 @@
  */
 -(void)changePassword;
 
+
+/**
+ 班员工分登记查询
+ */
+-(void)goMemberHistoryList;
+
 @end
 
 

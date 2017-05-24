@@ -212,6 +212,7 @@ static ZEPointRegCache * pointRegCahe = nil;
 
 - (void)clear
 {
+    _workConditionArr      = nil;
     _taskCachesArr         = nil;//  任务列表缓存
     _optionDic             = nil;// 用户选择信息缓存
     _RATIONTYPEVALUEDic    = nil;

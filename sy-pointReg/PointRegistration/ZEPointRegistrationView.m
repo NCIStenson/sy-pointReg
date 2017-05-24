@@ -1255,11 +1255,9 @@ withRationTypeValue:(NSArray *)rationTypeArr
     }
 
     [self.USERCHOOSEDWORKERVALUEARR replaceObjectAtIndex:0 withObject:middleDic];
-    NSLog(@">>>  %@",self.USERCHOOSEDWORKERVALUEARR);
     [[ZECalculateTotalPoint instance] getTotalPointTaskDic:self.CHOOSEDRATIONTYPEVALUEDic withPersonalDetailArr:self.USERCHOOSEDWORKERVALUEARR];
     
     NSDictionary * resultDic = [[ZECalculateTotalPoint instance] getResultDic];
-    NSLog(@">>>>  %@",resultDic);
     [_contentTableView beginUpdates];
     self.CHOOSEDRATIONTYPEVALUEDic = [resultDic objectForKey:kFieldDic];
     self.USERCHOOSEDWORKERVALUEARR = [NSMutableArray arrayWithArray:[resultDic objectForKey:kDefaultFieldDic]];

@@ -34,9 +34,6 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     application.applicationSupportsShakeToEdit = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reLogin) name:kRelogin object:nil];
-    NSLog(@"%@",Zenith_Server);
-    NSLog(@"%@",NSHomeDirectory());
-    NSLog(@"%@",[SvUDIDTools UDID]);
  
     if([[ZESettingLocalData getUSERNAME] length] > 0 && [[ZESettingLocalData getUSERPASSWORD] length] > 0) {
         ZEMainViewController * mainVC = [[ZEMainViewController alloc]init];
@@ -83,7 +80,7 @@
 }
 
 -(void)reLogin{
-    if([ZESettingLocalData getUSERNAME].length > 0 ){
+    if([ZESettingLocalData getUSERNAME].length > 0 && [ZESettingLocalData getUSERPASSWORD].length > 0){
         [self goLogin:[ZESettingLocalData getUSERNAME] password:[ZESettingLocalData getUSERPASSWORD]];
     }
 }

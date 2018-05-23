@@ -117,10 +117,11 @@
             if (self.listArr.count > 0) {
                 ZEEPM_TEAM_RATION_REGModel * maxModel = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:[self.listArr firstObject]];
                 NSString * maxUsername = maxModel.PSNNAME;
-                NSString * maxPoint = [NSString stringWithFormat:@"%@",maxModel.SUMPOINTS];
+                NSString * maxPoint = [ZEUtil decimalwithFormat:@"0.00" floatV:[maxModel.SUMPOINTS floatValue]];
+                
                 ZEEPM_TEAM_RATION_REGModel * minModel = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:[self.listArr lastObject]];
                 NSString * minUsername = minModel.PSNNAME;
-                NSString * minPoint =  [NSString stringWithFormat:@"%@",minModel.SUMPOINTS];
+                NSString * minPoint =  [ZEUtil decimalwithFormat:@"0.00" floatV:[minModel.SUMPOINTS floatValue]];
                 
                 NSString * str = [NSString stringWithFormat:@"最高分：%@ %@分 最低分：%@ %@分",maxUsername,maxPoint,minUsername,minPoint];
                 

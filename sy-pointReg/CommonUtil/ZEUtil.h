@@ -56,7 +56,7 @@
  *  @return 数据数组
  */
 + (NSDictionary *)getServerDic:(NSDictionary *)dic withTabelName:(NSString *)tableName;
-+ (NSArray *)getServerData:(NSDictionary *)dic withTabelName:(NSString *)tableName;
++ (NSMutableArray *)getServerData:(NSDictionary *)dic withTabelName:(NSString *)tableName;
 /**
  *  @author Stenson, 16-08-16 09:08:20
  *

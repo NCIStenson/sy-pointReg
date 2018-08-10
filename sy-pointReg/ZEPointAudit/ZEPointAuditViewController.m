@@ -34,6 +34,7 @@
     _currentPage = 0;
     self.navigationController.navigationBarHidden = YES;
     self.view.backgroundColor = [UIColor whiteColor];
+    
     [self initView];
     [self sendRequest];
 
@@ -52,11 +53,15 @@
 #pragma mark - initView
 -(void)initView
 {
+    __block ZEPointAuditViewController * safeSelf = self;
     _pointAuditView = [[ZEPointAuditView alloc]initWithFrame:self.view.frame];
     _pointAuditView.delegate = self;
     [self.view addSubview:_pointAuditView];
+    _pointAuditView.multipleBlock = ^(NSString *keyStr) {
+        NSLog(@" ==========  %@",keyStr);
+        [safeSelf multipleAuditRequest:keyStr];
+    };
 }
-
 #pragma mark - SendRequest
 
 -(void)auditRefreshView
@@ -76,9 +81,9 @@
                                      @"ORDERSQL":@"SYSCREATEDATE desc",
                                      @"WHERESQL":@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#' and status in ('10')",
                                      @"METHOD":@"search",
-                                     @"DETAILTABLE":@"",
+                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
                                      @"MASTERFIELD":@"SEQKEY",
-                                     @"DETAILFIELD":@"",
+                                     @"DETAILFIELD":@"TASKID",
                                      @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
                                      };
     
@@ -94,12 +99,13 @@
                              success:^(id data) {
                                  [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
                                  NSArray * dataArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG];
+                                 NSMutableArray * detailDataArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG_DETAIL];
                                  
                                  if ([ZEUtil isNotNull:dataArr] && dataArr.count > 0) {
                                      if (_currentPage == 0) {
-                                         [_pointAuditView reloadFirstView:dataArr];
+                                         [_pointAuditView reloadFirstView:dataArr withDetailDataArr:detailDataArr];
                                      }else{
-                                         [_pointAuditView reloadView:dataArr];
+                                         [_pointAuditView reloadView:dataArr withDetailDataArr:detailDataArr];
                                      }
                                      if (dataArr.count%20 == 0) {
                                          _currentPage += 1;
@@ -109,7 +115,7 @@
                                          [_pointAuditView loadNoMoreData];
                                          return ;
                                      }
-                                     [_pointAuditView reloadFirstView:dataArr];
+                                     [_pointAuditView reloadFirstView:dataArr withDetailDataArr:detailDataArr];
                                      [_pointAuditView headerEndRefreshing];
                                      [_pointAuditView loadNoMoreData];
                                  }
@@ -117,6 +123,42 @@
                              } fail:^(NSError *errorCode) {
                                  [MBProgressHUD hideHUDForView:_pointAuditView animated:YES];
                              }];
+}
+
+-(void)multipleAuditRequest:(NSString *)str
+{
+    NSDictionary * parametersDic = @{@"limit":@"20",
+                                     @"MASTERTABLE":EPM_TEAM_RATION_REG,
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"ORDERSQL":@"",
+                                     @"WHERESQL":@"",
+                                     @"start":@"0",
+                                     @"METHOD":@"teamassess",
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"DETAILFIELD":@"TASKID",
+                                     @"CLASSNAME":@"com.nci.app.biz.team.AppTeamRationReg",
+                                     @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,
+                                     @"EPM_TEAM_RATION_REG.SEQKEY":str,
+                                     };
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG,EPM_TEAM_RATION_REG_DETAIL]
+                                                                           withFields:@[fieldsDic,fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ZEUserServer getDataWithJsonDic:packageDic
+                       showAlertView:YES
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                 if ([ZEUtil isSuccess:[data objectForKey:@"RETMSG"]]) {
+                                     [self loadNewData:nil];
+                                 }
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+
 }
 
 

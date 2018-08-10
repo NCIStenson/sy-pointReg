@@ -10,4 +10,6 @@
 
 @interface ZEMemberHistoryListVC : ZESettingRootVC
 
+@property (nonatomic,copy) NSString * ORGCODE;
+
 @end

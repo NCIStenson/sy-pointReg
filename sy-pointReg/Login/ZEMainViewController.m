@@ -17,6 +17,7 @@
 #import "ZEPointRegCache.h"
 #import "ZEMemberHistoryListVC.h"
 #import "SvUDIDTools.h"
+#import "ZEGroupListVC.h"
 @interface ZEMainViewController ()
 {
     ZEMainView * mainView;
@@ -303,6 +304,11 @@
     ZEPointRegistrationVC * pointVC = [[ZEPointRegistrationVC alloc]init];
     pointVC.regType = ENTER_PERSON_POINTREG_TYPE_DEFAULT;
     pointVC.pointRegType = ENTER_POINTREG_TYPE_PERSON;
+    [self.navigationController pushViewController:pointVC animated:YES];
+}
+
+-(void)goGQCK{
+    ZEGroupListVC * pointVC = [[ZEGroupListVC alloc]init];
     [self.navigationController pushViewController:pointVC animated:YES];
 }
 

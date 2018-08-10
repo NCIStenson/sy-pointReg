@@ -16,6 +16,7 @@
 
 #import "ZEPointRegChooseDateView.h"
 #import "JCAlertView.h"
+#import "ZESumDeatilVC.h"
 
 @interface ZEQueryMemberQueryVC ()<UITableViewDelegate,UITableViewDataSource,ZEPointRegChooseDateViewDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
 {
@@ -53,7 +54,6 @@
     _chooseMonthView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 40, 288)];
     _chooseMonthView.clipsToBounds = YES;
     _chooseMonthView.layer.cornerRadius = 5;
-
     
     UILabel * titleLab = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, _chooseMonthView.frame.size.width, 44.0f)];
     titleLab.text = @"请选择";
@@ -146,7 +146,6 @@
         [_alertView dismissWithCompletion:nil];
         _currentMonth = [NSString stringWithFormat:@"%@%@",_currentSelectYear,_currentSelectMonth];
         [self sendRequest];
-        NSLog(@">>>>  %@",_currentMonth);
     }
 }
 /**
@@ -160,6 +159,9 @@
 -(void)sendRequest
 {
     NSString * whereSQL = [NSString stringWithFormat:@"orgcode='#ORGCODE#' and suitunit='#SUITUNIT#' AND  substr(PERIODCODE,0,6)='%@'",_currentMonth];
+    if (_ORGCODE.length > 0) {
+        whereSQL = [NSString stringWithFormat:@"orgcode='%@' and suitunit='#SUITUNIT#' AND  substr(PERIODCODE,0,6)='%@'",_ORGCODE,_currentMonth];
+    }
     
     NSDictionary * parametersDic = @{@"start":@"0",
                                      @"limit":@"-1",
@@ -348,7 +350,7 @@
                 break;
             case 2:
                 lineLayer.frame = CGRectMake(0,0,1, 40.0f);
-                taskNameLable.text = [NSString stringWithFormat:@"%@",model.FINALSCORE];
+                taskNameLable.text = [NSString stringWithFormat:@"%.2f",[model.FINALSCORE floatValue]];
                 break;
                 
             default:
@@ -359,5 +361,15 @@
     return cell;
 }
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:self.listArr[indexPath.row]];
+
+    ZESumDeatilVC * sumDetailVC = [[ZESumDeatilVC alloc]init];
+    sumDetailVC.PSNNUM = model.PSNNUM;
+    sumDetailVC.PERIODCODE = model.PERIODCODE;
+    [self.navigationController pushViewController:sumDetailVC animated:YES];
+
+}
 
 @end

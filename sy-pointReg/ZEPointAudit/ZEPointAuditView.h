@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^muilAuditBlock)(NSString * keyStr);
+
 @class ZEPointAuditView;
 @protocol ZEPointAuditViewDelegate <NSObject>
 
@@ -49,12 +51,14 @@
 
 @property (nonatomic,assign) id <ZEPointAuditViewDelegate>delegate;
 
+@property (nonatomic,copy) muilAuditBlock multipleBlock;
+
 -(id)initWithFrame:(CGRect)frame;
 /**
  *  刷新界面
  */
--(void)reloadFirstView:(NSArray *)array;
--(void)reloadView:(NSArray *)array;
+-(void)reloadFirstView:(NSArray *)array withDetailDataArr:(NSArray *)arr;
+-(void)reloadView:(NSArray *)array withDetailDataArr:(NSArray *)arr;
 /**
  *  停止刷新
  */

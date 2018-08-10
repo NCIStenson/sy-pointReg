@@ -77,6 +77,8 @@
 		989B2C611C4DE7AA00F14EFA /* sy-pointRegTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 989B2C601C4DE7AA00F14EFA /* sy-pointRegTests.m */; };
 		989B2C6C1C4DE7AA00F14EFA /* sy-pointRegUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 989B2C6B1C4DE7AA00F14EFA /* sy-pointRegUITests.m */; };
 		98A10DED1D6E857100DFD935 /* ZEEPM_TEAM_RATIONTYPEDETAIL.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A10DEC1D6E857100DFD935 /* ZEEPM_TEAM_RATIONTYPEDETAIL.m */; };
+		98A45DBF211C2A71007A68C8 /* ZEGroupListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A45DBE211C2A71007A68C8 /* ZEGroupListVC.m */; };
+		98A45DC1211D27A1007A68C8 /* gqck@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98A45DC0211D27A1007A68C8 /* gqck@3x.png */; };
 		98AEA33A1CD061D0001C4AED /* ZEMainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 98AEA3371CD061D0001C4AED /* ZEMainView.m */; };
 		98AEA33B1CD061D0001C4AED /* ZEMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98AEA3391CD061D0001C4AED /* ZEMainViewController.m */; };
 		98AEA3551CD1AFCC001C4AED /* ZEUserCenterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 98AEA3541CD1AFCC001C4AED /* ZEUserCenterVC.m */; };
@@ -246,6 +248,9 @@
 		989B2C6D1C4DE7AA00F14EFA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98A10DEB1D6E857100DFD935 /* ZEEPM_TEAM_RATIONTYPEDETAIL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEEPM_TEAM_RATIONTYPEDETAIL.h; path = Model/ZEEPM_TEAM_RATIONTYPEDETAIL.h; sourceTree = "<group>"; };
 		98A10DEC1D6E857100DFD935 /* ZEEPM_TEAM_RATIONTYPEDETAIL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEEPM_TEAM_RATIONTYPEDETAIL.m; path = Model/ZEEPM_TEAM_RATIONTYPEDETAIL.m; sourceTree = "<group>"; };
+		98A45DBD211C2A71007A68C8 /* ZEGroupListVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ZEGroupListVC.h; path = "sy-pointReg/PointQuery/ZEGroupListVC.h"; sourceTree = SOURCE_ROOT; };
+		98A45DBE211C2A71007A68C8 /* ZEGroupListVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ZEGroupListVC.m; path = "sy-pointReg/PointQuery/ZEGroupListVC.m"; sourceTree = SOURCE_ROOT; };
+		98A45DC0211D27A1007A68C8 /* gqck@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gqck@3x.png"; path = "SourceImage/gqck@3x.png"; sourceTree = "<group>"; };
 		98AEA3361CD061D0001C4AED /* ZEMainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEMainView.h; path = Login/ZEMainView.h; sourceTree = "<group>"; };
 		98AEA3371CD061D0001C4AED /* ZEMainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZEMainView.m; path = Login/ZEMainView.m; sourceTree = "<group>"; };
 		98AEA3381CD061D0001C4AED /* ZEMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZEMainViewController.h; path = Login/ZEMainViewController.h; sourceTree = "<group>"; };
@@ -368,6 +373,8 @@
 				98FA64871ED3D3B4000F2133 /* ZEMemberHistoryListView.m */,
 				98FA64891ED412AC000F2133 /* ZEQueryMemberQueryVC.h */,
 				98FA648A1ED412AC000F2133 /* ZEQueryMemberQueryVC.m */,
+				98A45DBD211C2A71007A68C8 /* ZEGroupListVC.h */,
+				98A45DBE211C2A71007A68C8 /* ZEGroupListVC.m */,
 			);
 			name = PointQuery;
 			path = setting;
@@ -622,6 +629,7 @@
 		98DB7C751C4F80BE0046D405 /* SourceImage */ = {
 			isa = PBXGroup;
 			children = (
+				98A45DC0211D27A1007A68C8 /* gqck@3x.png */,
 				98CE757D1D894A4200CF2133 /* bananer.png */,
 				98D965D71D8684CB00BC1216 /* home_personalskills@3x.png */,
 				98D965D81D8684CB00BC1216 /* home_foreman@3x.png */,
@@ -819,6 +827,7 @@
 				98376DFB1CC07D7200BA07DC /* sy_dengji@3x.png in Resources */,
 				984F0DED1C7558AA008106A5 /* audit_no_icon@3x.png in Resources */,
 				98DB7CB41C50ACCD0046D405 /* JCAlertView.bundle in Resources */,
+				98A45DC1211D27A1007A68C8 /* gqck@3x.png in Resources */,
 				989B2C531C4DE7AA00F14EFA /* Assets.xcassets in Resources */,
 				98255AAB1CE5CE420023BEA9 /* icon_point@3x.png in Resources */,
 				98255AAA1CE5CE420023BEA9 /* icon_point@2x.png in Resources */,
@@ -940,6 +949,7 @@
 				98947EAB1D6C4D2800D1EE24 /* ZEEPM_TEAM_RATION_COMMON.m in Sources */,
 				987013D11D7015B900CBD1B2 /* ZECalculateTotalPoint.m in Sources */,
 				982CEA111C744A11008693C2 /* ZEPointAuditView.m in Sources */,
+				98A45DBF211C2A71007A68C8 /* ZEGroupListVC.m in Sources */,
 				9845DEC81D6AABC600895F1A /* ZELoginViewController.m in Sources */,
 				988B0F271D855207005DC924 /* ZESumDeatilVC.m in Sources */,
 				987B34B31C5214970035FB6B /* ZEPointRegModel.m in Sources */,

@@ -11,5 +11,6 @@
 @interface ZESumDeatilVC : ZESettingRootVC
 
 @property (nonatomic,copy) NSString * PERIODCODE;
+@property (nonatomic,copy) NSString * PSNNUM;
 
 @end

@@ -67,6 +67,9 @@
 @property (nonatomic,copy) NSString * SYSUPDATORID;
 @property (nonatomic,copy) NSString * SUMPOINTS;
 
+@property (nonatomic,copy) NSString * TASKID;
+@property (nonatomic,copy) NSString * WORKPOINTS;
+
 @property (nonatomic,copy) NSString * UNIT;
 @property (nonatomic,copy) NSString * WORKINGPROCEDURE;
 

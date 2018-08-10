@@ -16,6 +16,7 @@
     JCAlertView * _alertView;
     UIButton * _startDateBut;
     UIButton * _endDateBut;
+    UITextField * _nameTextField;
 }
 
 @end
@@ -23,9 +24,9 @@
 
 -(id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 40, 190.0f)];
+    self = [super initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 40, [ZESettingLocalData getISLEADER] ? 240.0f : 190.0f)];
     if (self) {
-        _viewFrame = CGRectMake(0, 0, SCREEN_WIDTH - 40, 190.0f);
+        _viewFrame = CGRectMake(0, 0, SCREEN_WIDTH - 40,  [ZESettingLocalData getISLEADER] ? 240.0f : 190.0f);
         self.backgroundColor = [UIColor whiteColor];
         [self initView];
         self.clipsToBounds = YES;
@@ -64,10 +65,27 @@
         chooseDateBut.layer.borderColor = [MAIN_LINE_COLOR CGColor];
         chooseDateBut.layer.borderWidth = 1;
         chooseDateBut.layer.cornerRadius = 5;
-        
-        
+    
+        if(i == 1){
+            _nameTextField = [[UITextField alloc]initWithFrame:CGRectMake(10, 150, chooseDateBut.frame.size.width, 40.0f)];
+            _nameTextField.placeholder = @"请输入人员姓名";
+            [self addSubview:_nameTextField];
+            [_nameTextField setValue:[UIColor lightGrayColor] forKeyPath:@"_placeholderLabel.textColor"];
+            [_nameTextField setValue:[UIFont boldSystemFontOfSize:15] forKeyPath:@"_placeholderLabel.font"];
+
+            _nameTextField.leftViewMode = UITextFieldViewModeAlways;
+            _nameTextField.leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 10, 40.0f)];
+            
+            _nameTextField.clipsToBounds = YES;
+            _nameTextField.layer.borderWidth = 1;
+            _nameTextField.layer.cornerRadius = 5;
+            _nameTextField.layer.borderColor = [MAIN_LINE_COLOR CGColor];
+            if (![ZESettingLocalData getISLEADER]) {
+                _nameTextField.hidden = YES;
+            }
+        }
         UIButton * optionBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-        optionBtn.frame = CGRectMake(0 + _viewFrame.size.width / 2 * i , 146.0f, _viewFrame.size.width / 2, 44.0f);
+        optionBtn.frame = CGRectMake(0 + _viewFrame.size.width / 2 * i , [ZESettingLocalData getISLEADER] ? 196.0f : 146.0f, _viewFrame.size.width / 2, 44.0f);
         [optionBtn setTitle:@"取消" forState:UIControlStateNormal];
         [optionBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [optionBtn setBackgroundColor:MAIN_COLOR];
@@ -80,7 +98,7 @@
     }
     
     CALayer * lineLayer = [CALayer layer];
-    lineLayer.frame = CGRectMake(_viewFrame.size.width / 2 - 0.25f, 146.0f, 0.5, 44.0f);
+    lineLayer.frame = CGRectMake(_viewFrame.size.width / 2 - 0.25f,  [ZESettingLocalData getISLEADER] ? 196.0f : 146.0f, 0.5, 44.0f);
     lineLayer.backgroundColor = [MAIN_LINE_COLOR CGColor];
     [self.layer addSublayer:lineLayer];
     
@@ -89,6 +107,7 @@
 
 -(void)chooseDateBtnClick:(UIButton *)button
 {
+    [self endEditing:YES];
     ZEPointRegChooseDateView * chooseDateView = [[ZEPointRegChooseDateView alloc]initWithFrame:CGRectZero];
     chooseDateView.delegate = self;
     _alertView = [[JCAlertView alloc]initWithCustomView:chooseDateView dismissWhenTouchedBackground:YES];
@@ -100,11 +119,13 @@
 
 -(void)cancelChooseDate
 {
+    [self endEditing:YES];
     [_alertView dismissWithCompletion:nil];
 }
 
 -(void)confirmChooseDate:(NSString *)dateStr
 {
+    [self endEditing:YES];
     [_alertView dismissWithCompletion:^{
         if(_alertView.tag == 200){
             [_startDateBut setTitle:dateStr forState:UIControlStateNormal];
@@ -126,8 +147,8 @@
             break;
         case 1:
         {
-            if ([self.delegate respondsToSelector:@selector(confirmSearchStartDate:endDate:)]) {
-                [self.delegate confirmSearchStartDate:_startDateBut.titleLabel.text endDate:_endDateBut.titleLabel.text];
+            if ([self.delegate respondsToSelector:@selector(confirmSearchStartDate:endDate:withPeopleName:)]) {
+                [self.delegate confirmSearchStartDate:_startDateBut.titleLabel.text endDate:_endDateBut.titleLabel.text withPeopleName:_nameTextField.text];
             }
         }
             break;

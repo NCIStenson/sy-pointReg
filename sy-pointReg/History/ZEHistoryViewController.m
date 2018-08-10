@@ -24,6 +24,7 @@
     BOOL _isSearch;
     NSString * _startDate;
     NSString * _endDate;
+    NSString * _inputPeopleName;
 }
 @end
 
@@ -117,11 +118,18 @@
                              }];
 }
 
--(void)searchHistoryStartDate:(NSString *)startDate withEndDate:(NSString *)endDate
+-(void)searchHistoryStartDate:(NSString *)startDate withEndDate:(NSString *)endDate withPeopleName:(NSString *)name
 {
     [_historyView showAlertView:YES];
-    NSString * whereSQL = [NSString stringWithFormat:@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#' and enddate>=to_date('%@','yyyy-mm-dd') and enddate<=to_date('%@','yyyy-mm-dd')",startDate,endDate];
+    NSString * whereSQL = @"";
+    
+   if (startDate.length > 0 && endDate.length >0 ){       
+       whereSQL = [NSString stringWithFormat:@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#' and psnname like '%%%@%%' and enddate>=to_date('%@','yyyy-mm-dd') and enddate<=to_date('%@','yyyy-mm-dd')",name,startDate,endDate];
 
+    }else if (name.length > 0){
+        whereSQL =  [NSString stringWithFormat:@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#' and psnname like '%%%@%%'",name];
+    }
+    
     NSDictionary * parametersDic = @{@"start":[NSString stringWithFormat:@"%ld",(long)_currentPage * 20],
                                      @"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATION_REG,
@@ -178,29 +186,43 @@
 
 #pragma mark - ZEHistoryViewDelegate
 
--(void)beginSearch:(ZEHistoryView *)hisView withStartDate:(NSString *)startDate withEndDate:(NSString *)endDate
+-(void)beginSearch:(ZEHistoryView *)hisView withStartDate:(NSString *)startDate withEndDate:(NSString *)endDate witnPeopleName:(NSString *)name
 {
-    if ([startDate isEqualToString:@"开始日期"]||[endDate isEqualToString:@"结束日期"]) {
-        [hisView showAlertView:YES];
-        [ZEUtil showAlertView:@"请选择日期" viewController:self];
-        return;
+    if (name.length > 0) {
+        NSLog(@" =======  进行人员搜索");
+        if ([ZEUtil compareDate:startDate withDate:endDate] == -1) {
+            [ZEUtil showAlertView:@"开始日期不能晚于结束日期" viewController:self];
+            [hisView showAlertView:YES];
+            return;
+        }
+    }else{
+        if ([startDate isEqualToString:@"开始日期"]||[endDate isEqualToString:@"结束日期"]) {
+            [hisView showAlertView:YES];
+            [ZEUtil showAlertView:@"请选择日期" viewController:self];
+            return;
+        }
+        if ([ZEUtil compareDate:startDate withDate:endDate] == -1) {
+            [ZEUtil showAlertView:@"开始日期不能晚于结束日期" viewController:self];
+            [hisView showAlertView:YES];
+            return;
+        }
     }
-    if ([ZEUtil compareDate:startDate withDate:endDate] == -1) {
-        [ZEUtil showAlertView:@"开始日期不能晚于结束日期" viewController:self];
-        [hisView showAlertView:YES];
-        return;
-    }
+    
     _currentPage = 0;
     _isSearch    = YES;
     _startDate   = startDate;
     _endDate     = endDate;
+    _inputPeopleName = name;
+    if (name.length == 0) {
+        _inputPeopleName = @"";
+    }
     
     if ([startDate isEqualToString:@"开始日期"]) {
         _startDate = @"";
     }else if ([endDate isEqualToString:@"结束日期"]){
         _endDate = @"";
     }
-    [self searchHistoryStartDate:_startDate withEndDate:_endDate];
+    [self searchHistoryStartDate:_startDate withEndDate:_endDate withPeopleName:_inputPeopleName];
 
 }
 
@@ -216,7 +238,7 @@
 -(void)loadMoreData:(ZEHistoryView *)hisView
 {
     if (_isSearch) {
-        [self searchHistoryStartDate:_startDate withEndDate:_endDate];
+        [self searchHistoryStartDate:_startDate withEndDate:_endDate withPeopleName:_inputPeopleName];
     }else{
         [self sendRequest];
     }
@@ -342,7 +364,7 @@
                              success:^(id data) {
                                  _currentPage = 0 ;
                                  if(_isSearch){
-                                     [safeSelf searchHistoryStartDate:_startDate withEndDate:_endDate];
+                                     [safeSelf searchHistoryStartDate:_startDate withEndDate:_endDate withPeopleName:_inputPeopleName];
                                  }else{
                                      [safeSelf sendRequest];
                                  }

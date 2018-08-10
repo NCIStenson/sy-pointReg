@@ -71,4 +71,13 @@ typedef NS_ENUM (NSInteger,ENTER_MANYPERSON_POINTREG_TYPE){
     ENTER_MANYPERSON_POINTREG_TYPE_LEADER,      //班组长进入工分登记固定页面
     ENTER_MANYPERSON_POINTREG_TYPE_CHARGE,      //负责人进入工分登记固定页面
 };
+
+/* 进入班组工时查看界面 */
+typedef NS_ENUM (NSInteger,ENTER_MEMBERLIST){
+    ENTER_MEMBERLIST_GROUP,      // 班组进去页面
+    ENTER_MEMBERLIST_MEMBER,      //班员进入页面
+};
+
+
+
 #endif /* ZEEnumConstant_h */

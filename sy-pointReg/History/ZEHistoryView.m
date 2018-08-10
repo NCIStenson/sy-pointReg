@@ -450,7 +450,7 @@
 {
     ZEAlertSearchView * customAlertView = [[ZEAlertSearchView alloc]initWithFrame:CGRectZero];
     customAlertView.delegate = self;
-    _alertView = [[JCAlertView alloc]initWithCustomView:customAlertView dismissWhenTouchedBackground:YES];
+    _alertView = [[JCAlertView alloc]initWithCustomView:customAlertView dismissWhenTouchedBackground:NO];
     [_alertView show];
 }
 
@@ -460,10 +460,10 @@
 {
     [_alertView dismissWithCompletion:nil];
 }
--(void)confirmSearchStartDate:(NSString *)startDate endDate:(NSString *)endDate
+-(void)confirmSearchStartDate:(NSString *)startDate endDate:(NSString *)endDate withPeopleName:(NSString *)name
 {
-    if ([self.delegate respondsToSelector:@selector(beginSearch:withStartDate:withEndDate:)]) {
-        [self.delegate beginSearch:self withStartDate:startDate withEndDate:endDate];
+    if ([self.delegate respondsToSelector:@selector(beginSearch:withStartDate:withEndDate:witnPeopleName:)]) {
+        [self.delegate beginSearch:self withStartDate:startDate withEndDate:endDate witnPeopleName:name];
     }
 }
 @end

@@ -30,4 +30,5 @@
 #define SNOW_MOBILE_DEVICE           @"SNOW_MOBILE_DEVICE"            /***   设备列表  ***/
 
 #define EPM_TEAM_RATION_REG_SX       @"EPM_TEAM_RATION_REG_SX"      /******** 工时序数 ********/
+#define V_EPM_TEAM_SUITUNIT_ORG       @"V_EPM_TEAM_SUITUNIT_ORG"      /******** 班组列表 ********/
 #endif /* ZEServerTableMessage_h */

@@ -27,7 +27,7 @@
 /**
  *  开始查询
  */
--(void)beginSearch:(ZEHistoryView *)hisView withStartDate:(NSString *)startDate withEndDate:(NSString *)endDate;
+-(void)beginSearch:(ZEHistoryView *)hisView withStartDate:(NSString *)startDate withEndDate:(NSString *)endDate witnPeopleName:(NSString *)name;
 
 /**
  *  删除未审核历史记录

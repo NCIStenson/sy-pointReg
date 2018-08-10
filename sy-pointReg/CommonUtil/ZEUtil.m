@@ -414,10 +414,10 @@
     return tableDic;
 }
 
-+ (NSArray *)getServerData:(NSDictionary *)dic withTabelName:(NSString *)tableName
++ (NSMutableArray *)getServerData:(NSDictionary *)dic withTabelName:(NSString *)tableName
 {
-    NSDictionary * tableDic = [[dic objectForKey:@"DATAS"] objectForKey:tableName];
-    NSArray * serverDatasArr = [tableDic objectForKey:@"datas"];
+    NSMutableDictionary * tableDic = [NSMutableDictionary dictionaryWithDictionary:[[dic objectForKey:@"DATAS"] objectForKey:tableName]];
+    NSMutableArray * serverDatasArr = [NSMutableArray arrayWithArray:[tableDic objectForKey:@"datas"]];
     
     return serverDatasArr;
 }

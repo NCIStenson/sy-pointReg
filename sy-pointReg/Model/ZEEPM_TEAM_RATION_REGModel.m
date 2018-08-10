@@ -16,13 +16,17 @@ static ZEEPM_TEAM_RATION_REGModel * model = nil;
 {
     model = [[ZEEPM_TEAM_RATION_REGModel alloc]init];
     
-    model.ADDMODE               = [dic objectForKey:@"ADDMODE"];
+    if([ZEUtil isNotNull:[dic objectForKey:@"ADDMODE"]]){
+        model.ADDMODE               = [dic objectForKey:@"ADDMODE"];
+    }
     model.BEGINDATE             = [dic objectForKey:@"BEGINDATE"];
     model.CATEGORYCODE          = [dic objectForKey:@"CATEGORYCODE"];
     model.CATEGORYNAME          = [dic objectForKey:@"CATEGORYNAME"];
     model.CONVERSIONCOEFFICIENT = [dic objectForKey:@"CONVERSIONCOEFFICIENT"];
     model.CONVERSIONUNITS       = [dic objectForKey:@"CONVERSIONUNITS"];
-    model.DESCR                 = [dic objectForKey:@"DESCR"];
+    if ([ZEUtil isNotNull:[dic objectForKey:@"DESCR"]]) {
+        model.DESCR                 = [dic objectForKey:@"DESCR"];
+    }
     model.DISPATCHTYPE          = [dic objectForKey:@"DISPATCHTYPE"];
     model.DISPLAYORDER          = [dic objectForKey:@"DISPLAYORDER"];
     model.ENDDATE               = [[dic objectForKey:@"ENDDATE"] stringByReplacingOccurrencesOfString:@" 00:00:00.0" withString:@""];
@@ -30,10 +34,13 @@ static ZEEPM_TEAM_RATION_REGModel * model = nil;
     model.ORGCODE               = [dic objectForKey:@"ORGCODE"];
     model.PERIODCODE            = [dic objectForKey:@"PERIODCODE"];
     model.PSNNAME               = [dic objectForKey:@"PSNNAME"];
-    model.PSNNUM                = [dic objectForKey:@"PSNNUM"];
+    model.PSNNUM              = [dic objectForKey:@"PSNNUM"];
+
     model.QSTANDARD             = [dic objectForKey:@"QSTANDARD"];
     model.QUOTIETY1             = [dic objectForKey:@"QUOTIETY1"];
-    model.QUOTIETY1CODE         = [dic objectForKey:@"QUOTIETY1CODE"];
+    if ([ZEUtil isNotNull:[dic objectForKey:@"QUOTIETY1CODE"]]) {
+        model.QUOTIETY1CODE         = [dic objectForKey:@"QUOTIETY1CODE"];
+    }
     model.QUOTIETY2             = [dic objectForKey:@"QUOTIETY2"];
     model.QUOTIETY2CODE         = [dic objectForKey:@"QUOTIETY2CODE"];
     model.QUOTIETY3             = [dic objectForKey:@"QUOTIETY3"];
@@ -53,8 +60,13 @@ static ZEEPM_TEAM_RATION_REGModel * model = nil;
     model.SELF                  = [dic objectForKey:@"SELF"];
     model.SEQKEY                = [dic objectForKey:@"SEQKEY"];
     model.STANDARDOPERATIONNUM  = [dic objectForKey:@"STANDARDOPERATIONNUM"];
-    model.STANDARDOPERATIONTIME = [NSString stringWithFormat:@"%@",[dic objectForKey:@"STANDARDOPERATIONTIME"]];
-    model.STATISTICTYPE         = [dic objectForKey:@"STATISTICTYPE"];
+    if ([ZEUtil isNotNull:[dic objectForKey:@"STANDARDOPERATIONTIME"]]) {
+        model.STANDARDOPERATIONTIME         = [dic objectForKey:@"STANDARDOPERATIONTIME"];
+    }
+
+    if ([ZEUtil isNotNull:[dic objectForKey:@"STATISTICTYPE"]]) {
+        model.STATISTICTYPE         = [dic objectForKey:@"STATISTICTYPE"];
+    }
     model.STATUS                = [dic objectForKey:@"STATUS"];
     model.STDSCORE              = [dic objectForKey:@"STDSCORE"];
     model.SUITUNIT              = [dic objectForKey:@"SUITUNIT"];
@@ -65,10 +77,15 @@ static ZEEPM_TEAM_RATION_REGModel * model = nil;
     model.SYSUPDATEDATE         = [dic objectForKey:@"SYSUPDATEDATE"];
     model.SYSUPDATORID          = [dic objectForKey:@"SYSUPDATORID"];
     model.UNIT                  = [dic objectForKey:@"UNIT"];
-    model.WORKINGPROCEDURE      = [dic objectForKey:@"WORKINGPROCEDURE"];
+    if ([ZEUtil isNotNull:[dic objectForKey:@"WORKINGPROCEDURE"]]) {
+        model.WORKINGPROCEDURE      = [dic objectForKey:@"WORKINGPROCEDURE"];
+    }
     model.SUMPOINTS             = [dic objectForKey:@"SUMPOINTS"];
     model.FINALSCORE            = [dic objectForKey:@"FINALSCORE"];
     
+    model.TASKID            = [dic objectForKey:@"TASKID"];
+    model.WORKPOINTS            = [dic objectForKey:@"WORKPOINTS"];
+
     return model;
 }
 

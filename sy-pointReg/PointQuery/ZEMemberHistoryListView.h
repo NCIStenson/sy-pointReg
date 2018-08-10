@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import "ZEEPM_TEAM_RATION_REGModel.h"
+
+typedef void(^selectBlock)(ZEEPM_TEAM_RATION_REGModel * model);
+
 @class ZEMemberHistoryListView;
 
 @protocol ZEMemberHistoryListViewDelegate <NSObject>
@@ -21,7 +25,13 @@
 
 @property (nonatomic,weak) id <ZEMemberHistoryListViewDelegate> delegate;
 
--(id)initWithFrame:(CGRect)frame;
+-(id)initWithFrame:(CGRect)frame withType:(ENTER_MEMBERLIST)type;
 
 -(void)reloadContentData:(NSArray *)arr;
+
+@property(nonatomic,assign) ENTER_MEMBERLIST enterType;
+@property (nonatomic, copy) selectBlock block;
+
+
+
 @end

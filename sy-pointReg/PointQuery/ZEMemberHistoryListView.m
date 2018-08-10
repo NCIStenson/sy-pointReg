@@ -31,10 +31,11 @@
 
 @implementation ZEMemberHistoryListView
 
--(id)initWithFrame:(CGRect)frame
+-(id)initWithFrame:(CGRect)frame withType:(ENTER_MEMBERLIST)type;
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _enterType = type;
         [self initView];
         personalPoint = @"0";
         personalTime = @"0";
@@ -76,7 +77,6 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     
     UIView * backgroundView = [UIView new];
-    
     for (int i = 0 ;i < 4; i ++) {
         CALayer * lineLayer = [CALayer layer];
         lineLayer.frame = CGRectMake(0, kRowHeight + kRowHeight * i, SCREEN_WIDTH, 0.5f);
@@ -99,13 +99,21 @@
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 float avaPoint = 0;
                 float totalSumPoints = 0.0f;
+                NSInteger haveScoreCount = 0;
                 for (int i = 0; i < self.listArr.count; i ++ ) {
                     ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:self.listArr [i]];
                     float a = [[ZEUtil decimalwithFormat:@"0.00" floatV:[model.SUMPOINTS floatValue]] floatValue];
+                    if (a != 0) {
+                        haveScoreCount += 1;
+                    }
                     totalSumPoints += a;
                     totalSumPoints = [[ZEUtil decimalwithFormat:@"0.00" floatV:totalSumPoints] floatValue];
                 }
-                avaPoint = totalSumPoints / self.listArr.count;
+                if (haveScoreCount > 0) {
+                    avaPoint = totalSumPoints / haveScoreCount;
+                }else{
+                    avaPoint = totalSumPoints / self.listArr.count;
+                }
                 
                 NSMutableAttributedString * str =[self getTeamAverageAttrText:[NSString stringWithFormat:@"班组内平均分：%@分",[ZEUtil roundUp:avaPoint afterPoint:2]] withPoint:[NSString stringWithFormat:@"%.2f",avaPoint]]  ;
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -120,6 +128,14 @@
                 NSString * maxPoint = [ZEUtil decimalwithFormat:@"0.00" floatV:[maxModel.SUMPOINTS floatValue]];
                 
                 ZEEPM_TEAM_RATION_REGModel * minModel = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:[self.listArr lastObject]];
+                
+                for (int i = 0; i < self.listArr.count; i ++ ) {
+                    ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:self.listArr [i]];
+                    float a = [[ZEUtil decimalwithFormat:@"0.00" floatV:[model.SUMPOINTS floatValue]] floatValue];
+                    if (a != 0) {
+                        minModel = model;
+                    }
+                }
                 NSString * minUsername = minModel.PSNNAME;
                 NSString * minPoint =  [ZEUtil decimalwithFormat:@"0.00" floatV:[minModel.SUMPOINTS floatValue]];
                 
@@ -161,6 +177,25 @@
     [contentTitleView addSubview:workPointLable];
 
     return backgroundView;
+}
+
+-(UIView *)groupHeaderView
+{
+    UIView * groupHeaderView = [UIView new];
+    
+    for(int i = 0 ; i < 3; i ++){
+        UIButton * headerBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+        headerBtn.frame = CGRectMake(SCREEN_WIDTH / 3 * i , 0, SCREEN_WIDTH / 3, kRowHeight * 2);
+        [headerBtn setTitle:@"2017年8月" forState:UIControlStateNormal];
+//        headerBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        headerBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+        [groupHeaderView addSubview:headerBtn];
+        [headerBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        headerBtn.titleLabel.numberOfLines = 0;
+    }
+    
+    return groupHeaderView;
+    
 }
 
 -(NSMutableAttributedString *)getAttrText:(NSString *)str
@@ -321,7 +356,11 @@
     if ([self.delegate respondsToSelector:@selector(goQueryMemberVC)]) {
         [self.delegate goQueryMemberVC];
     }
+}
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    ZEEPM_TEAM_RATION_REGModel * model = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:self.listArr[indexPath.row]];
+    self.block(model);
 }
 
 @end

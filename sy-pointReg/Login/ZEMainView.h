@@ -43,7 +43,7 @@
  */
 -(void)changePassword;
 
-
+-(void)goGQCK;
 /**
  班员工分登记查询
  */

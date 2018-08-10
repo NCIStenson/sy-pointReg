@@ -20,7 +20,7 @@
  *  确定查询
  */
 
--(void)confirmSearchStartDate:(NSString *)startDate endDate:(NSString *)endDate;
+-(void)confirmSearchStartDate:(NSString *)startDate endDate:(NSString *)endDate withPeopleName:(NSString *)name;
 
 
 @end

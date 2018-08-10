@@ -272,5 +272,4 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:kNOTISEARCHPOINT object:nil];
 }
 
-
 @end

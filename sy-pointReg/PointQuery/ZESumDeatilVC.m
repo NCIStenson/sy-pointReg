@@ -28,16 +28,57 @@
 {
     [super viewDidLoad];
     
-    self.title = @"汇总详情";
-    
     [self initView];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    [self sendRequest];
+    self.title = @"详情明细";
+    if(_PSNNUM.length > 0){
+        [self sendPSNUMRequest];
+    }else if (_PERIODCODE.length > 0) {
+        [self sendRequest];
+        self.title = @"汇总详情";
+    }
 }
+
+-(void)sendPSNUMRequest{
+    NSString * whereSQL = [NSString stringWithFormat:@"psnnum='%@' and suitunit='#SUITUNIT#' and PERIODCODE='%@' and status in ('1','2','3','4','5','6','7','8')",_PSNNUM,_PERIODCODE];
+    
+    NSDictionary * parametersDic = @{@"start":@"0",
+                                     @"limit":@"2000",
+                                     @"MASTERTABLE":EPM_TEAM_RATION_REG_DETAIL,
+                                     @"MASTERFIELD":@"SEQKEY",
+                                     @"MENUAPP":@"EMARK_APP",
+                                     @"WHERESQL":whereSQL,
+                                     @"METHOD":@"search",
+                                     @"DETAILTABLE":@"",
+                                     @"DETAILFIELD":@"",
+                                     @"CLASSNAME":@"com.nci.app.operation.business.AppBizOperation",
+                                     };
+    
+    NSDictionary * fieldsDic =@{};
+    
+    NSDictionary * packageDic = [ZEPackageServerData getCommonServerDataWithTableName:@[EPM_TEAM_RATION_REG_DETAIL]
+                                                                           withFields:@[fieldsDic]
+                                                                       withPARAMETERS:parametersDic
+                                                                       withActionFlag:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __block ZESumDeatilVC * safeSelf = self;
+    [ZEUserServer getDataWithJsonDic:packageDic
+                             success:^(id data) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                 if ([[ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG_DETAIL] count] > 0) {
+                                     safeSelf.listArr = [ZEUtil getServerData:data withTabelName:EPM_TEAM_RATION_REG_DETAIL];
+                                     [_contentTableView reloadData];
+                                 }
+                             } fail:^(NSError *errorCode) {
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             }];
+}
+
+
 -(void)sendRequest
 {
     NSString * whereSQL = [NSString stringWithFormat:@"psnnum='#PSNNUM#' and suitunit='#SUITUNIT#' and PERIODCODE='%@' and status in ('2','3','4','5','6','7')",_PERIODCODE];

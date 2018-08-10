@@ -184,6 +184,9 @@
         }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_07"]){
             [enterBtn setImage:[UIImage imageNamed:@"home_foreman"] forState:UIControlStateNormal];
             [enterBtn addTarget:self action:@selector(goMemberHistoryList) forControlEvents:UIControlEventTouchUpInside];
+        }else if ([UUMFUNCTIONM.FUNCTIONCODE isEqualToString:@"APP_08"]){
+            [enterBtn setImage:[UIImage imageNamed:@"gqck"] forState:UIControlStateNormal];
+            [enterBtn addTarget:self action:@selector(goGQCK) forControlEvents:UIControlEventTouchUpInside];
         }
     }
 }
@@ -238,6 +241,12 @@
 {
     if ([self.delegate respondsToSelector:@selector(goMemberHistoryList)]) {
         [self.delegate goMemberHistoryList];
+    }
+}
+
+-(void)goGQCK{
+    if ([self.delegate respondsToSelector:@selector(goGQCK)]) {
+        [self.delegate goGQCK];
     }
 }
 

@@ -464,6 +464,7 @@ buttonType ButtonTitle:(NSString *)buttonTitle Click:(clickHandle)click ButtonTy
 }
 
 - (void)coverViewTouched{
+    [self endEditing:YES];
     if (self.isDismissWhenTouchBackground) {
         [self dismissAlertWithCompletion:nil];
     }

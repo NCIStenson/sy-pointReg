@@ -10,4 +10,6 @@
 
 @interface ZEQueryMemberQueryVC : ZESettingRootVC
 
+@property (nonatomic,copy) NSString * ORGCODE;
+
 @end

@@ -18,10 +18,10 @@
 #define kCloseBtnMarginTop 12.0f
 
 // 导航栏内右侧按钮
-#define kRightButtonWidth 76.0f
-#define kRightButtonHeight 40.0f
-#define kRightButtonMarginRight -15.0f
-#define kRightButtonMarginTop 20.0f + 2.0f
+#define kRightButtonWidth 70.0f
+#define kRightButtonHeight 44.0f
+#define kRightButtonMarginLeft kNavBarWidth - kRightButtonWidth - 10.0f
+#define kRightButtonMarginTop  22.0f
 // 导航栏标题
 #define kNavTitleLabelWidth SCREEN_WIDTH
 #define kNavTitleLabelHeight 44.0f
@@ -44,9 +44,14 @@
     UITableView * _contentTableView;
     NSInteger _currentSelectRow;
     NSArray * statusArr;
+    NSString * _multipleStr;
 }
 @property (nonatomic,retain) NSMutableArray * dateArr;
 @property (nonatomic,retain) NSMutableArray * listDataArr;
+
+@property (nonatomic,retain) NSMutableArray * detailListDataArr;
+@property (nonatomic,retain) NSMutableDictionary * detailListDataDic;
+
 @end
 
 @implementation ZEPointAuditView
@@ -98,7 +103,14 @@
     [closeBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     
     [navBar addSubview:closeBtn];
-
+    
+    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    rightBtn.frame = CGRectMake(kRightButtonMarginLeft, kRightButtonMarginTop, kRightButtonWidth, kRightButtonHeight);
+    rightBtn.backgroundColor = [UIColor clearColor];
+    rightBtn.contentMode = UIViewContentModeScaleAspectFit;
+    [rightBtn setTitle:@"编辑" forState:UIControlStateNormal];
+    [rightBtn addTarget:self action:@selector(goEdit:) forControlEvents:UIControlEventTouchUpInside];
+    [navBar addSubview:rightBtn];
 }
 
 -(void)initView
@@ -124,14 +136,16 @@
 /**
  *  刷新界面
  */
--(void)reloadFirstView:(NSArray *)array
+-(void)reloadFirstView:(NSArray *)array withDetailDataArr:(NSArray *)arr
 {
     self.listDataArr = [NSMutableArray array];
+    self.detailListDataArr = [NSMutableArray array];
+    self.detailListDataDic = [NSMutableDictionary dictionary];
     self.dateArr = [NSMutableArray array];
     
-    [self reloadView:array];
+    [self reloadView:array withDetailDataArr:arr];
 }
--(void)reloadView:(NSArray *)array
+-(void)reloadView:(NSArray *)array withDetailDataArr:(NSArray *)arr
 {
     dispatch_queue_t queue = dispatch_queue_create("my.concurrent.queue", DISPATCH_QUEUE_CONCURRENT);
     
@@ -170,7 +184,17 @@
             }
         }
         
+        for (int j = 0 ; j < arr.count; j++) {
+            NSDictionary * dic = arr[j];
+            NSString * taskID = [dic objectForKey:@"TASKID"];
+            NSMutableArray * keyArr = [NSMutableArray arrayWithArray:[_detailListDataDic objectForKey:taskID]];
+            [keyArr addObject:dic];
+            [_detailListDataDic setObject:keyArr forKey:taskID];
+        }
+        
+        
         dispatch_async(dispatch_get_main_queue(), ^{
+            _contentTableView.editing = NO;
             [_contentTableView.mj_header endRefreshing];
             if (array.count % 20 != 0) {
                 [_contentTableView.mj_footer endRefreshingWithNoMoreData];
@@ -263,13 +287,15 @@
     if (!cell) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     for (UIView * view in cell.contentView.subviews) {
         [view removeFromSuperview];
     }
-    
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if(tableView.isEditing){
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+    }else{
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
     
     ZEEPM_TEAM_RATION_REGModel * pointAM = nil;
     if ([ZEUtil isNotNull:self.listDataArr]) {
@@ -305,6 +331,18 @@
     staffNameLabel.font = [UIFont systemFontOfSize:13.0f];
     [cellContent addSubview:staffNameLabel];
     
+    NSArray * arr = [_detailListDataDic objectForKey:pointAM.SEQKEY];
+    NSString * staffName = @"";
+    for (int i = 0; i < arr.count; i ++) {
+        ZEEPM_TEAM_RATION_REGModel * scoreModel = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:arr[i]];
+        if (staffName.length == 0) {
+            staffName = [NSString stringWithFormat:@"%@（%@）",scoreModel.PSNNAME,scoreModel.WORKPOINTS];
+        }else{
+            staffName = [NSString stringWithFormat:@"%@,%@（%@）",staffName,scoreModel.PSNNAME,scoreModel.WORKPOINTS];
+        }
+    }
+    staffNameLabel.text = staffName;
+
     return cell;
 }
 #pragma mark - 删除功能
@@ -341,7 +379,13 @@
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //当表视图处于没有未编辑状态时选择左滑删除
-    return UITableViewCellEditingStyleDelete;
+    if (tableView.isEditing) {
+        // 多选
+        return UITableViewCellEditingStyleDelete | UITableViewCellEditingStyleInsert;
+    }else{
+        // 删除
+        return UITableViewCellEditingStyleDelete;
+    }
 }
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
     return @"删除";
@@ -362,11 +406,13 @@
     }
 }
 
-
 #pragma mark - UITableViewDelegate
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if(tableView.isEditing){
+        return;
+    }
     ZEEPM_TEAM_RATION_REGModel * pointAM = nil;
     if ([ZEUtil isNotNull:self.listDataArr]) {
         pointAM = self.listDataArr[indexPath.section][indexPath.row];
@@ -408,6 +454,39 @@
     if ([self.delegate respondsToSelector:@selector(goBack)]) {
         [self.delegate goBack];
     }
+}
+
+-(void)goEdit:(UIButton*)btn
+{
+    _multipleStr = @"";
+    NSArray * arr = [_contentTableView indexPathsForSelectedRows];
+    for (int i = 0; i < arr.count; i ++) {
+        NSIndexPath * indexPathCell = arr[i];
+        NSArray * sectionDataArr = self.listDataArr[indexPathCell.section];
+        if (sectionDataArr.count > indexPathCell.row) {
+            ZEEPM_TEAM_RATION_REGModel * pointAM = sectionDataArr[indexPathCell.row];
+            if (_multipleStr.length > 0) {
+                _multipleStr = [NSString stringWithFormat:@"%@,%@",_multipleStr,pointAM.SEQKEY];
+            }else{
+                _multipleStr = pointAM.SEQKEY;
+            }
+        }
+    }
+    
+    if(_contentTableView.isEditing){
+        [btn setTitle:@"编辑" forState:UIControlStateNormal];
+        [_contentTableView setEditing:NO animated:YES];
+        btn.titleLabel.font = [UIFont systemFontOfSize:16];
+        if (_multipleStr.length > 0) {
+            self.multipleBlock(_multipleStr);
+        }
+    }else{
+        [btn setTitle:@"批量审核" forState:UIControlStateNormal];
+        [_contentTableView setEditing:YES animated:YES];
+        btn.titleLabel.font = [UIFont systemFontOfSize:14];
+    }
+    [_contentTableView reloadData];
+    
 }
 
 

@@ -78,7 +78,7 @@
                                      @"limit":@"20",
                                      @"MASTERTABLE":EPM_TEAM_RATION_REG,
                                      @"MENUAPP":@"EMARK_APP",
-                                     @"ORDERSQL":@"SYSCREATEDATE desc",
+                                     @"ORDERSQL":@"ENDDATE desc",
                                      @"WHERESQL":@"(SYSCREATORID='#PSNNUM#' or ( ORGCODE IN (#TEAMORGCODES#) and '#PSNNUM#'='#PLURALIST#')) and suitunit='#SUITUNIT#' and status in ('10')",
                                      @"METHOD":@"search",
                                      @"DETAILTABLE":EPM_TEAM_RATION_REG_DETAIL,

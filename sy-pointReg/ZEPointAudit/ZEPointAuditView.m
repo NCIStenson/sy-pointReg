@@ -45,6 +45,9 @@
     NSInteger _currentSelectRow;
     NSArray * statusArr;
     NSString * _multipleStr;
+    
+    UILabel * navTitleLabel;
+    UIButton *rightBtn;
 }
 @property (nonatomic,retain) NSMutableArray * dateArr;
 @property (nonatomic,retain) NSMutableArray * listDataArr;
@@ -82,7 +85,7 @@
     navBar.backgroundColor = MAIN_NAV_COLOR;
     navBar.clipsToBounds = YES;
         
-    UILabel *navTitleLabel = [UILabel new];
+    navTitleLabel = [UILabel new];
     navTitleLabel.backgroundColor = [UIColor clearColor];
     navTitleLabel.textAlignment = NSTextAlignmentCenter;
     navTitleLabel.textColor = [UIColor whiteColor];
@@ -104,11 +107,12 @@
     
     [navBar addSubview:closeBtn];
     
-    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     rightBtn.frame = CGRectMake(kRightButtonMarginLeft, kRightButtonMarginTop, kRightButtonWidth, kRightButtonHeight);
     rightBtn.backgroundColor = [UIColor clearColor];
     rightBtn.contentMode = UIViewContentModeScaleAspectFit;
-    [rightBtn setTitle:@"编辑" forState:UIControlStateNormal];
+    rightBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+    [rightBtn setTitle:@"批量审核" forState:UIControlStateNormal];
     [rightBtn addTarget:self action:@selector(goEdit:) forControlEvents:UIControlEventTouchUpInside];
     [navBar addSubview:rightBtn];
 }
@@ -194,7 +198,7 @@
         
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            _contentTableView.editing = NO;
+//            _contentTableView.editing = NO;
             [_contentTableView.mj_header endRefreshing];
             if (array.count % 20 != 0) {
                 [_contentTableView.mj_footer endRefreshingWithNoMoreData];
@@ -254,17 +258,17 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 20.0f;
+    return 30.0f;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UILabel * headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    headerLabel.backgroundColor = [UIColor lightGrayColor];
+    headerLabel.backgroundColor = RGBA(230, 230, 230, 1);
     headerLabel.opaque = NO;
     headerLabel.text = [NSString stringWithFormat:@"   %@",[self weekdayStringFromDate:_dateArr[section]]];
-    headerLabel.textColor = MAIN_COLOR;
+//    headerLabel.textColor = ;
     headerLabel.highlightedTextColor = [UIColor whiteColor];
-    headerLabel.font = [UIFont boldSystemFontOfSize:13];
-    headerLabel.frame = CGRectMake(0.0, 0.0, SCREEN_WIDTH, 20.0);
+    headerLabel.font = [UIFont systemFontOfSize:13];
+    headerLabel.frame = CGRectMake(0.0, 0.0, SCREEN_WIDTH, 30.0);
     return headerLabel;
 }
 
@@ -314,12 +318,12 @@
     [cellContent addSubview:imageView];
     
 
-    UILabel * realHourLabel = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 80.0f, 0.0f, 70.0f, 50.0f)];
-    realHourLabel.font = [UIFont systemFontOfSize:12.0f];
-    realHourLabel.textColor = [UIColor lightGrayColor];
-    realHourLabel.textAlignment = NSTextAlignmentRight;
-    realHourLabel.text = statusArr[[pointAM.STATUS integerValue]];
-    [cellContent addSubview:realHourLabel];
+//    UILabel * realHourLabel = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 80.0f, 0.0f, 70.0f, 50.0f)];
+//    realHourLabel.font = [UIFont systemFontOfSize:12.0f];
+//    realHourLabel.textColor = [UIColor lightGrayColor];
+//    realHourLabel.textAlignment = NSTextAlignmentRight;
+//    realHourLabel.text = statusArr[[pointAM.STATUS integerValue]];
+//    [cellContent addSubview:realHourLabel];
     
     UILabel * taskNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(65.0f, 5.0f, 200.0f, 20.0f)];
     taskNameLabel.font = [UIFont systemFontOfSize:15.0f];
@@ -336,9 +340,9 @@
     for (int i = 0; i < arr.count; i ++) {
         ZEEPM_TEAM_RATION_REGModel * scoreModel = [ZEEPM_TEAM_RATION_REGModel getDetailWithDic:arr[i]];
         if (staffName.length == 0) {
-            staffName = [NSString stringWithFormat:@"%@（%@）",scoreModel.PSNNAME,scoreModel.WORKPOINTS];
+            staffName = [NSString stringWithFormat:@"%@（%.2f）",scoreModel.PSNNAME,[scoreModel.WORKPOINTS floatValue]];
         }else{
-            staffName = [NSString stringWithFormat:@"%@,%@（%@）",staffName,scoreModel.PSNNAME,scoreModel.WORKPOINTS];
+            staffName = [NSString stringWithFormat:@"%@,%@（%.2f）",staffName,scoreModel.PSNNAME,[scoreModel.WORKPOINTS floatValue]];
         }
     }
     staffNameLabel.text = staffName;
@@ -451,6 +455,14 @@
 }
 -(void)goBack
 {
+    if (_contentTableView.editing) {
+        [rightBtn setTitle:@"批量审核" forState:UIControlStateNormal];
+        [_contentTableView setEditing:NO animated:YES];
+        rightBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+        navTitleLabel.text = @"工时审核";
+        return;
+    }
+    
     if ([self.delegate respondsToSelector:@selector(goBack)]) {
         [self.delegate goBack];
     }
@@ -474,16 +486,18 @@
     }
     
     if(_contentTableView.isEditing){
-        [btn setTitle:@"编辑" forState:UIControlStateNormal];
+        [btn setTitle:@"批量审核" forState:UIControlStateNormal];
         [_contentTableView setEditing:NO animated:YES];
-        btn.titleLabel.font = [UIFont systemFontOfSize:16];
+        btn.titleLabel.font = [UIFont systemFontOfSize:14];
+        navTitleLabel.text = @"工时审核";
         if (_multipleStr.length > 0) {
             self.multipleBlock(_multipleStr);
         }
     }else{
-        [btn setTitle:@"批量审核" forState:UIControlStateNormal];
+        [btn setTitle:@"审核" forState:UIControlStateNormal];
         [_contentTableView setEditing:YES animated:YES];
-        btn.titleLabel.font = [UIFont systemFontOfSize:14];
+        btn.titleLabel.font = [UIFont systemFontOfSize:16];
+        navTitleLabel.text = @"批量审核";
     }
     [_contentTableView reloadData];
     

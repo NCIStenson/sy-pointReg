@@ -220,6 +220,8 @@ static ZEPointRegCache * pointRegCahe = nil;
     _distributionTypeArr   = nil;
     _disTypeCoefficientDic = nil;
     _workerListArr         = nil;
+    self.disTypeCoefficientDic = [NSMutableDictionary dictionary];
+    self.RATIONTYPEVALUEDic = [NSMutableDictionary dictionary];
 }
 
 #pragma mark - 缓存分摊类型

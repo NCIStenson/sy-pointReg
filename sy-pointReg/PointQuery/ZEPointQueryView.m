@@ -120,7 +120,7 @@
     [contentTitleView addSubview:dateLable];
     
     UILabel * taskNameLable = [[UILabel alloc]initWithFrame:CGRectMake(60, 0.0f, SCREEN_WIDTH - 180, kRowHeight)];
-    taskNameLable.text = @"工作项";
+    taskNameLable.text = @"任务名称";
     taskNameLable.textAlignment = NSTextAlignmentCenter;
     taskNameLable.font = [UIFont systemFontOfSize:14];
     taskNameLable.textColor = kFontColor;

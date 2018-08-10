@@ -4,7 +4,7 @@ D/CommonUtil////
 D/Constant////
 D/History////
 D/Images.xcassets////
-/Info.plist/1.5/Fri Nov  4 08:53:32 2016/-kb/
+/Info.plist/1.6/Wed May 23 09:16:50 2018/-kb/
 D/LeaderReg////
 D/Login////
 D/Model////
@@ -14,8 +14,8 @@ D/PointRegistration////
 D/Service////
 D/SourceImage////
 D/UserCenter////
-/ZEAppDelegate.h/1.1/Wed Sep 21 04:03:44 2016/-kb/
-/ZEAppDelegate.m/1.5/Fri Nov  4 10:34:56 2016/-kb/
+/ZEAppDelegate.h/1.2/Tue Mar 21 03:12:13 2017/-kb/
+/ZEAppDelegate.m/1.6/Thu Aug  9 06:45:13 2018/-kb/
 D/ZEPointAudit////
 /ZESettingRootVC.h/1.1/Wed Sep 21 04:03:44 2016/-kb/
 /ZESettingRootVC.m/1.1/Wed Sep 21 04:03:44 2016/-kb/

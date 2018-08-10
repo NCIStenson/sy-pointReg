@@ -281,17 +281,16 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 20.0f;
+    return 30.0f;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UILabel * headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    headerLabel.backgroundColor = [UIColor lightGrayColor];
+    headerLabel.backgroundColor = RGBA(230, 230, 230, 1);
     headerLabel.opaque = NO;
     headerLabel.text = [NSString stringWithFormat:@"   %@",[self weekdayStringFromDate:_dateArr[section]]];
-    headerLabel.textColor = MAIN_COLOR;
     headerLabel.highlightedTextColor = [UIColor whiteColor];
-    headerLabel.font = [UIFont boldSystemFontOfSize:13];
-    headerLabel.frame = CGRectMake(0.0, 0.0, SCREEN_WIDTH, 20.0);
+    headerLabel.font = [UIFont systemFontOfSize:13];
+    headerLabel.frame = CGRectMake(0.0, 0.0, SCREEN_WIDTH, 30.0);
     return headerLabel;
 }
 

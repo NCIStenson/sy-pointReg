@@ -52,6 +52,7 @@
                                      @"MASTERFIELD":@"SEQKEY",
                                      @"MENUAPP":@"EMARK_APP",
                                      @"WHERESQL":whereSQL,
+                                     @"ORDERSQL":@"ENDDATE DESC",
                                      @"METHOD":@"search",
                                      @"DETAILTABLE":@"",
                                      @"DETAILFIELD":@"",
@@ -89,6 +90,7 @@
                                      @"MASTERFIELD":@"SEQKEY",
                                      @"MENUAPP":@"EMARK_APP",
                                      @"WHERESQL":whereSQL,
+                                     @"ORDERSQL":@"ENDDATE DESC",
                                      @"METHOD":@"search",
                                      @"DETAILTABLE":@"",
                                      @"DETAILFIELD":@"",
@@ -147,7 +149,7 @@
     [contentTitleView addSubview:dateLable];
     
     UILabel * taskNameLable = [[UILabel alloc]initWithFrame:CGRectMake(100, 0.0f, SCREEN_WIDTH - 220, 40.0f)];
-    taskNameLable.text = @"工作项";
+    taskNameLable.text = @"任务名称";
     taskNameLable.textAlignment = NSTextAlignmentCenter;
     taskNameLable.font = [UIFont systemFontOfSize:14];
     taskNameLable.textColor = kFontColor;

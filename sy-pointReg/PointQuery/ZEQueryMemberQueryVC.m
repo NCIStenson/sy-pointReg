@@ -226,7 +226,7 @@
     
     for (int i = 0; i < 3; i ++ ) {
         UILabel * taskNameLable = [[UILabel alloc]initWithFrame:CGRectMake(10 + (SCREEN_WIDTH - 20) / 3 * i , 0.0f, (SCREEN_WIDTH - 20) / 3, 40.0f)];
-        taskNameLable.text = @"工作项";
+        taskNameLable.text = @"任务名称";
         taskNameLable.textAlignment = NSTextAlignmentCenter;
         taskNameLable.font = [UIFont systemFontOfSize:14];
         taskNameLable.textColor = kFontColor;
